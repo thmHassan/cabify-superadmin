@@ -24,15 +24,12 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Deploy to Server
+      - name: Deploy React app
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-              sudo apt-get update
-              sudo apt-get install -y rsync
-              echo "Deploying React app..."
-              sudo mkdir -p /var/www/html/admin.cabifyit.com
-              sudo rsync -avz --delete $GITHUB_WORKSPACE/build/ /var/www/html/admin.cabifyit.com/
+          port: 22
+          source: "./build/"
+          target: "/var/www/html/admin.cabifyit.com/"
