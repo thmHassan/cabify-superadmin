@@ -31,6 +31,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            echo "Deploying React app..."
-            mkdir -p /var/www/html/admin.cabifyit.com
-            rsync -avz --delete ./build/ /var/www/html/admin.cabifyit.com/
+              sudo apt-get update
+              sudo apt-get install -y rsync
+              echo "Deploying React app..."
+              sudo mkdir -p /var/www/html/admin.cabifyit.com
+              sudo rsync -avz --delete ./build/ /var/www/html/admin.cabifyit.com/
