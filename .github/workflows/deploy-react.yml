@@ -34,3 +34,4 @@ jobs:
             echo "Deploying React app..."
             mkdir -p /var/www/html/admin.cabifyit.com
             rsync -avz --delete ./build/ /var/www/html/admin.cabifyit.com/
+ 
