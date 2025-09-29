@@ -24,6 +24,13 @@ jobs:
       - name: Build React app
         run: npm run build
 
+      - name: Debug build folder
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Files in workspace:"
+          ls -R
+
       # Copy build folder to server
       - name: Copy files via SCP
         uses: appleboy/scp-action@v0.1.7
