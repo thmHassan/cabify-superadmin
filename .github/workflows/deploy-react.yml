@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # change if your React project uses a different Node version
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
@@ -24,12 +24,13 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Deploy React app
-        uses: appleboy/ssh-action@v0.1.10
+      # Copy build folder to server
+      - name: Copy files via SCP
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: "./build/"
+          source: "./build/*"
           target: "/var/www/html/admin.cabifyit.com/"
