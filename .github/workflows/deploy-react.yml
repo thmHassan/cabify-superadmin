@@ -35,4 +35,4 @@ jobs:
               sudo apt-get install -y rsync
               echo "Deploying React app..."
               sudo mkdir -p /var/www/html/admin.cabifyit.com
-              sudo rsync -avz --delete ./build/ /var/www/html/admin.cabifyit.com/
+              sudo rsync -avz --delete $GITHUB_WORKSPACE/build/ /var/www/html/admin.cabifyit.com/
