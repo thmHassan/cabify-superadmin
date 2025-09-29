@@ -31,7 +31,6 @@ jobs:
           echo "Files in workspace:"
           ls -R
 
-      # Copy build folder to server
       - name: Copy files via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -39,5 +38,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: "build/"
+          source: "dist/"
           target: "/var/www/html/admin.cabifyit.com/"
