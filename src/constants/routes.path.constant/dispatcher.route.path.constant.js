@@ -1,0 +1,10 @@
+export const DISPATCHER_OVERVIEW_PATH = "/overview";
+export const DISPATCHER_MAP_PATH = "/map";
+export const DISPATCHER_PUSH_NOTIFICATION_PATH = "/push-notification";
+export const DISPATCHER_CANCELLATIONS_PATH = "/cancellations";
+export const DISPATCHER_USERS_PATH = "/users";
+export const DISPATCHER_DRIVERS_PATH = "/drivers";
+export const DISPATCHER_RIDES_PATH = "/rides";
+export const DISPATCHER_SUPPORT_TICKETS_PATH = "/support-tickets";
+export const DISPATCHER_SOS_PATH = "/sos";
+export const DISPATCHER_LOST_FOUND_PATH = "/lost-found";

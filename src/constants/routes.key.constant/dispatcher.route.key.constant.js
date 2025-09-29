@@ -1,0 +1,10 @@
+export const DISPATCHER_OVERVIEW_KEY = "overview";
+export const DISPATCHER_MAP_KEY = "map";
+export const DISPATCHER_PUSH_NOTIFICATION_KEY = "push-notification";
+export const DISPATCHER_CANCELLATIONS_KEY = "cancellations";
+export const DISPATCHER_USERS_KEY = "users";
+export const DISPATCHER_DRIVERS_KEY = "drivers";
+export const DISPATCHER_RIDES_KEY = "rides";
+export const DISPATCHER_SUPPORT_TICKETS_KEY = "support-tickets";
+export const DISPATCHER_SOS_KEY = "sos";
+export const DISPATCHER_LOST_FOUND_KEY = "lost-found";
