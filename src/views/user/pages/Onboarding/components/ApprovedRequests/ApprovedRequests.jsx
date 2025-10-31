@@ -1,10 +1,16 @@
 import RequestComponent from "../RequestComponent";
 
-const ApprovedRequests = () => {
+const ApprovedRequests = ({ allOnboardings, onEdit }) => {
+  console.log(allOnboardings, "allOnboardings=====");
   return (
     <div className="flex flex-col gap-5">
-      {Array.from({ length: 2 }, (_, i) => (
-        <RequestComponent key={i} type="accepted" />
+      {allOnboardings.map((data, index) => (
+        <RequestComponent
+          key={index}
+          type="accepted"
+          data={data}
+          onEdit={onEdit}
+        />
       ))}
     </div>
   );

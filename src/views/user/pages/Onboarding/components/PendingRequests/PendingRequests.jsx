@@ -1,10 +1,19 @@
 import RequestComponent from "../RequestComponent";
 
-const PendingRequests = () => {
+const PendingRequests = ({ allOnboardings, onRefresh, onEdit }) => {
   return (
     <div className="flex flex-col gap-5">
-      {Array.from({ length: 2 }, (_, i) => (
-        <RequestComponent key={i} type="pending" />
+      {allOnboardings.map((data, index) => (
+        <div>
+          {/* {index} */}
+          <RequestComponent
+            onEdit={onEdit}
+            key={index}
+            type="pending"
+            data={data}
+            onRefresh={onRefresh}
+          />
+        </div>
       ))}
     </div>
   );

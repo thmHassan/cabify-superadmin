@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import DownArrow from "../../../../svg/DownArrow";
+import DownArrowIcon from "../../../../svg/DownArrowIcon";
 
 const NavElement = ({ navItem }) => {
   const {
@@ -52,7 +52,7 @@ const NavElement = ({ navItem }) => {
           </div>
           {isSubMenu && (
             <div className="w-4 h-4 flex justify-center items-center">
-              <DownArrow />
+              <DownArrowIcon />
             </div>
           )}
         </div>

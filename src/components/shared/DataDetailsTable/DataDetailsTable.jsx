@@ -5,21 +5,20 @@ const DataDetailsTable = ({
   rowType,
   companies,
   itemsPerPage = 6,
-  onActionClick,
-  isOnActionClick = true,
+  actionOptions,
+  ...rest
 }) => {
   return (
     <div className="pt-5 overflow-auto">
-      <table className="w-full">
+      <table className="w-full border-collapse table-auto">
         <tbody>
-          {companies?.slice(0, itemsPerPage).map((company, i) => (
+          {companies?.slice(0, itemsPerPage).map((data, i) => (
             <DataDetailsRow
               key={i}
-              {...company}
+              data={data}
               type={rowType}
-              onActionClick={
-                isOnActionClick ? () => onActionClick(company) : false
-              }
+              actionOptions={actionOptions}
+              {...rest}
             />
           ))}
         </tbody>

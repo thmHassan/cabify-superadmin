@@ -8,7 +8,7 @@ import TotalRequestIcon from "../../../../components/svg/TotalRequestIcon";
 import DataTransferIcon from "../../../../components/svg/DataTransferIcon";
 import ResponseTimeIcon from "../../../../components/svg/ResponseTimeIcon";
 import ErrorRateIcon from "../../../../components/svg/ErrorRateIcon";
-import SnapshotCard from "../../../../components/shared/SnapshotCard/SnapshotCard";
+import SnapshotCard from "../../../../components/shared/SnapshotCard";
 import PerformanceOverview from "./components/PerformanceOverview";
 import TrafficAnalytics from "./components/TrafficAnalytics";
 import ErrorMonitoring from "./components/ErrorMonitoring";
@@ -80,12 +80,13 @@ const SystemAnalytics = () => {
   return (
     <div className="p-10 min-h-[calc(100vh-85px)]">
       <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-start">
           <PageTitle title="System Analytics" />
           <Button
             type="filled"
             btnSize="2xl"
             // onClick={() => setIsAddSubscriptionModalOpen(true)}
+            className="-mb-3"
           >
             <div className="flex gap-[15px] items-center">
               <PlusIcon />

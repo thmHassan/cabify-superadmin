@@ -124,7 +124,7 @@ const userNavRoutes = [
       },
       {
         key: KEY.DRIVER_KEY,
-        title: "Driver",
+        title: "Driver’s Documents",
         icon: {
           active: DriverIcon,
           component: DriverIcon,
@@ -172,6 +172,18 @@ const userNavRoutes = [
         route: PATH.ACCOUNT_PATH,
         active: [],
         isSubMenu: true,
+        subMenu: [],
+      },
+      {
+        key: KEY.SUB_ADMIN_MANAGEMENT_KEY,
+        title: "Sub Admin Management",
+        icon: {
+          active: AccountActiveIcon,
+          component: AccountIcon,
+          size: 20,
+        },
+        route: PATH.SUB_ADMIN_MANAGEMENT_PATH,
+        active: [],
         subMenu: [],
       },
       // {

@@ -1,6 +1,6 @@
 import React from "react";
 
-const PhoneOutline = ({ width, height, fill = "#ffffff" }) => {
+const PhoneOutlineIcon = ({ width, height, fill = "#ffffff" }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,4 +19,4 @@ const PhoneOutline = ({ width, height, fill = "#ffffff" }) => {
   );
 };
 
-export default PhoneOutline;
+export default PhoneOutlineIcon;

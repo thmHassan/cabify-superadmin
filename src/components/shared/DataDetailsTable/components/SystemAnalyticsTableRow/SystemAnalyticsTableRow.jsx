@@ -5,13 +5,14 @@ import Tag from "../../../../ui/Tag";
 import ChildText from "../../../../ui/ChildText.jsx/ChildText";
 
 const SystemAnalyticsTableRow = (props) => {
-  const { name, status, metrics, uptime, onActionClick } = props;
+  const { data, actionOptions } = props;
+  const { name, status, metrics, uptime } = data;
   return (
     <CommonTableRowFields
       data={{
         name,
         status,
-        onActionClick,
+        actionOptions,
         icon: {
           component: WalletIcon,
           width: 31.82,

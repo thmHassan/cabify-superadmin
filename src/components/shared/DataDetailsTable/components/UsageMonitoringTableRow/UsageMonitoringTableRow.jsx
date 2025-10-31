@@ -5,13 +5,26 @@ import Tag from "../../../../ui/Tag";
 import ChildText from "../../../../ui/ChildText.jsx/ChildText";
 
 const UsageMonitoringTableRow = (props) => {
-  const { name, status, metrics, lastSeen, onActionClick } = props;
+  const { data, actionOptions } = props;
+  const {
+    company_name,
+    api_calls_today,
+    map_request,
+    voip_minutes,
+    dispatchers,
+  } = data;
+  const metrics = [
+    { label: "API Calls Today", value: api_calls_today },
+    { label: "Map Requests", value: map_request },
+    { label: "VoIP Minutes", value: voip_minutes },
+    { label: "Dispatchers", value: dispatchers },
+  ];
   return (
     <CommonTableRowFields
       data={{
-        name,
-        status,
-        onActionClick,
+        name: company_name,
+        status: ["Active"],
+        actionOptions,
         icon: {
           component: WalletIcon,
           width: 31.82,
@@ -43,7 +56,7 @@ const UsageMonitoringTableRow = (props) => {
                 <span className="text-xs font-semibold opacity-75">
                   Last Seen
                 </span>
-                <ChildText text={lastSeen} className="!text-[#FFFFFF]" />
+                <ChildText text="2 minute ago" className="!text-[#FFFFFF]" />
               </div>
             </Tag>
           </div>

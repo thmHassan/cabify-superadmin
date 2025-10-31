@@ -7,6 +7,7 @@ export const publicRoutes = [...authRoute];
 
 export const protectedRoutes = {
   admin: [...userRoute],
+  superadmin: [...userRoute], // Add superadmin role to use user routes
   client: [...clientRoute],
   dispatcher: [...dispatcherRoute],
 };

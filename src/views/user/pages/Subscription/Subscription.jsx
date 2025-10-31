@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import WalletIcon from "../../../../components/svg/WalletIcon";
 import WatchIcon from "../../../../components/svg/WatchIcon";
 import WarningIcon from "../../../../components/svg/WarningIcon";
@@ -6,9 +6,9 @@ import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
 import PlusIcon from "../../../../components/svg/PlusIcon";
 import PageSubTitle from "../../../../components/ui/PageSubTitle";
-import SnapshotCard from "../../../../components/shared/SnapshotCard/SnapshotCard";
+import SnapshotCard from "../../../../components/shared/SnapshotCard";
 import MonthlyRevenueIcon from "../../../../components/svg/MonthlyRevenueIcon";
-import DataDetailsTable from "../../../../components/shared/DataDetailsTable/DataDetailsTable";
+import DataDetailsTable from "../../../../components/shared/DataDetailsTable";
 import ChildText from "../../../../components/ui/ChildText.jsx/ChildText";
 import CardContainer from "../../../../components/shared/CardContainer";
 import AddSubscriptionModal from "./components/AddSubscriptionModal";
@@ -20,11 +20,19 @@ import {
 import Pagination from "../../../../components/ui/Pagination";
 import SearchBar from "../../../../components/shared/SearchBar";
 import CustomSelect from "../../../../components/ui/CustomSelect";
+import { lockBodyScroll } from "../../../../utils/functions/common.function";
+import Modal from "../../../../components/shared/Modal";
+import {
+  apiGetSubscriptionCardDetails,
+  apiGetSubscriptions,
+} from "../../../../services/SubscriptionService";
+import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
+import EditSubscriptionModal from "./components/EditSubscriptionModal";
 
 const DASHBOARD_CARDS = [
   {
     title: "Active Subscriptions",
-    value: 24,
+    value: "active_subscription",
     change: "+3 from last hour",
     icon: {
       component: WalletIcon,
@@ -34,7 +42,8 @@ const DASHBOARD_CARDS = [
   },
   {
     title: "Monthly Revenue",
-    value: "$6,800",
+    value: "monthly_revenue",
+    valuePreAssets: "$",
     change: "42% from last hour",
     icon: {
       component: MonthlyRevenueIcon,
@@ -46,7 +55,7 @@ const DASHBOARD_CARDS = [
   },
   {
     title: "Pending Renewals",
-    value: "03",
+    value: "pending_renewals",
     change: "Due this week",
     icon: {
       component: WatchIcon,
@@ -73,46 +82,10 @@ const DASHBOARD_CARDS = [
 
 const companiesData = [
   {
-    name: "Metro Taxi Co.",
+    plan_name: "Metro Taxi Co.",
     status: ["Active", "Premium"],
-    location: "New York",
-    drivers: "45 Drivers",
-    contact: "+1-555-0101",
-    revenue: "$4500",
-  },
-];
-const companiesData2 = [
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active", "Premium"],
-    location: "New York",
-    drivers: "45 Drivers",
-    contact: "+1-555-0101",
-    revenue: "$4500",
-  },
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active", "Premium"],
-    location: "New York",
-    drivers: "45 Drivers",
-    contact: "+1-555-0101",
-    revenue: "$4500",
-  },
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active", "Premium"],
-    location: "New York",
-    drivers: "45 Drivers",
-    contact: "+1-555-0101",
-    revenue: "$4500",
-  },
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active", "Premium"],
-    location: "New York",
-    drivers: "45 Drivers",
-    contact: "+1-555-0101",
-    revenue: "$4500",
+    features: "New York,45 Drivers,+1-555-0101",
+    amount: "4500",
   },
 ];
 
@@ -120,8 +93,19 @@ const Subscription = () => {
   const [_searchQuery, setSearchQuery] = useState("");
   const [_selectedStatus, setSelectedStatus] = useState(STATUS_OPTIONS[0]);
   const [_selectedPlan, setSelectedPlan] = useState(PLAN_OPTIONS[0]);
-  const [isAddSubscriptionModalOpen, setIsAddSubscriptionModalOpen] =
-    useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isSubscriptionsLoading, setIsSubscriptionsLoading] = useState(false);
+  const [
+    isSubscriptionCardDetailsLoading,
+    setIsSubscriptionCardDetailsLoading,
+  ] = useState(false);
+  const [allSubscription, setAllSubscription] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [subscriptionCardDetails, setSubscriptionCardDetails] = useState({});
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState({
+    isOpen: false,
+    type: "new",
+  });
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -150,15 +134,69 @@ const Subscription = () => {
     setCurrentPage(1);
   };
 
+  const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
+
+  const getSubscriptions = async () => {
+    try {
+      setIsSubscriptionsLoading(true);
+      const result = await apiGetSubscriptions();
+      if (result?.status === 200) {
+        setAllSubscription(result?.data?.list?.data);
+      }
+    } catch (errors) {
+      console.log(errors, "err---");
+      // ErrorNotification(
+      //   errors?.response?.data?.message ||
+      //     "Failed to fetch booking list. Please reload."
+      // );
+    } finally {
+      setIsSubscriptionsLoading(false);
+    }
+  };
+
+  const getSubscriptionCardDetails = async () => {
+    try {
+      setIsSubscriptionCardDetailsLoading(true);
+      const result = await apiGetSubscriptionCardDetails();
+      if (result?.status === 200) {
+        console.log(result, "res======");
+        setSubscriptionCardDetails(result?.data?.data);
+      }
+    } catch (errors) {
+      console.log(errors, "err---");
+    } finally {
+      setIsSubscriptionCardDetailsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getSubscriptionCardDetails();
+    getSubscriptions();
+  }, [refreshTrigger]);
+
+  if (isSubscriptionsLoading || isSubscriptionCardDetailsLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen w-full">
+        <AppLogoLoader />
+      </div>
+    );
+  }
+
+  console.log(allSubscription, "allSubscription=====");
+
   return (
     <div className="p-10 min-h-[calc(100vh-85px)]">
       <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-start">
           <PageTitle title="Subscriptions" />
           <Button
             type="filled"
             btnSize="2xl"
-            onClick={() => setIsAddSubscriptionModalOpen(true)}
+            onClick={() => {
+              lockBodyScroll();
+              setIsSubscriptionModalOpen({ type: "new", isOpen: true });
+            }}
+            className="-mb-3"
           >
             <div className="flex gap-[15px] items-center">
               <PlusIcon />
@@ -173,7 +211,15 @@ const Subscription = () => {
       <div className="flex flex-col gap-5">
         <div className="flex gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
-            <SnapshotCard key={index} data={card} />
+            <SnapshotCard
+              key={index}
+              data={{
+                ...card,
+                value: `${card?.valuePreAssets || ""}${
+                  subscriptionCardDetails[card?.value] ?? 0
+                }`,
+              }}
+            />
           ))}
         </div>
         <div>
@@ -214,8 +260,34 @@ const Subscription = () => {
               </div>
               <div>
                 <DataDetailsTable
-                  companies={companiesData2}
-                  onActionClick={() => console.log("object")}
+                  companies={allSubscription}
+                  actionOptions={[
+                    // {
+                    //   label: "View",
+                    //   onClick: (data) => {
+                    //     // setSelectedViewData(data);
+                    //     // setIsViewPermissionModal(true);
+                    //   },
+                    // },
+                    {
+                      label: "Edit",
+                      onClick: (item) => {
+                        if (item) {
+                          setSelectedId(item?.id);
+                          setIsSubscriptionModalOpen({
+                            type: "edit",
+                            isOpen: true,
+                          });
+                        }
+                      },
+                    },
+                    // {
+                    //   label: "Delete",
+                    //   onClick: () => {
+                    //     console.log("Delete clicked");
+                    //   },
+                    // },
+                  ]}
                 />
               </div>
               <div className="mt-4 border-t border-[#E9E9E9] pt-4">
@@ -232,10 +304,20 @@ const Subscription = () => {
           </CardContainer>
         </div>
       </div>
-      <AddSubscriptionModal
-        isOpen={isAddSubscriptionModalOpen}
-        setIsOpen={setIsAddSubscriptionModalOpen}
-      />
+      <Modal isOpen={isSubscriptionModalOpen.isOpen} className="p-10">
+        {isSubscriptionModalOpen.type === "new" ? (
+          <AddSubscriptionModal
+            setIsOpen={setIsSubscriptionModalOpen}
+            onRefresh={handleRefresh}
+          />
+        ) : (
+          <EditSubscriptionModal
+            id={selectedId}
+            setIsOpen={setIsSubscriptionModalOpen}
+            onRefresh={handleRefresh}
+          />
+        )}
+      </Modal>
     </div>
   );
 };

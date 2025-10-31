@@ -1,6 +1,6 @@
 import React from "react";
-import Select, { components } from "react-select";
-import SelectionDownArrow from "../../svg/SelectionDownArrow";
+import Select from "react-select";
+import DropdownIndicator from "../DropdownIndicator";
 
 const VARIANT_CONFIG = {
   0: {
@@ -15,23 +15,6 @@ const VARIANT_CONFIG = {
     backgroundColor: "#ffffff",
     border: "none",
   },
-};
-
-const DropdownIndicator = (props) => {
-  const DropdownIndicator = components.DropdownIndicator;
-  return (
-    <DropdownIndicator {...props}>
-      {props.selectProps.menuIsOpen ? (
-        <div className="rotate-180">
-          <SelectionDownArrow />
-        </div>
-      ) : (
-        <div>
-          <SelectionDownArrow />
-        </div>
-      )}
-    </DropdownIndicator>
-  );
 };
 
 const CustomSelect = ({

@@ -1,14 +1,14 @@
-import React from 'react'
-import RequestComponent from '../RequestComponent';
+import React from "react";
+import RequestComponent from "../RequestComponent";
 
-const RejectedRequests = () => {
+const RejectedRequests = ({ allOnboardings, onEdit }) => {
   return (
     <div className="flex flex-col gap-5">
-      {Array.from({ length: 2 }, (_, i) => (
-        <RequestComponent key={i} type="rejected" />
+      {allOnboardings.map((data, index) => (
+        <RequestComponent key={index} type="rejected" onEdit={onEdit} />
       ))}
     </div>
   );
-}
+};
 
-export default RejectedRequests
+export default RejectedRequests;

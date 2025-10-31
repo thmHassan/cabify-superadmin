@@ -1,5 +1,7 @@
 import React from "react";
 import CustomSelect from "../CustomSelect";
+import LeftArrowIcon from "../../svg/LeftArrowIcon";
+import RightArrowIcon from "../../svg/RightArrowIcon";
 
 const VARIANT_CONFIG = {
   0: "bg-[#ffffff] border border-[#ededed]",
@@ -88,7 +90,7 @@ const Pagination = ({
               : "text-[#6C6C6C] hover:bg-[#F5F5F5] cursor-pointer"
           }`}
         >
-          &lt;
+          <LeftArrowIcon />
         </button>
 
         <div className="flex items-center gap-2">
@@ -116,7 +118,7 @@ const Pagination = ({
               : "text-[#6C6C6C] hover:bg-[#F5F5F5] cursor-pointer"
           }`}
         >
-          &gt;
+          <RightArrowIcon />
         </button>
       </div>
 

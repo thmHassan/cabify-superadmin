@@ -1,172 +1,111 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import CardContainer from "../../../../components/shared/CardContainer";
 import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
 import PlusIcon from "../../../../components/svg/PlusIcon";
 import PageSubTitle from "../../../../components/ui/PageSubTitle";
-import Table from "../../../../components/shared/Table/Table";
-import DataTable from "../../../../components/shared/DataTable/DataTable";
-import EditPaperPencilIcon from "../../../../components/svg/EditPaperPencilIcon";
-import BinIcon from "../../../../components/svg/BinIcon";
-import CardSubtitle from "../../../../components/ui/CardSubtitle/CardSubtitle";
-import TableActionColumn from "../../../../components/ui/TableActionColumn";
-
-const data = [
-  {
-    documentType: "Driver’s License",
-    type: "XXXXX",
-    issueDate: "Yes ✓",
-    expiryDate: "01-02-1999",
-  },
-  {
-    documentType: "Profile Photo",
-    type: "XXXXX",
-    issueDate: "-",
-    expiryDate: "-",
-  },
-  {
-    documentType: "Vehicle Photo",
-    type: "Image",
-    issueDate: "-",
-    expiryDate: "-",
-  },
-  {
-    documentType: "Front Photo",
-    type: "Image",
-    issueDate: "-",
-    expiryDate: "-",
-  },
-  {
-    documentType: "Back Photo",
-    type: "Image",
-    issueDate: "-",
-    expiryDate: "-",
-  },
-  {
-    documentType: "Insurance",
-    type: "Image",
-    issueDate: "-",
-    expiryDate: "-",
-  },
-];
+import Pagination from "../../../../components/ui/Pagination";
+import { PAGE_SIZE_OPTIONS } from "../../../../constants/selectOptions";
+import SearchBar from "../../../../components/shared/SearchBar";
+import DataDetailsTable from "../../../../components/shared/DataDetailsTable";
+import Modal from "../../../../components/shared/Modal";
+import { lockBodyScroll } from "../../../../utils/functions/common.function";
+import AddDriverDocumentModal from "./components/AddDriverDocumentModal";
+import {
+  apiDeleteDriversDocument,
+  apiGetDriversDocuments,
+} from "../../../../services/DriverService";
+import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
+import EditDriverDocumentModal from "./components/EditDriverDocumentModal";
 
 const Driver = () => {
-  const tableRef = useRef(null);
+  const [isDocumentModalOpen, setIsDocumentModalOpen] = useState({
+    isOpen: false,
+    type: "new",
+  });
+  const [allDriversDocuments, setAllDriversDocuments] = useState([]);
+  const [_searchQuery, setSearchQuery] = useState("");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [isDriverDocumentsLoading, setIsDriverDocumentsLoading] =
+    useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
-  const onPaginationChange = (page) => {
-    console.log(page);
-    // const newTableData = cloneDeep(tableData)
-    // newTableData.pageIndex = page
-    // dispatch(setTableData(newTableData))
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const totalItems = 25;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const handleSearchChange = (value) => {
+    setSearchQuery(value);
   };
 
-  // const onSort = (sort) => {
-  //   // const newTableData = cloneDeep(tableData)
-  //   // newTableData.sort = sort
-  //   // dispatch(setTableData(newTableData))
-  // };
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
-  const onView = () => {};
-  const onEdit = () => {};
-  const onDelete = () => {};
+  const handleItemsPerPageChange = (newItemsPerPage) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1);
+  };
 
-  const columns = useMemo(
-    () => [
-      {
-        header: "Document Type",
-        accessorKey: "documentType",
-        cell: (props) => {
-          const row = props.row.original;
-          return (
-            <span className="whitespace-nowrap">
-              <CardSubtitle
-                subtitle={row.documentType}
-                className="!text-[#000000]"
-              />
-            </span>
-          );
-        },
-      },
-      {
-        header: "Type",
-        accessorKey: "type",
-        cell: (props) => {
-          const row = props.row.original;
-          return (
-            <span className="whitespace-nowrap">
-              <CardSubtitle
-                variant={1}
-                subtitle={row.type}
-                className="!text-[#000000] !font-normal"
-              />
-            </span>
-          );
-        },
-      },
-      {
-        header: "Has Issue Date",
-        accessorKey: "issueDate",
-        cell: (props) => {
-          const row = props.row.original;
-          return <span className="whitespace-nowrap">{row.issueDate}</span>;
-        },
-      },
-      {
-        header: "Has Expiry Date",
-        accessorKey: "expiryDate",
-        cell: (props) => {
-          const row = props.row.original;
-          return (
-            <span className="whitespace-nowrap">
-              <CardSubtitle
-                variant={1}
-                subtitle={row.expiryDate}
-                className="!text-[#000000] !font-normal"
-              />
-            </span>
-          );
-        },
-      },
-      {
-        header: "File",
-        accessorKey: "file",
-        className: "flex justify-center",
-        cell: (props) => {
-          const row = props.row.original;
-          console.log(row);
-          return (
-            <div className="flex justify-center">
-              <Button type="filled" btnSize="md" onClick={onView}>
-                <span>View</span>
-              </Button>
-            </div>
-          );
-        },
-      },
-      {
-        header: "Actions",
-        accessorKey: "action",
-        className: "flex justify-center",
-        cell: (props) => {
-          const row = props.row.original;
-          return (
-            <TableActionColumn row={row} onEdit={onEdit} onDelete={onDelete} />
-          );
-        },
-      },
-    ],
-    []
-  );
+  const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
+
+  const getDriversDocuments = async () => {
+    try {
+      setIsDriverDocumentsLoading(true);
+      const result = await apiGetDriversDocuments();
+      if (result?.status === 200) {
+        console.log(result, "res========");
+        setAllDriversDocuments(result?.data?.list?.data);
+      }
+    } catch (errors) {
+      console.log(errors, "err---");
+      // ErrorNotification(
+      //   errors?.response?.data?.message ||
+      //     "Failed to fetch booking list. Please reload."
+      // );
+    } finally {
+      setIsDriverDocumentsLoading(false);
+    }
+  };
+
+  const onDelete = async (id) => {
+    if (id) {
+      const result = await apiDeleteDriversDocument({ id });
+      if (result?.status === 200) {
+        console.log(result, "res========");
+        handleRefresh();
+        // setAllDriversDocuments(result?.data?.list?.data);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getDriversDocuments();
+  }, [refreshTrigger]);
+
+  if (isDriverDocumentsLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen w-full">
+        <AppLogoLoader />
+      </div>
+    );
+  }
 
   return (
     <div className="p-10">
-      <div className="flex flex-col gap-2.5 mb-[30px] px-4 pt-2">
-        <div className="flex justify-between">
+      <div className="flex flex-col gap-2.5 mb-[30px]">
+        <div className="flex justify-between items-start">
           <PageTitle title="Default Document Type" />
           <Button
             type="filled"
             btnSize="2xl"
-            // onClick={() => setIsAddSubscriptionModalOpen(true)}
+            onClick={() => {
+              lockBodyScroll();
+              setIsDocumentModalOpen({ type: "new", isOpen: true });
+            }}
+            className="-mb-3"
           >
             <div className="flex gap-[15px] items-center">
               <PlusIcon />
@@ -179,40 +118,60 @@ const Driver = () => {
         </div>
       </div>
       <CardContainer className="p-5">
-        <CardContainer type={1} className="px-10 py-7">
-          <div>
-            <DataTable
-              ref={tableRef}
-              columns={columns}
-              data={data}
-              skeletonAvatarColumns={[0]}
-              skeletonAvatarProps={{ className: "rounded-md" }}
-              loading={false}
-              pagingData={{
-                total: data?.length,
-                pageIndex: 0,
-                pageSize: 10,
-              }}
-              paginationVariant={1}
-              onPaginationChange={onPaginationChange}
-              // onSelectChange={onSelectChange}
-              // onSort={onSort}
-            />
-          </div>
-        </CardContainer>
-        <div className="pt-[50px] pb-8 flex justify-center">
-          <Button
-            type="filled"
-            btnSize="2xl"
-            // onClick={() => setIsAddSubscriptionModalOpen(true)}
-          >
-            <div className="flex gap-[15px] items-center">
-              <PlusIcon />
-              <span>Push to All Panels</span>
-            </div>
-          </Button>
+        <div className="flex items-center gap-5 justify-between">
+          <SearchBar onSearchChange={handleSearchChange} />
+        </div>
+        <div>
+          <DataDetailsTable
+            rowType="driverDocuments"
+            companies={allDriversDocuments}
+            actionOptions={[
+              {
+                label: "Edit",
+                onClick: (item) => {
+                  console.log("object", item);
+                  if (item) {
+                    setIsDocumentModalOpen({ type: "edit", isOpen: true });
+                    setSelectedId(item?.id);
+                  }
+                },
+              },
+              {
+                label: "Delete",
+                onClick: (item) => {
+                  if (item) {
+                    onDelete(item.id);
+                  }
+                },
+              },
+            ]}
+          />
+        </div>
+        <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+          />
         </div>
       </CardContainer>
+      <Modal size="sm" isOpen={isDocumentModalOpen.isOpen} className="p-10">
+        {isDocumentModalOpen.type === "new" ? (
+          <AddDriverDocumentModal
+            setIsOpen={setIsDocumentModalOpen}
+            onRefresh={handleRefresh}
+          />
+        ) : (
+          <EditDriverDocumentModal
+            setIsOpen={setIsDocumentModalOpen}
+            onRefresh={handleRefresh}
+            id={selectedId}
+          />
+        )}
+      </Modal>
     </div>
   );
 };

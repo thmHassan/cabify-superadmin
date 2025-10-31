@@ -1,5 +1,5 @@
 .table-default {
-  @apply table-auto min-w-full divide-y divide-gray-200 dark:divide-gray-700;
+  @apply table-auto min-w-full divide-y divide-gray-200 dark:divide-gray-700 border-collapse;
 
   thead {
     >tr {
@@ -11,12 +11,6 @@
 
   tbody {
     @apply divide-y divide-gray-200 dark:divide-gray-700;
-
-    >tr {
-      >td {
-        @apply px-6 py-7;
-      }
-    }
   }
 
   tfoot {
