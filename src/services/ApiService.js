@@ -94,7 +94,7 @@ const ApiService = {
         })
     },
 
-    getCompanyList({ page = 1, status = 'active' } = {}) {
+    getCompanyList({ page = 1, status = 'all' } = {}) {
         return new Promise((resolve, reject) => {
             BaseService({
                 method: 'GET',

@@ -36,7 +36,7 @@ const Companies = () => {
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
   const [_searchQuery, setSearchQuery] = useState("");
   const [_selectedStatus, setSelectedStatus] = useState(
-    STATUS_OPTIONS.find((o) => o.value === "active") ?? STATUS_OPTIONS[0]
+    STATUS_OPTIONS.find((o) => o.value === "all") ?? STATUS_OPTIONS[0]
   );
   const [_selectedPlan, setSelectedPlan] = useState(PLAN_OPTIONS[0]);
   const [companyCards, setCompanyCards] = useState(null);
@@ -130,7 +130,7 @@ const Companies = () => {
     }
   };
 
-  const fetchCompanyList = async (page = 1, status = "active") => {
+  const fetchCompanyList = async (page = 1, status = "all") => {
     try {
       setTableLoading(true);
       const response = await ApiService.getCompanyList({ page, status });
@@ -161,10 +161,7 @@ const Companies = () => {
 
   useEffect(() => {
     fetchCompanyCards();
-    const statusParam =
-      _selectedStatus?.value === "all"
-        ? ""
-        : _selectedStatus?.value ?? "active";
+    const statusParam = _selectedStatus?.value ?? "all";
 
     console.log(statusParam, "statusparam");
     fetchCompanyList(1, statusParam);
@@ -211,10 +208,7 @@ const Companies = () => {
   }, [companyListRaw, _searchQuery, _selectedPlan]);
 
   useEffect(() => {
-    const statusParam =
-      _selectedStatus?.value === "all"
-        ? ""
-        : _selectedStatus?.value ?? "active";
+    const statusParam = _selectedStatus?.value ?? "all";
     fetchCompanyList(currentPage, statusParam);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, _selectedStatus]);
