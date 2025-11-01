@@ -5,7 +5,7 @@ import SubAdminManagementRowFields from "../SubAdminManagementRowFields";
 import SubscriptionTableRow from "../SubscriptionTableRow";
 import SystemAnalyticsTableRow from "../SystemAnalyticsTableRow";
 import UsageMonitoringTableRow from "../UsageMonitoringTableRow";
-import VehicleTypeFields from "../vehicleTypeFields";
+import VehicleTypeFields from "../VehicleTypeFields";
 
 const DataDetailsRow = ({ type = "subscription", ...props }) => {
   const TABLE_ROW_CONFIG = {
