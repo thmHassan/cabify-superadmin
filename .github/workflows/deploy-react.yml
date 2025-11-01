@@ -1,4 +1,4 @@
-name: Deploy Vite React App
+name: Deploy React App
 
 on:
   push:
@@ -21,32 +21,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build Vite app
+      - name: Build React app
         run: npm run build
 
-      - name: Debug workspace after build
+      - name: Debug build folder
         run: |
-          echo "Folder structure after build:"
-          ls -la
-          echo "Contents of dist folder:"
-          ls -la dist || true
+          echo "Current directory:"
+          pwd
+          echo "Files in workspace:"
+          ls -R
 
-      - name: Clear old files on server
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 22
-          script: |
-            rm -rf /var/www/html/admin.cabifyit.com/*
-
-      - name: Deploy files via SCP
+      - name: Copy files via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: "dist/**"
-          target: "/var/www/html/admin.cabifyit.com/"
+          source: "dist/*"
+          target: "/var/www/html/admin.cabifyit.com/" 
