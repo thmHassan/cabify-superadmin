@@ -28,10 +28,8 @@ jobs:
         run: |
           echo "Current directory:"
           pwd
-          echo "Files in dist folder:"
-          ls -la dist/
-          echo "Checking if debug.html exists:"
-          ls -la dist/debug.html || echo "debug.html not found"
+          echo "Files in workspace:"
+          ls -R
 
       - name: Copy files via SCP
         uses: appleboy/scp-action@v0.1.7
@@ -40,23 +38,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: "dist/"
-          target: "/var/www/html/admin.cabifyit.com/"
-          strip_components: 1
-          rm: true
-          overwrite: true
-
-      - name: Set correct permissions
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: 22
-          script: |
-            cd /var/www/html/admin.cabifyit.com/
-            chmod -R 755 .
-            chown -R www-data:www-data . 2>/dev/null || chown -R nginx:nginx . 2>/dev/null || echo "Note: Could not change owner (might need sudo)"
-            echo "Deployment completed!"
-            echo "Files in directory:"
-            ls -la 
+          source: "dist/*"
+          target: "/var/www/html/admin.cabifyit.com/" 
