@@ -1,4 +1,4 @@
-name: Deploy React App
+name: Deploy Vite React App
 
 on:
   push:
@@ -21,8 +21,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build React app
+      - name: Build Vite app
         run: npm run build
+
+      - name: Debug workspace after build
+        run: |
+          echo "Folder structure after build:"
+          ls -la
+          echo "Contents of dist folder:"
+          ls -la dist || true
 
       - name: Clear old files on server
         uses: appleboy/ssh-action@v1.0.3
@@ -41,5 +48,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: "build/*"
+          source: "dist/**"
           target: "/var/www/html/admin.cabifyit.com/"
