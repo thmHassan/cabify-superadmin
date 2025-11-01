@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,6 +44,7 @@ jobs:
           target: "/var/www/html/admin.cabifyit.com/"
           strip_components: 1
           rm: true
+          overwrite: true
 
       - name: Set correct permissions
         uses: appleboy/ssh-action@v1.0.0
@@ -54,7 +56,7 @@ jobs:
           script: |
             cd /var/www/html/admin.cabifyit.com/
             chmod -R 755 .
-            chown -R www-data:www-data .
+            chown -R www-data:www-data . 2>/dev/null || chown -R nginx:nginx . 2>/dev/null || echo "Note: Could not change owner (might need sudo)"
             echo "Deployment completed!"
             echo "Files in directory:"
-            ls -la
+            ls -la 
