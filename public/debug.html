@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Debug Console</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4ec9b0;
+        }
+        .section {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .section h2 {
+            color: #569cd6;
+            margin-top: 0;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .status.success {
+            background: #0e7c0e;
+        }
+        .status.error {
+            background: #f14c4c;
+        }
+        .status.warning {
+            background: #cca700;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        pre {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+        .log {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #569cd6;
+        }
+        .log.error {
+            border-left-color: #f14c4c;
+        }
+        .log.success {
+            border-left-color: #0e7c0e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Cabify API Debug Console</h1>
+        
+        <div class="section">
+            <h2>Environment Information</h2>
+            <div id="env-info"></div>
+        </div>
+
+        <div class="section">
+            <h2>Authentication Status</h2>
+            <div id="auth-info"></div>
+        </div>
+
+        <div class="section">
+            <h2>Quick Actions</h2>
+            <button onclick="runFullDiagnostics()">Run Full Diagnostics</button>
+            <button onclick="testCORS()">Test CORS</button>
+            <button onclick="testAPIEndpoint()">Test API Endpoint</button>
+            <button onclick="clearAuth()">Clear Auth & Reload</button>
+        </div>
+
+        <div class="section">
+            <h2>Diagnostic Results</h2>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://backend.cabifyit.com/api';
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const logDiv = document.createElement('div');
+            logDiv.className = `log ${type}`;
+            logDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(logDiv);
+            console.log(message);
+        }
+
+        function displayEnvInfo() {
+            const envInfo = document.getElementById('env-info');
+            envInfo.innerHTML = `
+                <pre>Current URL: ${window.location.href}
+Origin: ${window.location.origin}
+User Agent: ${navigator.userAgent}
+Online: ${navigator.onLine ? '✅' : '❌'}
+Cookies Enabled: ${navigator.cookieEnabled ? '✅' : '❌'}
+API Base URL: ${API_BASE}</pre>
+            `;
+        }
+
+        function displayAuthInfo() {
+            const authInfo = document.getElementById('auth-info');
+            const token = localStorage.getItem('admin_token');
+            const hasToken = !!token;
+            
+            authInfo.innerHTML = `
+                <div class="status ${hasToken ? 'success' : 'error'}">
+                    ${hasToken ? '✅ Token Found' : '❌ No Token Found'}
+                </div>
+                ${hasToken ? `<pre>Token Length: ${token.length} characters
+Token Preview: ${token.substring(0, 30)}...</pre>` : '<p>Please log in to get a token.</p>'}
+            `;
+        }
+
+        async function testCORS() {
+            log('Testing CORS configuration...', 'info');
+            
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Access-Control-Request-Method': 'GET',
+                        'Access-Control-Request-Headers': 'authorization,content-type'
+                    }
+                });
+
+                log(`CORS OPTIONS Response: ${response.status}`, 'success');
+                
+                const headers = {
+                    'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
+                    'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
+                    'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
+                };
+
+                log(`CORS Headers: ${JSON.stringify(headers, null, 2)}`, 'info');
+
+                if (!headers['Access-Control-Allow-Origin']) {
+                    log('⚠️ WARNING: No CORS headers found! Backend needs CORS configuration.', 'error');
+                } else {
+                    log('✅ CORS headers present', 'success');
+                }
+            } catch (error) {
+                log(`❌ CORS Test Failed: ${error.message}`, 'error');
+                log('This usually means the backend is not accessible or CORS is blocking the request.', 'error');
+            }
+        }
+
+        async function testAPIEndpoint() {
+            log('Testing API endpoint: /super-admin/company-cards', 'info');
+            
+            const token = localStorage.getItem('admin_token');
+            if (!token) {
+                log('❌ No token found. Please log in first.', 'error');
+                return;
+            }
+
+            // Decrypt token (simple XOR with base64)
+            function decryptToken(encryptedToken) {
+                try {
+                    const ENCRYPTION_KEY = 'taxi-dispatch-admin-key-2024';
+                    const encrypted = atob(encryptedToken);
+                    let decrypted = '';
+                    for (let i = 0; i < encrypted.length; i++) {
+                        const encryptedChar = encrypted.charCodeAt(i);
+                        const keyChar = ENCRYPTION_KEY.charCodeAt(i % ENCRYPTION_KEY.length);
+                        decrypted += String.fromCharCode(encryptedChar ^ keyChar);
+                    }
+                    return decrypted;
+                } catch (error) {
+                    log(`Token decryption failed: ${error.message}`, 'error');
+                    return null;
+                }
+            }
+
+            const decryptedToken = decryptToken(token);
+            if (!decryptedToken) {
+                log('❌ Failed to decrypt token', 'error');
+                return;
+            }
+
+            log('Token decrypted successfully', 'success');
+
+            try {
+                const url = `${API_BASE}/super-admin/company-cards`;
+                log(`Fetching: ${url}`, 'info');
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${decryptedToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                log(`Response Status: ${response.status}`, response.ok ? 'success' : 'error');
+
+                const data = await response.json().catch(() => null);
+                if (data) {
+                    log(`Response Data: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    log('No JSON data in response', 'warning');
+                }
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        log('❌ Authentication failed. Token might be expired or invalid.', 'error');
+                    } else if (response.status === 404) {
+                        log('❌ Endpoint not found. Check API URL.', 'error');
+                    } else {
+                        log(`❌ Request failed with status ${response.status}`, 'error');
+                    }
+                }
+            } catch (error) {
+                log(`❌ API Test Failed: ${error.message}`, 'error');
+                
+                if (error.message.includes('Failed to fetch')) {
+                    log('This is likely a CORS or network connectivity error!', 'error');
+                    log('Possible causes:', 'error');
+                    log('1. Backend CORS not configured for this domain', 'error');
+                    log('2. Backend server is down', 'error');
+                    log('3. Network firewall blocking request', 'error');
+                }
+            }
+        }
+
+        async function runFullDiagnostics() {
+            document.getElementById('results').innerHTML = '';
+            
+            log('🏥 Starting Full Diagnostics...', 'info');
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            
+            displayEnvInfo();
+            displayAuthInfo();
+            
+            await testCORS();
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            
+            await testAPIEndpoint();
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            
+            log('✅ Diagnostics Complete!', 'success');
+            log('Check the results above for any errors.', 'info');
+        }
+
+        function clearAuth() {
+            if (confirm('This will clear all authentication data and reload the page. Continue?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                log('Cleared all storage. Reloading...', 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            displayEnvInfo();
+            displayAuthInfo();
+            log('Debug console ready. Click "Run Full Diagnostics" to start.', 'success');
+        };
+    </script>
+</body>
+</html>
+
