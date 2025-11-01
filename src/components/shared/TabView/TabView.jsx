@@ -12,7 +12,7 @@ const ALIGN_CONFIG = {
   center: "justify-center",
 };
 
-const TabView = ({ align = "center", tabs, ...rest }) => {
+const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const previousTabRef = useRef(0);
 
@@ -43,7 +43,13 @@ const TabView = ({ align = "center", tabs, ...rest }) => {
     <div>
       <div className={classNames("flex gap-5 mb-[52px]", ALIGN_CONFIG[align])}>
         {tabs.map(({ title }, index) => (
-          <Button key={index} onClick={() => handleTabChange(index, title)}>
+          <Button
+            key={index}
+            onClick={() => {
+              onTabChange(index);
+              handleTabChange(index, title);
+            }}
+          >
             <Tag variant={currentTab === index ? "blue" : "gray"} size="lg">
               {title}
             </Tag>

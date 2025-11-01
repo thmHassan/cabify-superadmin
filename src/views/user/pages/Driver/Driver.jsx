@@ -23,7 +23,10 @@ const Driver = () => {
     isOpen: false,
     type: "new",
   });
-  const [allDriversDocuments, setAllDriversDocuments] = useState([]);
+  const [allDriversDocuments, setAllDriversDocuments] = useState({
+    data: [],
+    last_Page: 1,
+  });
   const [_searchQuery, setSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isDriverDocumentsLoading, setIsDriverDocumentsLoading] =
@@ -32,9 +35,6 @@ const Driver = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const totalItems = 25;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);
@@ -54,10 +54,10 @@ const Driver = () => {
   const getDriversDocuments = async () => {
     try {
       setIsDriverDocumentsLoading(true);
-      const result = await apiGetDriversDocuments();
+      const result = await apiGetDriversDocuments({ page: currentPage });
       if (result?.status === 200) {
         console.log(result, "res========");
-        setAllDriversDocuments(result?.data?.list?.data);
+        setAllDriversDocuments(result?.data?.list);
       }
     } catch (errors) {
       console.log(errors, "err---");
@@ -83,7 +83,7 @@ const Driver = () => {
 
   useEffect(() => {
     getDriversDocuments();
-  }, [refreshTrigger]);
+  }, [currentPage, refreshTrigger]);
 
   if (isDriverDocumentsLoading) {
     return (
@@ -124,7 +124,7 @@ const Driver = () => {
         <div>
           <DataDetailsTable
             rowType="driverDocuments"
-            companies={allDriversDocuments}
+            companies={allDriversDocuments.data}
             actionOptions={[
               {
                 label: "Edit",
@@ -150,7 +150,7 @@ const Driver = () => {
         <div className="mt-4 border-t border-[#E9E9E9] pt-4">
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={allDriversDocuments.last_Page}
             itemsPerPage={itemsPerPage}
             onPageChange={handlePageChange}
             onItemsPerPageChange={handleItemsPerPageChange}

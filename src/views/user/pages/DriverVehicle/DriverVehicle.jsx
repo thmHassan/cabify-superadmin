@@ -25,12 +25,13 @@ const DriverVehicle = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [isVehiclesLoading, setIsVehiclesLoading] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const [allVehicleTypes, setAllVehicleTypes] = useState([]);
+  const [allVehicleTypes, setAllVehicleTypes] = useState({
+    data: [],
+    last_page: 1,
+  });
 
   const navigate = useNavigate();
 
-  const totalItems = 25;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
   const handleSearchChange = (value) => {
     setSearchQuery(value);
   };
@@ -48,10 +49,10 @@ const DriverVehicle = () => {
   const getVehicles = async () => {
     try {
       setIsVehiclesLoading(true);
-      const result = await apiGetVehicleTypes();
+      const result = await apiGetVehicleTypes({ page: currentPage });
       if (result?.status === 200) {
         console.log(result, "all-data");
-        setAllVehicleTypes(result?.data?.list?.data);
+        setAllVehicleTypes(result?.data?.list);
       }
     } catch (errors) {
       console.log(errors, "err---");
@@ -73,7 +74,7 @@ const DriverVehicle = () => {
 
   useEffect(() => {
     getVehicles();
-  }, [refreshTrigger]);
+  }, [currentPage, refreshTrigger]);
 
   if (isVehiclesLoading) {
     return (
@@ -111,7 +112,7 @@ const DriverVehicle = () => {
         <div>
           <DataDetailsTable
             rowType="vehicleType"
-            companies={allVehicleTypes}
+            companies={allVehicleTypes.data}
             actionOptions={[
               // {
               //   label: "View",
@@ -140,7 +141,7 @@ const DriverVehicle = () => {
         <div className="mt-4 border-t border-[#E9E9E9] pt-4">
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={allVehicleTypes.last_page}
             itemsPerPage={itemsPerPage}
             onPageChange={handlePageChange}
             onItemsPerPageChange={handleItemsPerPageChange}

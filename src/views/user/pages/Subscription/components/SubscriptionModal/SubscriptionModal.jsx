@@ -5,6 +5,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import Button from "../../../../../../components/ui/Button/Button";
 
+const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
+
 const SubscriptionModal = ({
   submitError,
   setIsOpen,
@@ -28,7 +30,16 @@ const SubscriptionModal = ({
       </div>
       <div>
         <Formik
-          initialValues={initialValues}
+          initialValues={
+            defaultFormValue
+              ? {
+                  plan_name: "Premuim",
+                  billing_cycle: "monthly",
+                  amount: 700,
+                  features: ["API Access", "Real Time Tracking"],
+                }
+              : initialValues
+          }
           // validationSchema={FORGOT_PASSWORD_VALIDATION_SCHEMA}
           onSubmit={onSubmit}
           enableReinitialize={true}

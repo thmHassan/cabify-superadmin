@@ -1,18 +1,12 @@
 import React from "react";
 import DataDetailsRow from "./components/DataDetailsRow";
 
-const DataDetailsTable = ({
-  rowType,
-  companies,
-  itemsPerPage = 6,
-  actionOptions,
-  ...rest
-}) => {
+const DataDetailsTable = ({ rowType, companies, actionOptions, ...rest }) => {
   return (
     <div className="pt-5 overflow-auto">
       <table className="w-full border-collapse table-auto">
         <tbody>
-          {companies?.slice(0, itemsPerPage).map((data, i) => (
+          {companies?.map((data, i) => (
             <DataDetailsRow
               key={i}
               data={data}

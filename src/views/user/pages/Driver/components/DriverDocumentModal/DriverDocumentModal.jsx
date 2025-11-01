@@ -6,6 +6,8 @@ import { Field, Form, Formik } from "formik";
 import FormikCheckbox from "../../../../../../components/ui/FormikCheckbox";
 import Button from "../../../../../../components/ui/Button/Button";
 
+const isDefaultValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
+
 const DriverDocumentModal = ({
   submitError,
   setIsOpen,
@@ -27,7 +29,18 @@ const DriverDocumentModal = ({
       <div className="pt-[35px]">
         <FieldTitle label="Document Name" />
         <Formik
-          initialValues={initialValues}
+          initialValues={
+            isDefaultValue
+              ? {
+                  document_name: "Test",
+                  front_photo: true,
+                  back_photo: false,
+                  profile_photo: true,
+                  has_issue_date: false,
+                  has_expiry_date: true,
+                }
+              : initialValues
+          }
           //   validationSchema={SIGNIN_VALIDATION_SCHEMA}
           //   onSubmit={(values, { setSubmitting }) => {
           //     if (!disableSubmit) {

@@ -49,7 +49,7 @@ const SubAdminManagement = () => {
     isOpen: false,
     type: "new",
   });
-  const [allSubAdmins, setAllSubAdmins] = useState([]);
+  const [allSubAdmins, setAllSubAdmins] = useState({ data: [], last_page: 1 });
   const [isSubAdminsLoading, setIsSubAdminsLoading] = useState([]);
   const [_searchQuery, setSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -59,9 +59,6 @@ const SubAdminManagement = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const totalItems = 25;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);
@@ -81,9 +78,9 @@ const SubAdminManagement = () => {
   const getSubAdmins = async () => {
     try {
       setIsSubAdminsLoading(true);
-      const result = await apiGetSubAdmins();
+      const result = await apiGetSubAdmins({ page: currentPage });
       if (result?.status === 200) {
-        setAllSubAdmins(result?.data?.list?.data);
+        setAllSubAdmins(result?.data?.list);
       }
     } catch (errors) {
       console.log(errors, "err---");
@@ -98,7 +95,7 @@ const SubAdminManagement = () => {
 
   useEffect(() => {
     getSubAdmins();
-  }, [refreshTrigger]);
+  }, [currentPage, refreshTrigger]);
 
   if (isSubAdminsLoading) {
     return (
@@ -145,7 +142,7 @@ const SubAdminManagement = () => {
         <div>
           <DataDetailsTable
             rowType="subAdminManagement"
-            companies={allSubAdmins}
+            companies={allSubAdmins.data}
             onViewClick={(data) => {
               setSelectedViewData(data);
               setIsViewPermissionModal(true);
@@ -179,7 +176,7 @@ const SubAdminManagement = () => {
         <div className="mt-4 border-t border-[#E9E9E9] pt-4">
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={allSubAdmins.last_page}
             itemsPerPage={itemsPerPage}
             onPageChange={handlePageChange}
             onItemsPerPageChange={handleItemsPerPageChange}

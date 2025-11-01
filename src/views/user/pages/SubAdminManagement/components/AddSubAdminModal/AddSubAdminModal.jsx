@@ -7,6 +7,8 @@ import { apiCreateSubAdmin } from "../../../../../../services/SubAdminService";
 import SubAdminModal from "../SubAdminModal";
 import _ from "lodash";
 
+const isDefaultValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
+
 const PERMISSION_CONFIG = [
   { label: "Users", value: "users" },
   { label: "Drivers", value: "drivers" },
@@ -84,13 +86,23 @@ const AddSubAdminModal = ({ setIsDocumentModalOpen, onRefresh }) => {
       onSubmit={onSubmit}
       type="new"
       setIsDocumentModalOpen={setIsDocumentModalOpen}
-      initialValues={{
-        name: "",
-        email: "",
-        password: "",
-        cPassword: "",
-        permissions: PERMISSION_KEYS,
-      }}
+      initialValues={
+        isDefaultValue
+          ? {
+              name: "Jaya",
+              email: "jaya@mailinator.comm",
+              password: "123456",
+              cPassword: "123456",
+              permissions: PERMISSION_KEYS,
+            }
+          : {
+              name: "",
+              email: "",
+              password: "",
+              cPassword: "",
+              permissions: PERMISSION_KEYS,
+            }
+      }
     />
   );
 };

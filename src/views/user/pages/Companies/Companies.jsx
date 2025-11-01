@@ -134,9 +134,9 @@ const Companies = () => {
     try {
       setTableLoading(true);
       const response = await ApiService.getCompanyList({ page, status });
-      const list = response?.data?.list?.data;
+      const list = response?.data?.list;
       console.log(list, "list");
-      const rows = Array.isArray(list) ? list : [];
+      const rows = Array.isArray(list?.data) ? list?.data : [];
 
       console.log(rows, "rows");
 

@@ -19,6 +19,8 @@ import _ from "lodash";
 import { MODAL_CONFIG } from "../../configs/ModalConfigs";
 import { Form, Formik } from "formik";
 
+const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
+
 const AddCompanyModal = ({
   modalType = "company",
   isCompanyModalOpen,
@@ -27,7 +29,6 @@ const AddCompanyModal = ({
   onRefresh,
   initialValue = {},
 }) => {
-  const defaultFormValue = !true;
   const { type } = isCompanyModalOpen;
   const [formData, setFormData] = useState(initialValue);
   const [companyCreated, setCompanyCreated] = useState(false);

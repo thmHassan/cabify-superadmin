@@ -18,6 +18,7 @@ import {
 } from "../../../../services/OnboardingService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import Modal from "../../../../components/shared/Modal";
+import _ from "lodash";
 
 const Onboarding = () => {
   const [isManualRequestModal, setIsManualRequestModal] = useState({
@@ -33,21 +34,26 @@ const Onboarding = () => {
 
   const TABS_CONFIGS = [
     {
-      title: "Pending (03)",
+      title: "Pending (0)",
       component: PendingRequests,
       status: "pending",
+      count: 0,
     },
     {
-      title: "Approved (1)",
+      title: "Approved (0)",
       component: ApprovedRequests,
       status: "approved",
+      count: 0,
     },
     {
-      title: "Rejected (2)",
+      title: "Rejected (0)",
       component: RejectedRequests,
       status: "rejected",
+      count: 0,
     },
   ];
+
+  const [tabConfig, setTabConfig] = useState(TABS_CONFIGS);
 
   const onEdit = async (data) => {
     try {
@@ -120,11 +126,37 @@ const Onboarding = () => {
     try {
       setIsOnboardingLoading(true);
       const result = await apiGetOnboarding({
-        status: TABS_CONFIGS[currentTabIndex].status,
+        status: tabConfig[currentTabIndex].status,
       });
       console.log(result, "result======");
       if (result?.status === 200) {
         setAllOnboardings(result?.data?.list?.data);
+        if (currentTabIndex === 0) {
+          const { pendingCount, rejectedCount, approvedCount } =
+            result?.data || {
+              pendingCount: 0,
+              rejectedCount: 0,
+              approvedCount: 0,
+            };
+          const [pending, approved, rejected] = _.cloneDeep(tabConfig);
+          setTabConfig([
+            {
+              ...pending,
+              title: `${pending.title.split(" ")[0]} (${pendingCount})`,
+              count: pendingCount,
+            },
+            {
+              ...approved,
+              title: `${approved.title.split(" ")[0]} (${approvedCount})`,
+              count: approvedCount,
+            },
+            {
+              ...rejected,
+              title: `${rejected.title.split(" ")[0]} (${rejectedCount})`,
+              count: rejectedCount,
+            },
+          ]);
+        }
       }
     } catch (errors) {
       console.log(errors, "err---");
@@ -142,9 +174,14 @@ const Onboarding = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTabIndex, refreshTrigger]);
 
+  // console.log(currentTabIndex, "currentTabIndex=====");
+
   // console.log(allOnboardings, "allOnboardings====");
 
-  if (isOnboardingLoading || isOnboardingEditLoading) {
+  if (
+    (currentTabIndex === 0 && isOnboardingLoading) ||
+    isOnboardingEditLoading
+  ) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full">
         <AppLogoLoader />
@@ -177,9 +214,10 @@ const Onboarding = () => {
       <div>
         <TabView
           align="left"
-          tabs={TABS_CONFIGS}
+          tabs={tabConfig}
           onTabChange={(index) => setCurrentTabIndex(index)}
           allOnboardings={allOnboardings}
+          isOnboardingLoading={isOnboardingLoading}
           onRefresh={handleRefresh}
           onEdit={onEdit}
         />

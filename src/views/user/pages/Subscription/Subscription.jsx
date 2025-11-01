@@ -99,7 +99,10 @@ const Subscription = () => {
     isSubscriptionCardDetailsLoading,
     setIsSubscriptionCardDetailsLoading,
   ] = useState(false);
-  const [allSubscription, setAllSubscription] = useState([]);
+  const [allSubscription, setAllSubscription] = useState({
+    data: [],
+    last_page: 1,
+  });
   const [selectedId, setSelectedId] = useState(null);
   const [subscriptionCardDetails, setSubscriptionCardDetails] = useState({});
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState({
@@ -109,9 +112,6 @@ const Subscription = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const totalItems = 25;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);
@@ -139,9 +139,9 @@ const Subscription = () => {
   const getSubscriptions = async () => {
     try {
       setIsSubscriptionsLoading(true);
-      const result = await apiGetSubscriptions();
+      const result = await apiGetSubscriptions({ page: currentPage });
       if (result?.status === 200) {
-        setAllSubscription(result?.data?.list?.data);
+        setAllSubscription(result?.data?.list);
       }
     } catch (errors) {
       console.log(errors, "err---");
@@ -171,8 +171,11 @@ const Subscription = () => {
 
   useEffect(() => {
     getSubscriptionCardDetails();
+  }, []);
+
+  useEffect(() => {
     getSubscriptions();
-  }, [refreshTrigger]);
+  }, [refreshTrigger, currentPage]);
 
   if (isSubscriptionsLoading || isSubscriptionCardDetailsLoading) {
     return (
@@ -260,7 +263,7 @@ const Subscription = () => {
               </div>
               <div>
                 <DataDetailsTable
-                  companies={allSubscription}
+                  companies={allSubscription.data}
                   actionOptions={[
                     // {
                     //   label: "View",
@@ -293,7 +296,7 @@ const Subscription = () => {
               <div className="mt-4 border-t border-[#E9E9E9] pt-4">
                 <Pagination
                   currentPage={currentPage}
-                  totalPages={totalPages}
+                  totalPages={allSubscription.last_page}
                   itemsPerPage={itemsPerPage}
                   onPageChange={handlePageChange}
                   onItemsPerPageChange={handleItemsPerPageChange}

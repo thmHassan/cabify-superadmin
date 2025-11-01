@@ -17,62 +17,67 @@ import ServicePerformance from "./components/ServicePerformance";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import { apiGetUsageMonitoringDetails } from "../../../../services/UsageMonitoringService";
 
-const DASHBOARD_CARDS = [
-  {
-    title: "System Uptime",
-    value: "99.9%",
-    change: "+0.1% from last hour",
-    icon: {
-      component: SystemUptimeIcon,
-    },
-    backgroundColor: "#eeedff",
-    color: "#534CB4",
-  },
-  {
-    title: "API Response Time",
-    value: "120ms",
-    change: "-15ms vs last hour",
-    icon: {
-      component: ApiResponseIcon,
-      width: 24,
-      height: 30,
-    },
-    backgroundColor: "#e5f9f0",
-    color: "#3E9972",
-  },
-  {
-    title: "Active Companies",
-    value: "26",
-    change: "+3 vs last hour",
-    icon: {
-      component: CompaniesIcon,
-      width: 28,
-      height: 28,
-      fill: "#C29569",
-    },
-    backgroundColor: "#fdf3e7",
-    color: "#C29569",
-  },
-  {
-    title: "Total API Calls",
-    value: "45.2k",
-    change: "+12% vs Last hour",
-    icon: {
-      width: 24,
-      height: 24,
-      component: APIKeysIcon,
-    },
-    backgroundColor: "#FFEDED",
-    color: "#FF4747",
-  },
-];
-
 const UsageMonitoring = () => {
   const [isUsageMonitoringDetailsLoading, setIsUsageMonitoringDetailsLoading] =
     useState(false);
   const [allUsageMonitoring, setAllUsageMonitoring] = useState({
     company_list: [],
+    data: {
+      activeCompanies: 0,
+      totalAPICalls: 0,
+    },
   });
+
+  const DASHBOARD_CARDS = [
+    {
+      title: "System Uptime",
+      value: "99.9%",
+      change: "+0.1% from last hour",
+      icon: {
+        component: SystemUptimeIcon,
+      },
+      backgroundColor: "#eeedff",
+      color: "#534CB4",
+    },
+    {
+      title: "API Response Time",
+      value: "120ms",
+      change: "-15ms vs last hour",
+      icon: {
+        component: ApiResponseIcon,
+        width: 24,
+        height: 30,
+      },
+      backgroundColor: "#e5f9f0",
+      color: "#3E9972",
+    },
+    {
+      title: "Active Companies",
+      value: allUsageMonitoring.data.activeCompanies,
+      change: "+3 vs last hour",
+      icon: {
+        component: CompaniesIcon,
+        width: 28,
+        height: 28,
+        fill: "#C29569",
+      },
+      backgroundColor: "#fdf3e7",
+      color: "#C29569",
+    },
+    {
+      title: "Total API Calls",
+      value: `${allUsageMonitoring.data.totalAPICalls}k`,
+      change: "+12% vs Last hour",
+      icon: {
+        width: 24,
+        height: 24,
+        component: APIKeysIcon,
+      },
+      backgroundColor: "#FFEDED",
+      color: "#FF4747",
+    },
+  ];
+
   const TABS_CONFIGS = [
     {
       title: "Company Usage",
