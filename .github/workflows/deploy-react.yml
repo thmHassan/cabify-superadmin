@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -28,8 +27,10 @@ jobs:
         run: |
           echo "Current directory:"
           pwd
-          echo "Files in workspace:"
-          ls -R
+          echo "Files in dist folder:"
+          ls -la dist/
+          echo "Checking if debug.html exists:"
+          ls -la dist/debug.html || echo "debug.html not found"
 
       - name: Copy files via SCP
         uses: appleboy/scp-action@v0.1.7
@@ -38,5 +39,22 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: "dist/*"
-          target: "/var/www/html/admin.cabifyit.com/" 
+          source: "dist/"
+          target: "/var/www/html/admin.cabifyit.com/"
+          strip_components: 1
+          rm: true
+
+      - name: Set correct permissions
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/html/admin.cabifyit.com/
+            chmod -R 755 .
+            chown -R www-data:www-data .
+            echo "Deployment completed!"
+            echo "Files in directory:"
+            ls -la
