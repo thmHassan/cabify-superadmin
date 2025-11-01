@@ -5,7 +5,7 @@ const appConfig = {
   authenticatedEntryPath: "/overview",
   unAuthenticatedEntryPath: SELECTION_PATH,
   locale: "en",
-  enableMock: true,
+  enableMock: false,
 };
 
 export default appConfig;
