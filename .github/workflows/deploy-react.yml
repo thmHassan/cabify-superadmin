@@ -24,19 +24,22 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Debug build folder
-        run: |
-          echo "Current directory:"
-          pwd
-          echo "Files in workspace:"
-          ls -R
+      - name: Clear old files on server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: 22
+          script: |
+            rm -rf /var/www/html/admin.cabifyit.com/*
 
-      - name: Copy files via SCP
+      - name: Deploy files via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: 22
-          source: "dist/*"
-          target: "/var/www/html/admin.cabifyit.com/" 
+          source: "build/*"
+          target: "/var/www/html/admin.cabifyit.com/"
