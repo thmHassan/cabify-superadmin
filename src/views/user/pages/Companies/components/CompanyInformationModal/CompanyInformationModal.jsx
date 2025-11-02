@@ -13,8 +13,9 @@ import CompanyOverview from "../CompanyOverview";
 import CompanyPaymentHistory from "../CompanyPaymentHistory";
 import CompanySetting from "../CompanySetting";
 import TabView from "../../../../../../components/shared/TabView/TabView";
+import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 
-const CompanyInformationModal = ({ isOpen, setIsOpen }) => {
+const CompanyInformationModal = ({ isOpen, setIsOpen, companyId, onEdit }) => {
   const TABS_CONFIGS = [
     {
       title: "Overview",
@@ -33,7 +34,10 @@ const CompanyInformationModal = ({ isOpen, setIsOpen }) => {
     <Modal isOpen={isOpen} size="2xl" className="p-10">
       <Button
         className="bg-[#F3F3F3] absolute top-5 right-10 w-[45px] h-[45px] rounded-full flex justify-center items-center"
-        onClick={() => setIsOpen(false)}
+        onClick={() => {
+          unlockBodyScroll();
+          setIsOpen(false);
+        }}
       >
         <CloseIcon width={14} height={14} fill="#3D3D3D" />
       </Button>
@@ -76,6 +80,10 @@ const CompanyInformationModal = ({ isOpen, setIsOpen }) => {
               btnSize="md"
               type="filled"
               className="!px-[25px] !py-[11px]"
+              onClick={() => {
+                onEdit();
+                setIsOpen(false);
+              }}
             >
               <div className="flex gap-[7.5px]">
                 <EditPaperPencilIcon />
@@ -85,7 +93,12 @@ const CompanyInformationModal = ({ isOpen, setIsOpen }) => {
           </div>
         </div>
         <div>
-          <TabView align="left" tabs={TABS_CONFIGS} setIsOpen={setIsOpen} />
+          <TabView
+            align="left"
+            tabs={TABS_CONFIGS}
+            setIsOpen={setIsOpen}
+            companyId={companyId}
+          />
         </div>
       </div>
     </Modal>

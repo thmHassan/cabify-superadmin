@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CardContainer from "../../../../../../components/shared/CardContainer";
-import DataDetailsTable from "../../../../../../components/shared/DataDetailsTable/DataDetailsTable";
+import DataDetailsTable from "../../../../../../components/shared/DataDetailsTable";
 import {
   PAGE_SIZE_OPTIONS,
   PLAN_OPTIONS,
@@ -79,7 +79,7 @@ const usageMonitoringData = [
   },
 ];
 
-const CompanyUsage = () => {
+const CompanyUsage = ({ data }) => {
   const [_searchQuery, setSearchQuery] = useState("");
   const [_selectedStatus, setSelectedStatus] = useState(STATUS_OPTIONS[0]);
   const [_selectedPlan, setSelectedPlan] = useState(PLAN_OPTIONS[0]);
@@ -132,11 +132,7 @@ const CompanyUsage = () => {
           />
         </div>
       </div>
-      <DataDetailsTable
-        rowType="usageMonitoring"
-        companies={usageMonitoringData}
-        onActionClick={() => console.log("object")}
-      />
+      <DataDetailsTable rowType="usageMonitoring" companies={data} />
       <div className="mt-4 border-t border-[#E9E9E9] pt-4">
         <Pagination
           currentPage={currentPage}

@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import useAuth from "../../../utils/hooks/useAuth";
 import SettingIcon from "../../svg/SettingIcon";
 import NotificationIcon from "../../svg/NotificationIcon";
@@ -11,20 +12,31 @@ import UserDropdown from "../../shared/UserDropdown";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ACCOUNT_PATH } from "../../../constants/routes.path.constant/user.route.path.constant";
+import AppLogoLoader from "../../shared/AppLogoLoader";
 
 const UserPageContainer = ({ children }) => {
-  // const [activeId, setActiveId] = useState(null);
-
-  // const handleToggle = (id) => {
-  //   setActiveId((prev) => (prev === id ? null : id));
-  // };
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const { signOut } = useAuth();
-  const { role } = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector((state) => state.auth.user);
+  console.log(user, "user======");
   const navigate = useNavigate();
 
+  // Fallback to admin role if superadmin role is not found in NAV_ELEMENTS
+  const userRole = user.role || "admin";
+  const navElements = NAV_ELEMENTS[userRole] || NAV_ELEMENTS["admin"];
+
   const handleProfile = () => navigate(ACCOUNT_PATH);
-  const handleLogout = () => signOut();
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <div className="flex">
@@ -33,7 +45,7 @@ const UserPageContainer = ({ children }) => {
           <AppLogoIcon />
         </div>
         <div className="flex flex-col gap-[30px]">
-          {NAV_ELEMENTS[role].map(({ title, routes }, index) => (
+          {navElements.map(({ title, routes }, index) => (
             <div key={index}>
               <div className="text-[#7A7A7A] px-8 text-sm leading-[19px] font-semibold mb-[18px]">
                 {title}
@@ -66,9 +78,12 @@ const UserPageContainer = ({ children }) => {
                   route: ACCOUNT_PATH,
                 },
                 {
-                  label: "Logout",
-                  icon: FaSignOutAlt,
+                  label: isLoggingOut ? "Logging out..." : "Logout",
+                  icon: isLoggingOut
+                    ? () => <AppLogoLoader size={50} />
+                    : FaSignOutAlt,
                   onClick: handleLogout,
+                  disabled: isLoggingOut,
                 },
               ]}
             >
@@ -80,8 +95,8 @@ const UserPageContainer = ({ children }) => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="font-semibold text-[18px] leading-[25px] min-w-[119px]">
-                  <span>Username...</span>
+                <div className="font-semibold w-[calc(100%-56px)] text-[18px] leading-[25px] min-w-[119px] truncate capitalize">
+                  <span>{user.name}</span>
                 </div>
               </div>
             </UserDropdown>

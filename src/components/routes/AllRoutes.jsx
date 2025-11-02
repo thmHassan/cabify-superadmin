@@ -14,6 +14,15 @@ const { authenticatedEntryPath } = appConfig;
 
 const AllRoutes = () => {
   const { role } = useAppSelector((state) => state.auth.user);
+
+  // Fallback to superadmin role if no role is set (for encrypted token users)
+  const userRole = role || "superadmin";
+
+
+
+  // Get routes for the current user role
+  const currentRoutes = protectedRoutes[userRole] || [];
+
   return (
     <Routes>
       <Route path="/" element={<ProtectedRoute />}>
@@ -21,7 +30,7 @@ const AllRoutes = () => {
           path="/"
           element={<Navigate replace to={authenticatedEntryPath} />}
         />
-        {protectedRoutes[role]?.map((route, index) => (
+        {currentRoutes.map((route, index) => (
           <Route
             key={route.key + index}
             path={route.path}
@@ -36,6 +45,18 @@ const AllRoutes = () => {
             }
           />
         ))}
+        {/* Fallback route for when routes are not loaded yet */}
+        <Route
+          path="*"
+          element={
+            <div style={{ padding: "20px", textAlign: "center" }}>
+              <p>Loading routes...</p>
+              <p>User Role: {userRole}</p>
+              <p>Available routes: {currentRoutes.length}</p>
+              <p>Route paths: {currentRoutes.map((r) => r.path).join(", ")}</p>
+            </div>
+          }
+        />
       </Route>
       <Route path="/" element={<PublicRoute />}>
         {publicRoutes.map((route) => (

@@ -55,6 +55,16 @@ const userRoute = [
     ),
     authority: [],
   },
+  {
+    key: KEY.DRIVER_VEHICLE_EDIT_KEY,
+    path: PATH.DRIVER_VEHICLE_EDIT_PATH,
+    component: lazy(() =>
+      import(
+        "../../../views/user/pages/DriverVehicle/components/EditDriverVehicle"
+      )
+    ),
+    authority: [],
+  },
   // {
   //   key: KEY.TARRIF_KEY,
   //   path: PATH.TARRIF_PATH,
@@ -121,6 +131,26 @@ const userRoute = [
     key: KEY.SYSTEM_SETTINGS_KEY,
     path: PATH.SYSTEM_SETTINGS_PATH,
     component: lazy(() => import("../../../views/user/pages/SystemSettings")),
+    authority: [],
+  },
+  {
+    key: KEY.SUB_ADMIN_MANAGEMENT_KEY,
+    path: PATH.SUB_ADMIN_MANAGEMENT_PATH,
+    component: lazy(() =>
+      import("../../../views/user/pages/SubAdminManagement")
+    ),
+    authority: [],
+  },
+  {
+    key: KEY.SUBSCRIPTION_SUCCESS_KEY,
+    path: PATH.SUBSCRIPTION_SUCCESS_PATH,
+    component: lazy(() => import("../../../views/auth/pages/SubscriptionSuccess/SubscriptionSuccess")),
+    authority: [],
+  },
+  {
+    key: KEY.PAYMENT_FAILED_KEY,
+    path: PATH.PAYMENT_FAILED_PATH,
+    component: lazy(() => import("../../../views/auth/pages/PaymentFailed/PaymentFailed")),
     authority: [],
   },
 ];

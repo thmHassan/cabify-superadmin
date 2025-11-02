@@ -2,7 +2,7 @@ export const signInUserData = [
   {
     id: "21",
     avatar: "/img/avatars/thumb-1.jpg",
-    userName: "Carolyn Perkins",
+    name: "Carolyn Perkins",
     email: "carolyn.p@elstar.com",
     role: "admin",
     password: "Text@123",
@@ -11,7 +11,7 @@ export const signInUserData = [
   {
     id: "22",
     avatar: "/img/avatars/thumb-1.jpg",
-    userName: "Carolyn Perkins",
+    name: "Carolyn Perkins",
     email: "carolyn.p@elstar.com",
     role: "client",
     password: "Text@123",
@@ -20,7 +20,7 @@ export const signInUserData = [
   {
     id: "23",
     avatar: "/img/avatars/thumb-1.jpg",
-    userName: "Carolyn Perkins",
+    name: "Carolyn Perkins",
     email: "carolyn.p@elstar.com",
     role: "dispatcher",
     password: "Text@123",

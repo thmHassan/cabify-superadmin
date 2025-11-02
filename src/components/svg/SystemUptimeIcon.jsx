@@ -1,6 +1,6 @@
 import React from "react";
 
-const SystemUptime = () => {
+const SystemUptimeIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -21,4 +21,4 @@ const SystemUptime = () => {
   );
 };
 
-export default SystemUptime;
+export default SystemUptimeIcon;

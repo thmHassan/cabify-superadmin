@@ -3,9 +3,9 @@ import { SLICE_BASE_NAME } from "./constants";
 
 const initialState = {
   avatar: "",
-  userName: "",
+  name: "",
   email: "",
-  role: "client",
+  role: "superadmin", // Default to superadmin for encrypted token users
 };
 
 const userSlice = createSlice({
@@ -15,7 +15,7 @@ const userSlice = createSlice({
     setUser(state, action) {
       state.avatar = action.payload?.avatar;
       state.email = action.payload?.email;
-      state.userName = action.payload?.userName;
+      state.name = action.payload?.name;
       state.role = action.payload?.role;
     },
   },

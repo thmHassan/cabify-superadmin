@@ -1,8 +1,9 @@
 import React from "react";
 import GraphIcon from "../../svg/GraphIcon";
 import ChildText from "../../ui/ChildText.jsx/ChildText";
+import classNames from "classnames";
 
-const SnapshotCard = ({ data }) => {
+const SnapshotCard = ({ data, isChange = true }) => {
   const {
     title,
     value,
@@ -29,17 +30,23 @@ const SnapshotCard = ({ data }) => {
         </div>
       </div>
       <div className="w-[calc(100%-78px)]">
-        <div className="flex flex-col gap-[5px] mb-5">
+        <div
+          className={classNames("flex flex-col gap-[5px] mb-5 h-[60px]", {
+            "justify-center": !isChange,
+          })}
+        >
           <h5 className="text-[#252525] text-xl leading-[27px] font-semibold">
             {title}
           </h5>
-          <div
-            className="flex gap-2.5 text-base leading-[22px] font-semibold items-center"
-            style={{ color }}
-          >
-            <GraphIcon fill={color} />
-            <ChildText size="md" text={change} style={{ color }} />
-          </div>
+          {isChange && (
+            <div
+              className="flex gap-2.5 text-base leading-[22px] font-semibold items-center"
+              style={{ color }}
+            >
+              <GraphIcon fill={color} />
+              <ChildText size="md" text={change} style={{ color }} />
+            </div>
+          )}
         </div>
         <div className="font-semibold text-[50px] leading-[68px] text-[#252525]">
           <span>{value}</span>

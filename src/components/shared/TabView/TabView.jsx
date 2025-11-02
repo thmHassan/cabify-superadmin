@@ -12,16 +12,29 @@ const ALIGN_CONFIG = {
   center: "justify-center",
 };
 
-const TabView = ({ align = "center", tabs, ...rest }) => {
+const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const previousTabRef = useRef(0);
 
-  const { component: CurrentTab } = tabs[currentTab];
+  const { component: CurrentTab, ...restProps } = tabs[currentTab];
 
   const handleTabChange = (index, title) => {
     previousTabRef.current = currentTab;
     setTabViewScreen({ tabViewScreen: title || "" });
     setCurrentTab(index);
+  };
+
+  const goToNextTab = () => {
+    console.log("object");
+    if (currentTab < tabs.length - 1) {
+      handleTabChange(currentTab + 1, tabs[currentTab + 1]?.title);
+    }
+  };
+
+  const goToPrevTab = () => {
+    if (currentTab > 0) {
+      handleTabChange(currentTab - 1, tabs[currentTab - 1]?.title);
+    }
   };
 
   const direction = currentTab > previousTabRef.current ? 1 : -1;
@@ -30,13 +43,20 @@ const TabView = ({ align = "center", tabs, ...rest }) => {
     <div>
       <div className={classNames("flex gap-5 mb-[52px]", ALIGN_CONFIG[align])}>
         {tabs.map(({ title }, index) => (
-          <Button key={index} onClick={() => handleTabChange(index, title)}>
+          <Button
+            key={index}
+            onClick={() => {
+              onTabChange(index);
+              handleTabChange(index, title);
+            }}
+          >
             <Tag variant={currentTab === index ? "blue" : "gray"} size="lg">
               {title}
             </Tag>
           </Button>
         ))}
       </div>
+
       <div className="w-full overflow-hidden">
         <AnimatePresence mode="wait">
           <Base
@@ -46,7 +66,14 @@ const TabView = ({ align = "center", tabs, ...rest }) => {
             exit={{ opacity: 0, x: -50 * direction }}
             transition={{ duration: 0.3 }}
           >
-            <CurrentTab {...rest} />
+            {/* 👇 Pass navigation helpers */}
+            <CurrentTab
+              {...rest}
+              {...restProps}
+              goToNextTab={goToNextTab}
+              goToPrevTab={goToPrevTab}
+              currentTab={currentTab}
+            />
           </Base>
         </AnimatePresence>
       </div>

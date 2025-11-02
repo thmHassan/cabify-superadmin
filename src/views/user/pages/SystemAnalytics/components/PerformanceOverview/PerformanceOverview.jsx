@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CardContainer from "../../../../../../components/shared/CardContainer";
-import DataDetailsTable from "../../../../../../components/shared/DataDetailsTable/DataDetailsTable";
+import DataDetailsTable from "../../../../../../components/shared/DataDetailsTable";
 import SearchBar from "../../../../../../components/shared/SearchBar";
 import {
   PAGE_SIZE_OPTIONS,

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ThreeDots = () => {
+const ThreeDotsIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,4 +20,4 @@ const ThreeDots = () => {
   );
 };
 
-export default ThreeDots;
+export default ThreeDotsIcon;

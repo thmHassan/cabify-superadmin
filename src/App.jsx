@@ -1,13 +1,14 @@
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import store, { persistor } from "./store";
+import { Suspense } from "react";
+import store from "./store";
 import { BrowserRouter } from "react-router-dom";
 import appConfig from "./components/configs/app.config";
 import mockServer from "./mock";
 import AllRoutes from "./components/routes/AllRoutes";
 import ScrollToTop from "./components/shared/ScrollToTop";
+import Loading from "./components/shared/Loading/Loading";
 
-const environment = import.meta.env.VITE_NODE_ENV;
+const environment = "development";
 
 if (appConfig.enableMock) {
   mockServer({ environment });
@@ -16,13 +17,13 @@ if (appConfig.enableMock) {
 function App() {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter>
-          <ScrollToTop>
+      <BrowserRouter>
+        <ScrollToTop>
+          <Suspense fallback={<Loading />}>
             <AllRoutes />
-          </ScrollToTop>
-        </BrowserRouter>
-      </PersistGate>
+          </Suspense>
+        </ScrollToTop>
+      </BrowserRouter>
     </Provider>
   );
 }

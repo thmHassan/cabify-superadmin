@@ -1,62 +1,94 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ChildText from "../../../../../../components/ui/ChildText.jsx/ChildText";
-import PageSubTitle from "../../../../../../components/ui/PageSubTitle";
 import Tag from "../../../../../../components/ui/Tag";
+import PaymentTable from "../../../../../../components/shared/PaymentTable";
+import ApiService from "../../../../../../services/ApiService";
+import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
 
-const CompanyPaymentHistory = () => {
-  return (
-    <div className="border-[0.5px] border-[#00000050] rounded-[10px] overflow-hidden">
-      <table className="w-full">
-        <thead>
-          <tr>
-            <th className="text-left bg-[#F5F7F9] pt-5 pb-[15px] px-[30px]">
-              <PageSubTitle title="Date" className="!text-[#00000080]" />
-            </th>
-            <th className="text-left bg-[#F5F7F9] pt-5 pb-[15px] px-[30px]">
-              <PageSubTitle title="Amount" className="!text-[#00000080]" />
-            </th>
-            <th className="text-left bg-[#F5F7F9] pt-5 pb-[15px] px-[30px]">
-              <PageSubTitle title="Status" className="!text-[#00000080]" />
-            </th>
-            <th className="text-left bg-[#F5F7F9] pt-5 pb-[15px] px-[30px]">
-              <PageSubTitle title="Method" className="!text-[#00000080]" />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from({ length: 10 }, (_, i) => (
-            <tr
-              key={i}
-              className="border-b-[0.5px] border-[#00000050] last:border-0"
-            >
-              <td className="px-[30px] pt-[26px] pb-6">
-                <ChildText
-                  size="md"
-                  text="2024-12-01"
-                  className="!text-[#444444]"
-                />
-              </td>
-              <td className="px-[30px] pt-[26px] pb-6">
-                <ChildText size="md" text="$199" className="!text-[#444444]" />
-              </td>
-              <td className="px-[30px] pt-[26px] pb-6 flex">
-                <Tag variant="green" className="!pt-1 !pb-[3px]">
-                  <ChildText text="Paid" className="!text-[#ffffff]" />
-                </Tag>
-              </td>
-              <td className="px-[30px] pt-[26px] pb-6">
-                <ChildText
-                  size="md"
-                  text="online"
-                  className="!text-[#444444]"
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+const PAYMENT_STATUS = {
+  paid: "green",
+  failed: "red",
+  pending: "yellow",
+  processing: "lightPurple",
+};
+
+const CompanyPaymentHistory = ({ companyId }) => {
+  const [companyDetails, setCompanyDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchCompanyDetails = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await ApiService.getCompanyDetails(companyId);
+      setCompanyDetails(response?.data || null);
+    } catch (err) {
+      setError(err.message || "Failed to fetch company details");
+      console.error("Error fetching company details:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (companyId) {
+      fetchCompanyDetails();
+    }
+  }, [companyId]);
+
+  if (loading) {
+    return <AppLogoLoader />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500">Error: {error}</p>
+        <button
+          onClick={fetchCompanyDetails}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!companyDetails) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">No payment history found</p>
+      </div>
+    );
+  }
+  const columns = [
+    { header: "Date", accessor: "date" },
+    { header: "Amount", accessor: "amount" },
+    {
+      header: "Status",
+      accessor: "status",
+      render: (value) => (
+        <div className="flex">
+          <Tag variant={PAYMENT_STATUS[value]} className="!pt-1 !pb-[3px]">
+            <ChildText text={value} className="!text-[#ffffff]" />
+          </Tag>
+        </div>
+      ),
+    },
+    { header: "Method", accessor: "method" },
+  ];
+
+  const paymentHistory = companyDetails?.data?.payment_history || [];
+
+  const data = paymentHistory.map((payment) => ({
+    date: payment.date || "N/A",
+    amount: payment.amount || "N/A",
+    status: payment.status || "Unknown",
+    method: payment.method || "N/A",
+  }));
+
+  return <PaymentTable columns={columns} data={data} />;
 };
 
 export default CompanyPaymentHistory;

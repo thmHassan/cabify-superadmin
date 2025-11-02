@@ -4,7 +4,7 @@ import * as PATH from "../../../constants/routes.path.constant/auth.route.path.c
 
 const authRoute = [
   {
-    key: KEY.SELECTION_KEY,
+    key: KEY.USER_SELECTION_KEY,
     path: PATH.SELECTION_PATH,
     component: lazy(() => import("../../templates/UserSelection")),
     authority: [],
@@ -12,16 +12,17 @@ const authRoute = [
   {
     key: KEY.CLIENT_SIGN_IN_KEY,
     path: PATH.CLIENT_SIGN_IN_PATH,
-    component: lazy(() =>
-      import("../../../views/auth/pages/SignIn/components/ClientSignIn")
+    component: lazy(
+      () => import("../../../views/auth/pages/SignIn/components/ClientSignIn")
     ),
     authority: [],
   },
   {
     key: KEY.DISPATCHER_SIGN_IN_KEY,
     path: PATH.DISPATCHER_SIGN_IN_PATH,
-    component: lazy(() =>
-      import("../../../views/auth/pages/SignIn/components/DispatcherSignIn")
+    component: lazy(
+      () =>
+        import("../../../views/auth/pages/SignIn/components/DispatcherSignIn")
     ),
     authority: [],
   },

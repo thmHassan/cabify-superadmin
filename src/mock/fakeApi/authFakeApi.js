@@ -7,9 +7,9 @@ export default function authFakeApi(server, apiPrefix) {
     });
 
     if (user) {
-      const { avatar, userName, email, role } = user;
+      const { avatar, name, email, role } = user;
       return {
-        user: { avatar, userName, email, role },
+        user: { avatar, name, email, role },
         token: "wVYrxaeNa9OxdnULvde1Au5m5w63",
       };
     }

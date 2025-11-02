@@ -1,16 +1,16 @@
 import React from "react";
 
-const SelectionDownArrow = () => {
+const DownArrowIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="11"
-      viewBox="0 0 20 11"
+      width="18"
+      height="10"
+      viewBox="0 0 18 10"
       fill="none"
     >
       <path
-        d="M1 1L10 10L19 1"
+        d="M1 1L9 9L17 1"
         stroke="#333333"
         strokeWidth="2"
         strokeLinecap="round"
@@ -20,4 +20,4 @@ const SelectionDownArrow = () => {
   );
 };
 
-export default SelectionDownArrow;
+export default DownArrowIcon;

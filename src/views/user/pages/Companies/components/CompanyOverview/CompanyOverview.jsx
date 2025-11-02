@@ -1,30 +1,115 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageSubTitle from "../../../../../../components/ui/PageSubTitle";
 import CardContainer from "../../../../../../components/shared/CardContainer";
 import ChildText from "../../../../../../components/ui/ChildText.jsx/ChildText";
 import ActiveDoneIcon from "../../../../../../components/svg/ActiveDoneIcon";
 import Tag from "../../../../../../components/ui/Tag";
-import InfoTableCard from "../../../../../../components/shared/InfoTableCard/InfoTableCard";
+import InfoTableCard from "../../../../../../components/shared/InfoTableCard";
+import ApiService from "../../../../../../services/ApiService";
+import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
 
-const CompanyOverview = () => {
+const CompanyOverview = ({ companyId = "test2" }) => {
+  const [companyDetails, setCompanyDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchCompanyDetails = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await ApiService.getCompanyDetails(companyId);
+      setCompanyDetails(response?.data || null);
+    } catch (err) {
+      setError(err.message || "Failed to fetch company details");
+      console.error("Error fetching company details:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (companyId) {
+      fetchCompanyDetails();
+    }
+  }, [companyId]);
+
+  if (loading) {
+    return <AppLogoLoader />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-500">Error: {error}</p>
+        <button
+          onClick={fetchCompanyDetails}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!companyDetails) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">No company details found</p>
+      </div>
+    );
+  }
+  // Helper function to get status color
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "active":
+      case "paid":
+        return "#10B981";
+      case "inactive":
+      case "failed":
+        return "#EF4444";
+      case "pending":
+      case "processing":
+        return "#F59E0B";
+      default:
+        return "#6B7280";
+    }
+  };
+  console.log(companyDetails, "companyDetails");
   return (
     <div>
       <div className="flex gap-2.5 mb-5">
         <div className="w-[calc((100%-20px)/3)]">
           <InfoTableCard
             title="Map API Usage"
-            serviceName="Google Maps"
+            serviceName={companyDetails?.data?.map_api?.map_api_name || "N/A"}
             status={{
-              text: "Active",
-              color: "#10B981",
+              text: companyDetails?.data?.map_api?.map_api_status || "Unknown",
+              color: getStatusColor(
+                companyDetails?.data?.map_api?.map_api_status
+              ),
               icon: (
-                <ActiveDoneIcon width={12.19} height={12.19} fill="#10B981" />
+                <ActiveDoneIcon
+                  width={12.19}
+                  height={12.19}
+                  fill={getStatusColor(
+                    companyDetails?.data?.map_api?.map_api_status
+                  )}
+                />
               ),
             }}
             details={[
-              { label: "Monthly Requests:", value: "850K" },
-              { label: "Monthly Cost:", value: "$420" },
-              { label: "Last Used:", value: "2024-12-10 14:30" },
+              {
+                label: "Monthly Requests:",
+                value: companyDetails?.data?.map_api?.monthly_request || "N/A",
+              },
+              {
+                label: "Monthly Cost:",
+                value: companyDetails?.data?.map_api?.monthly_cost || "N/A",
+              },
+              {
+                label: "Last Used:",
+                value: companyDetails?.data?.map_api?.last_used || "N/A",
+              },
             ]}
             features={[
               "Real-time Traffic",
@@ -37,18 +122,36 @@ const CompanyOverview = () => {
         <div className="w-[calc((100%-20px)/3)]">
           <InfoTableCard
             title="Call API Usage"
-            serviceName="Twilio"
+            serviceName={companyDetails?.data?.call_api?.call_api_name || "N/A"}
             status={{
-              text: "Active",
-              color: "#10B981",
+              text:
+                companyDetails?.data?.call_api?.call_api_status || "Unknown",
+              color: getStatusColor(
+                companyDetails?.data?.call_api?.call_api_status
+              ),
               icon: (
-                <ActiveDoneIcon width={12.19} height={12.19} fill="#10B981" />
+                <ActiveDoneIcon
+                  width={12.19}
+                  height={12.19}
+                  fill={getStatusColor(
+                    companyDetails?.data?.call_api?.call_api_status
+                  )}
+                />
               ),
             }}
             details={[
-              { label: "Monthly Minutes:", value: "1,250" },
-              { label: "Monthly Cost:", value: "$125" },
-              { label: "Last Call:", value: "2024-12-10 15:45" },
+              {
+                label: "Monthly Minutes:",
+                value: companyDetails?.data?.call_api?.monthly_minutes || "N/A",
+              },
+              {
+                label: "Monthly Cost:",
+                value: companyDetails?.data?.call_api?.monthly_cost || "N/A",
+              },
+              {
+                label: "Last Used:",
+                value: companyDetails?.data?.call_api?.last_used || "N/A",
+              },
             ]}
             features={["Call Recording", "Call Forwarding", "Voicemail", "SMS"]}
           />
@@ -56,18 +159,40 @@ const CompanyOverview = () => {
         <div className="w-[calc((100%-20px)/3)]">
           <InfoTableCard
             title="Payment Information"
-            serviceName="Online"
+            serviceName={
+              companyDetails?.data?.payment_info?.payment_mode || "N/A"
+            }
             status={{
-              text: "PAID",
-              color: "#10B981",
+              text:
+                companyDetails?.data?.payment_info?.payment_status || "Unknown",
+              color: getStatusColor(
+                companyDetails?.data?.payment_info?.payment_status
+              ),
               icon: (
-                <ActiveDoneIcon width={12.19} height={12.19} fill="#10B981" />
+                <ActiveDoneIcon
+                  width={12.19}
+                  height={12.19}
+                  fill={getStatusColor(
+                    companyDetails?.data?.payment_info?.payment_status
+                  )}
+                />
               ),
             }}
             details={[
-              { label: "Last Payment:", value: "2024-12-01" },
-              { label: "Next Payment:", value: "2025-01-01" },
-              { label: "Amount:", value: "$199" },
+              {
+                label: "Last Payment:",
+                value:
+                  companyDetails?.data?.payment_info?.last_payment || "N/A",
+              },
+              {
+                label: "Next Payment:",
+                value:
+                  companyDetails?.data?.payment_info?.next_payment || "N/A",
+              },
+              {
+                label: "Amount:",
+                value: companyDetails?.data?.payment_info?.amount || "N/A",
+              },
             ]}
           />
         </div>
@@ -124,17 +249,30 @@ const CompanyOverview = () => {
                 <td className="px-[30px] py-5">
                   <ChildText
                     size="md"
-                    text="1247"
+                    text={
+                      companyDetails?.data?.usage_statistic?.total_booking ||
+                      "N/A"
+                    }
                     className="!text-[#3D3D3D]"
                   />
                 </td>
                 <td className="px-[30px] py-5">
-                  <ChildText size="md" text="42" className="!text-[#3D3D3D]" />
+                  <ChildText
+                    size="md"
+                    text={
+                      companyDetails?.data?.usage_statistic?.active_drivers ||
+                      "N/A"
+                    }
+                    className="!text-[#3D3D3D]"
+                  />
                 </td>
                 <td className="px-[30px] py-5">
                   <ChildText
                     size="md"
-                    text="4.8/5"
+                    text={
+                      companyDetails?.data?.usage_statistic?.last_payment ||
+                      "N/A"
+                    }
                     className="!text-[#3D3D3D]"
                   />
                 </td>

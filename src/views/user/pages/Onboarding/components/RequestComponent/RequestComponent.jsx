@@ -4,7 +4,9 @@ import CardSubtitle from "../../../../../../components/ui/CardSubtitle";
 import PageSubTitle from "../../../../../../components/ui/PageSubTitle";
 import Tag from "../../../../../../components/ui/Tag";
 import WebsiteIcon from "../../../../../../components/svg/WebsiteIcon";
-import InfoTableCard from "../../../../../../components/shared/InfoTableCard/InfoTableCard";
+import InfoTableCard from "../../../../../../components/shared/InfoTableCard";
+import moment from "moment/moment";
+import StatusActionTab from "./StatusActionTab";
 import Button from "../../../../../../components/ui/Button/Button";
 
 const TYPE_CONFIG = {
@@ -13,20 +15,31 @@ const TYPE_CONFIG = {
   rejected: "red",
 };
 
-const RequestComponent = ({ type = "pending" }) => {
+const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
+  console.log(data, "data====");
   return (
     <CardContainer className="p-[30px]">
       <div className="flex justify-between">
         <div>
-          <CardSubtitle subtitle="Swift Taxi Services" type={2} />
+          <Button onClick={() => onEdit(data)}>
+            <CardSubtitle
+              subtitle={data?.company_name}
+              type={2}
+              className="capitalize"
+            />
+          </Button>
           <div className="flex gap-[15px] mt-2.5 mb-[22px]">
             <div className="flex flex-col gap-[15px] pr-[32px]">
-              <PageSubTitle title="Ahmed Hassan" />
-              <PageSubTitle title="ahmed@swifttaxi.ae" />
+              <PageSubTitle title={data?.company_admin_name}></PageSubTitle>
+              <PageSubTitle title={data?.email} />
             </div>
             <div className="flex flex-col gap-[15px]">
-              <PageSubTitle title="+971-50-123-4567" />
-              <PageSubTitle title="Submitted: 2025-01-29" />
+              <PageSubTitle title={data?.contact_person} />
+              <PageSubTitle
+                title={`Submitted: ${moment(data?.created_at).format(
+                  "YYYY-MM-DD"
+                )}`}
+              />
             </div>
           </div>
         </div>
@@ -99,22 +112,7 @@ const RequestComponent = ({ type = "pending" }) => {
         </div>
       </div>
       {type === "pending" && (
-        <div className="flex gap-[15px] justify-end">
-          <Button
-            btnSize="md"
-            type="filledRed"
-            className="!px-[30px] !py-[13px] !leading-6"
-          >
-            <span>Reject</span>
-          </Button>
-          <Button
-            btnSize="md"
-            type="filledGreen"
-            className="!px-[30px] !py-[13px] !leading-6"
-          >
-            <span>Accept</span>
-          </Button>
-        </div>
+        <StatusActionTab id={data?.id} onRefresh={onRefresh} />
       )}
     </CardContainer>
   );
