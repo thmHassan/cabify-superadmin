@@ -22,7 +22,7 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import { GeoJSON } from "react-leaflet";
 import ApiService from "../../../../services/ApiService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
-import { ZONES_LOCATION_VALIDATION_SCHEMA } from "../../validators/pages/zonesLocation.VALIDATION.JS";
+import { ZONES_LOCATION_VALIDATION_SCHEMA } from "../../validators/pages/zonesLocation.validation.js";
 
 const ZonesLocation = () => {
   const [isOpenLocationModal, setIsOpenLocationModal] = useState(false);
