@@ -14,7 +14,7 @@ const SnapshotCard = ({ data, isChange = true }) => {
   } = data;
   return (
     <div
-      className="w-[calc(100%-(20px*3)/4)] h-[200px] rounded-[15px] p-[15px] flex gap-[18px]"
+      className="w-full h-[200px] rounded-[15px] p-[15px] flex gap-[18px]"
       style={{
         background: backgroundColor,
       }}

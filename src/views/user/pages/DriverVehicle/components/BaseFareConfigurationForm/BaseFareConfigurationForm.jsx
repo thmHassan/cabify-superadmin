@@ -48,7 +48,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 />
               </div>
               <ErrorMessage
-                name="email"
+                name="base_fare_less_than_x_miles"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
@@ -69,7 +69,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 />
               </div>
               <ErrorMessage
-                name="email"
+                name="base_fare_less_than_x_price"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
@@ -82,24 +82,33 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 Base Fare From (x) Miles to (x) Miles*
               </label>
               <div className="h-16 flex gap-5">
-                <Field
-                  type="text"
-                  name="base_fare_from_x_miles"
-                  className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                  placeholder="$0"
-                />
-                <Field
-                  type="text"
-                  name="base_fare_to_x_miles"
-                  className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                  placeholder="$0"
-                />
+                <div className="w-[calc((100%-20px)/2)]">
+                  <Field
+                    type="text"
+                    name="base_fare_from_x_miles"
+                    className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                    placeholder="$0"
+                  />
+                  <ErrorMessage
+                    name="base_fare_from_x_miles"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+                <div className="w-[calc((100%-20px)/2)]">
+                  <Field
+                    type="text"
+                    name="base_fare_to_x_miles"
+                    className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                    placeholder="$0"
+                  />
+                  <ErrorMessage
+                    name="base_fare_to_x_miles"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
               </div>
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="text-red-500 text-sm mt-1"
-              />
             </div>
             <div className="w-[calc((100%-20px)/2)]">
               <label
@@ -117,7 +126,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 />
               </div>
               <ErrorMessage
-                name="email"
+                name="base_fare_from_to_price"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
@@ -138,7 +147,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 />
               </div>
               <ErrorMessage
-                name="email"
+                name="base_fare_greater_than_x_miles"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
@@ -159,7 +168,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 />
               </div>
               <ErrorMessage
-                name="email"
+                name="base_fare_greater_than_x_price"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />

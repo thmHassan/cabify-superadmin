@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import WalletIcon from "../../../../components/svg/WalletIcon";
 import WatchIcon from "../../../../components/svg/WatchIcon";
-import WarningIcon from "../../../../components/svg/WarningIcon";
 import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
 import PlusIcon from "../../../../components/svg/PlusIcon";
@@ -28,6 +27,7 @@ import {
 } from "../../../../services/SubscriptionService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import EditSubscriptionModal from "./components/EditSubscriptionModal";
+import { useAppSelector } from "../../../../store";
 
 const DASHBOARD_CARDS = [
   {
@@ -66,18 +66,6 @@ const DASHBOARD_CARDS = [
     backgroundColor: "#fdf3e7",
     color: "#C29569",
   },
-  {
-    title: "Total Drivers",
-    value: "01",
-    change: "Requires attention",
-    icon: {
-      width: 28,
-      height: 28,
-      component: WarningIcon,
-    },
-    backgroundColor: "#FFEDED",
-    color: "#FF4747",
-  },
 ];
 
 const companiesData = [
@@ -110,8 +98,15 @@ const Subscription = () => {
     type: "new",
   });
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const savedPagination = useAppSelector(
+    (state) => state?.app?.app?.pagination?.subscription
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(savedPagination?.currentPage) || 1
+  );
+  const [itemsPerPage, setItemsPerPage] = useState(
+    Number(savedPagination?.itemsPerPage) || 10
+  );
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);
@@ -139,7 +134,7 @@ const Subscription = () => {
   const getSubscriptions = async () => {
     try {
       setIsSubscriptionsLoading(true);
-      const result = await apiGetSubscriptions({ page: currentPage });
+      const result = await apiGetSubscriptions({ page: currentPage, perPage: itemsPerPage });
       if (result?.status === 200) {
         setAllSubscription(result?.data?.list);
       }
@@ -175,7 +170,8 @@ const Subscription = () => {
 
   useEffect(() => {
     getSubscriptions();
-  }, [refreshTrigger, currentPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshTrigger, currentPage, itemsPerPage]);
 
   if (isSubscriptionsLoading || isSubscriptionCardDetailsLoading) {
     return (
@@ -212,7 +208,7 @@ const Subscription = () => {
         </div>
       </div>
       <div className="flex flex-col gap-5">
-        <div className="flex gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard
               key={index}
@@ -242,25 +238,28 @@ const Subscription = () => {
               <PageSubTitle title="Overview of all company subscriptions and billing status" />
             </div>
             <div>
-              <div className="flex items-center gap-5 justify-between">
-                <SearchBar onSearchChange={handleSearchChange} />
-                <div className="flex gap-5">
-                  <CustomSelect
-                    variant={2}
-                    options={STATUS_OPTIONS}
-                    value={_selectedStatus}
-                    onChange={handleStatusChange}
-                    placeholder="All Status"
-                  />
-                  <CustomSelect
-                    variant={2}
-                    options={PLAN_OPTIONS}
-                    value={_selectedPlan}
-                    onChange={handlePlanChange}
-                    placeholder="All Plans"
-                  />
+              {Array.isArray(allSubscription.data) &&
+              allSubscription.data.length > 0 ? (
+                <div className="flex items-center gap-5 justify-between">
+                  <SearchBar onSearchChange={handleSearchChange} />
+                  <div className="flex gap-5">
+                    <CustomSelect
+                      variant={2}
+                      options={STATUS_OPTIONS}
+                      value={_selectedStatus}
+                      onChange={handleStatusChange}
+                      placeholder="All Status"
+                    />
+                    <CustomSelect
+                      variant={2}
+                      options={PLAN_OPTIONS}
+                      value={_selectedPlan}
+                      onChange={handlePlanChange}
+                      placeholder="All Plans"
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : null}
               <div>
                 <DataDetailsTable
                   companies={allSubscription.data}
@@ -293,16 +292,20 @@ const Subscription = () => {
                   ]}
                 />
               </div>
-              <div className="mt-4 border-t border-[#E9E9E9] pt-4">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={allSubscription.last_page}
-                  itemsPerPage={itemsPerPage}
-                  onPageChange={handlePageChange}
-                  onItemsPerPageChange={handleItemsPerPageChange}
-                  itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                />
-              </div>
+              {Array.isArray(allSubscription.data) &&
+              allSubscription.data.length > 0 ? (
+                <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={allSubscription.last_page}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={handlePageChange}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                    itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                    pageKey="subscription"
+                  />
+                </div>
+              ) : null}
             </div>
           </CardContainer>
         </div>

@@ -3,7 +3,7 @@ import Button from "../../../../../../components/ui/Button/Button";
 import Password from "../../../../../../components/elements/CustomPassword/Password";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
-import { basicInformationSchema } from "../../validators/companyValidation";
+import { BASIC_INFORMATION_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
 
 const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
   const { values, setFieldValue, setTouched, validateForm } = formEl;
@@ -17,7 +17,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
   ];
 
   const onNext = async () => {
-    const fieldsToValidate = Object.keys(basicInformationSchema);
+    const fieldsToValidate = Object.keys(BASIC_INFORMATION_VALIDATION_SCHEMA);
     setTouched(
       fieldsToValidate.reduce((acc, key) => ({ ...acc, [key]: true }), {})
     );

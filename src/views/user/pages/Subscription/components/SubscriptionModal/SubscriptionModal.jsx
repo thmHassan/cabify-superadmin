@@ -1,9 +1,11 @@
 import React from "react";
+import * as Yup from "yup";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import addSubscriptionIcon from "../../../../../../assets/Images/3d-hand-with-safe-payment-confirmation-bill 1.png";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import Button from "../../../../../../components/ui/Button/Button";
+import { SUBSCRIPTION_VALIDATION_SCHEMA } from "../../../../validators/pages/subscription.validation";
 
 const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
 
@@ -40,7 +42,7 @@ const SubscriptionModal = ({
                 }
               : initialValues
           }
-          // validationSchema={FORGOT_PASSWORD_VALIDATION_SCHEMA}
+          validationSchema={SUBSCRIPTION_VALIDATION_SCHEMA}
           onSubmit={onSubmit}
           enableReinitialize={true}
         >
@@ -63,7 +65,7 @@ const SubscriptionModal = ({
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="plan_name"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -86,7 +88,7 @@ const SubscriptionModal = ({
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="billing_cycle"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -107,7 +109,7 @@ const SubscriptionModal = ({
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="amount"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -143,7 +145,7 @@ const SubscriptionModal = ({
                       />
                     </div>
                     <ErrorMessage
-                      name="email"
+                      name="features"
                       component="div"
                       className="text-red-500 text-sm mt-1"
                     />

@@ -1,22 +1,31 @@
 import React from "react";
 import DataDetailsRow from "./components/DataDetailsRow";
+import EmptyState from "../EmptyState";
 
 const DataDetailsTable = ({ rowType, companies, actionOptions, ...rest }) => {
+  const hasData = Array.isArray(companies) && companies.length > 0;
   return (
     <div className="pt-5 overflow-auto">
-      <table className="w-full border-collapse table-auto">
-        <tbody>
-          {companies?.map((data, i) => (
-            <DataDetailsRow
-              key={i}
-              data={data}
-              type={rowType}
-              actionOptions={actionOptions}
-              {...rest}
-            />
-          ))}
-        </tbody>
-      </table>
+      {hasData ? (
+        <table className="w-full border-collapse table-auto">
+          <tbody>
+            {companies.map((data, i) => (
+              <DataDetailsRow
+                key={i}
+                data={data}
+                type={rowType}
+                actionOptions={actionOptions}
+                {...rest}
+              />
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <EmptyState
+          title="No data found"
+          description="There is nothing to display right now. Try adjusting filters or add a new item."
+        />
+      )}
     </div>
   );
 };

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
 import CardSubtitle from "../../../../../../components/ui/CardSubtitle";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import ApiService from "../../../../../../services/ApiService";
 import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
+import { COMPANY_SETTING_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
 
 const CompanySetting = ({ companyId }) => {
   const [companyDetails, setCompanyDetails] = useState(null);
@@ -28,6 +30,7 @@ const CompanySetting = ({ companyId }) => {
     if (companyId) {
       fetchCompanyDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId]);
 
   const handleSubmit = () => {};
@@ -92,6 +95,13 @@ const CompanySetting = ({ companyId }) => {
     { value: "OpenStreetMap", label: "OpenStreetMap" },
   ];
 
+  // Ensure API-provided value appears in the options even if casing/value differs
+  const callApiInitial = apiConfig.call_api_provide || "";
+  const callApiOptionsSafe =
+    callApiInitial && !callApiOptions.some((o) => o.value === callApiInitial)
+      ? [{ value: callApiInitial, label: callApiInitial }, ...callApiOptions]
+      : callApiOptions;
+
   return (
     <div>
       <div className="mb-5">
@@ -107,7 +117,7 @@ const CompanySetting = ({ companyId }) => {
             mapSearchApiProvider: apiConfig.map_search_api_provider || "",
           }}
           enableReinitialize={true}
-          // validationSchema={FORGOT_PASSWORD_VALIDATION_SCHEMA}
+          validationSchema={COMPANY_SETTING_VALIDATION_SCHEMA}
           onSubmit={handleSubmit}
         >
           {({ values, setFieldValue }) => (
@@ -131,7 +141,7 @@ const CompanySetting = ({ companyId }) => {
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="mapApiProvider"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -149,12 +159,12 @@ const CompanySetting = ({ companyId }) => {
                       name="callApiProvider"
                       value={values.callApiProvider}
                       onChange={(val) => setFieldValue("callApiProvider", val)}
-                      options={callApiOptions}
+                      options={callApiOptionsSafe}
                       placeholder="Select Call API Provider"
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="callApiProvider"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -177,7 +187,7 @@ const CompanySetting = ({ companyId }) => {
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="paymentMethod"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -200,7 +210,7 @@ const CompanySetting = ({ companyId }) => {
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="planType"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -226,7 +236,7 @@ const CompanySetting = ({ companyId }) => {
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="mapSearchApiProvider"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import CompaniesIcon from "../../../../components/svg/CompaniesIcon";
 import ActiveCompaniesIcon from "../../../../components/svg/ActiveCompaniesIcon";
 import MonthlyRevenueIcon from "../../../../components/svg/MonthlyRevenueIcon";
-import DriverVehicleIcon from "../../../../components/svg/DriverVehicleIcon";
 import Button from "../../../../components/ui/Button/Button";
 import PlusIcon from "../../../../components/svg/PlusIcon";
 import SnapshotCard from "../../../../components/shared/SnapshotCard";
@@ -25,6 +24,7 @@ import { lockBodyScroll } from "../../../../utils/functions/common.function";
 import ApiService from "../../../../services/ApiService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import Modal from "../../../../components/shared/Modal";
+import { useAppSelector } from "../../../../store";
 
 const Companies = () => {
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState({
@@ -43,8 +43,15 @@ const Companies = () => {
   const [companyListRaw, setCompanyListRaw] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [companyListDisplay, setCompanyListDisplay] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const savedPagination = useAppSelector(
+    (state) => state?.app?.app?.pagination?.companies
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(savedPagination?.currentPage) || 1
+  );
+  const [itemsPerPage, setItemsPerPage] = useState(
+    Number(savedPagination?.itemsPerPage) || 10
+  );
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [cardsLoading, setCardsLoading] = useState(false);
@@ -83,16 +90,6 @@ const Companies = () => {
       backgroundColor: "#fdf3e7",
       color: "#C29569",
     },
-    {
-      title: "Total Drivers",
-      value: 100,
-      change: "+3 from last hour",
-      icon: {
-        component: DriverVehicleIcon,
-      },
-      backgroundColor: "#e9f2ff",
-      color: "#3C71B7",
-    },
   ];
 
   const handleSearchChange = (value) => {
@@ -130,10 +127,18 @@ const Companies = () => {
     }
   };
 
-  const fetchCompanyList = async (page = 1, status = "all") => {
+  const fetchCompanyList = async (
+    page = 1,
+    status = "active",
+    perPage = itemsPerPage
+  ) => {
     try {
       setTableLoading(true);
-      const response = await ApiService.getCompanyList({ page, status });
+      const response = await ApiService.getCompanyList({
+        page,
+        status,
+        perPage,
+      });
       const list = response?.data?.list;
       console.log(list, "list");
       const rows = Array.isArray(list?.data) ? list?.data : [];
@@ -142,11 +147,11 @@ const Companies = () => {
 
       setCompanyListRaw(rows);
 
-      const perPage = list?.per_page ?? itemsPerPage;
+      const nextPerPage = list?.per_page ?? itemsPerPage;
       const total = list?.total ?? rows.length;
       const lastPage = list?.last_page ?? 1;
 
-      setItemsPerPage(perPage);
+      setItemsPerPage(nextPerPage);
       setTotalItems(total);
       setTotalPages(lastPage);
     } catch (error) {
@@ -164,7 +169,7 @@ const Companies = () => {
     const statusParam = _selectedStatus?.value ?? "all";
 
     console.log(statusParam, "statusparam");
-    fetchCompanyList(1, statusParam);
+    fetchCompanyList(1, statusParam, itemsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger]);
 
@@ -209,9 +214,9 @@ const Companies = () => {
 
   useEffect(() => {
     const statusParam = _selectedStatus?.value ?? "all";
-    fetchCompanyList(currentPage, statusParam);
+    fetchCompanyList(currentPage, statusParam, itemsPerPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, _selectedStatus]);
+  }, [currentPage, _selectedStatus, itemsPerPage]);
 
   if (cardsLoading || tableLoading) {
     return (
@@ -246,7 +251,7 @@ const Companies = () => {
         <PageSubTitle title="Manage taxi companies, their services, and subscriptions" />
       </div>
       <div className="flex flex-col gap-5">
-        <div className="flex gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard key={index} isChange={false} data={card} />
           ))}
@@ -258,25 +263,28 @@ const Companies = () => {
           </div>
           <div>
             <CardContainer className="p-5 bg-[#F5F5F5]">
-              <div className="flex items-center gap-5 justify-between">
-                <SearchBar onSearchChange={handleSearchChange} />
-                <div className="flex gap-5">
-                  <CustomSelect
-                    variant={2}
-                    options={STATUS_OPTIONS}
-                    value={_selectedStatus}
-                    onChange={handleStatusChange}
-                    placeholder="All Status"
-                  />
-                  <CustomSelect
-                    variant={2}
-                    options={PLAN_OPTIONS}
-                    value={_selectedPlan}
-                    onChange={handlePlanChange}
-                    placeholder="All Plans"
-                  />
+              {Array.isArray(companyListDisplay) &&
+              companyListDisplay.length > 0 ? (
+                <div className="flex items-center gap-5 justify-between">
+                  <SearchBar onSearchChange={handleSearchChange} />
+                  <div className="flex gap-5">
+                    <CustomSelect
+                      variant={2}
+                      options={STATUS_OPTIONS}
+                      value={_selectedStatus}
+                      onChange={handleStatusChange}
+                      placeholder="All Status"
+                    />
+                    <CustomSelect
+                      variant={2}
+                      options={PLAN_OPTIONS}
+                      value={_selectedPlan}
+                      onChange={handlePlanChange}
+                      placeholder="All Plans"
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : null}
               <DataDetailsTable
                 rowType="company"
                 companies={companyListDisplay}
@@ -288,18 +296,31 @@ const Companies = () => {
                       setIsCompanyInformationModalOpen(true);
                     },
                   },
+                  {
+                    label: "Edit",
+                    onClick: (item) => {
+                      if (item) {
+                        setSelectedCompanyId(item?.id);
+                        setIsCompanyModalOpen({ type: "edit", isOpen: true });
+                      }
+                    },
+                  },
                 ]}
               />
-              <div className="mt-4 border-t border-[#E9E9E9] pt-4">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  itemsPerPage={itemsPerPage}
-                  onPageChange={handlePageChange}
-                  onItemsPerPageChange={handleItemsPerPageChange}
-                  itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                />
-              </div>
+              {Array.isArray(companyListDisplay) &&
+              companyListDisplay.length > 0 ? (
+                <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={handlePageChange}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                    itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                    pageKey="companies"
+                  />
+                </div>
+              ) : null}
             </CardContainer>
             <CompanyInformationModal
               isOpen={isCompanyInformationModalOpen}

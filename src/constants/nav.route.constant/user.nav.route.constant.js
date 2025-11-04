@@ -4,8 +4,6 @@ import APIKeysActiveIcon from "../../components/svg/APIKeysActiveIcon";
 import APIKeysIcon from "../../components/svg/APIKeysIcon";
 import CompaniesActiveIcon from "../../components/svg/CompaniesActiveIcon";
 import CompaniesIcon from "../../components/svg/CompaniesIcon";
-// import ControllerIcon from "../../components/svg/ControllerIcon";
-// import CustomerUserIcon from "../../components/svg/CustomerUserIcon";
 import DashboardActiveIcon from "../../components/svg/DashboardActiveIcon";
 import DashboardIcon from "../../components/svg/DashboardIcon";
 import DriverIcon from "../../components/svg/DriverIcon";
@@ -19,7 +17,6 @@ import SubscriptionActiveIcon from "../../components/svg/SubscriptionActiveIcon"
 import SubscriptionIcon from "../../components/svg/SubscriptionIcon";
 import SystemAnalyticsActiveIcon from "../../components/svg/SystemAnalyticsActiveIcon";
 import SystemAnalyticsIcon from "../../components/svg/SystemAnalyticsIcon";
-// import TarrifIcon from "../../components/svg/TarrifIcon";
 import UsageMonitoringActiveIcon from "../../components/svg/UsageMonitoringActiveIcon";
 import UsageMonitoringIcon from "../../components/svg/UsageMonitoringIcon";
 import VoIPSettingsIcon from "../../components/svg/VoIPSettingsIcon";
@@ -118,8 +115,8 @@ const userNavRoutes = [
           size: 20,
         },
         route: PATH.DRIVER_VEHICLE_PATH,
-        active: [],
-        isSubMenu: true,
+        active: [PATH.DRIVER_VEHICLE_NEW_PATH],
+        isSubMenu: false,
         subMenu: [],
       },
       {
@@ -132,22 +129,9 @@ const userNavRoutes = [
         },
         route: PATH.DRIVER_PATH,
         active: [],
-        isSubMenu: true,
+        isSubMenu: false,
         subMenu: [],
       },
-      // {
-      //   key: KEY.TARRIF_KEY,
-      //   title: "Tarrif",
-      //   icon: {
-      //     active: TarrifIcon,
-      //     component: TarrifIcon,
-      //     size: 20,
-      //   },
-      //   route: PATH.TARRIF_PATH,
-      //   active: [],
-      //   isSubMenu: true,
-      //   subMenu: [],
-      // },
       {
         key: KEY.ZONES_LOCATION_KEY,
         title: "Zones / Location",
@@ -158,7 +142,7 @@ const userNavRoutes = [
         },
         route: PATH.ZONES_LOCATION_PATH,
         active: [],
-        isSubMenu: true,
+        isSubMenu: false,
         subMenu: [],
       },
       {
@@ -171,7 +155,7 @@ const userNavRoutes = [
         },
         route: PATH.ACCOUNT_PATH,
         active: [],
-        isSubMenu: true,
+        isSubMenu: false,
         subMenu: [],
       },
       {
@@ -186,32 +170,6 @@ const userNavRoutes = [
         active: [],
         subMenu: [],
       },
-      // {
-      //   key: KEY.CUSTOMER_USER_KEY,
-      //   title: "Customer / User",
-      //   icon: {
-      //     active: CustomerUserIcon,
-      //     component: CustomerUserIcon,
-      //     size: 20,
-      //   },
-      //   route: PATH.CUSTOMER_USER_PATH,
-      //   active: [],
-      //   isSubMenu: true,
-      //   subMenu: [],
-      // },
-      // {
-      //   key: KEY.CONTROLLER_KEY,
-      //   title: "Controller",
-      //   icon: {
-      //     active: ControllerIcon,
-      //     component: ControllerIcon,
-      //     size: 20,
-      //   },
-      //   route: PATH.CONTROLLER_PATH,
-      //   active: [],
-      //   isSubMenu: true,
-      //   subMenu: [],
-      // },
     ],
   },
   {

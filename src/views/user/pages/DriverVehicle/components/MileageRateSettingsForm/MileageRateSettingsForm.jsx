@@ -48,7 +48,7 @@ const MileageRateSettingsForm = ({ formEl }) => {
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="first_mile_km"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
@@ -69,7 +69,7 @@ const MileageRateSettingsForm = ({ formEl }) => {
                     />
                   </div>
                   <ErrorMessage
-                    name="email"
+                    name="second_mile_km"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />

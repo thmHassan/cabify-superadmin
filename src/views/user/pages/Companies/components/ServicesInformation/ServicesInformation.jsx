@@ -6,7 +6,7 @@ import RadioButton from "../../../../../../components/ui/RadioButton";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import ApiService from "../../../../../../services/ApiService";
-import { servicesInformationSchema } from "../../validators/companyValidation";
+import { SERVICE_INFORMATION_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
 
 const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
   const { values, setFieldValue, setTouched, validateForm } = formEl;
@@ -16,7 +16,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
   const [subscriptionError, setSubscriptionError] = useState(null);
 
   const onNext = async () => {
-    const fieldsToValidate = Object.keys(servicesInformationSchema);
+    const fieldsToValidate = Object.keys(SERVICE_INFORMATION_VALIDATION_SCHEMA);
     setTouched(
       fieldsToValidate.reduce((acc, key) => ({ ...acc, [key]: true }), {})
     );

@@ -17,6 +17,8 @@ import {
 } from "../../../../services/DriverService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import EditDriverDocumentModal from "./components/EditDriverDocumentModal";
+import ConfirmDialog from "../../../../components/shared/ConfirmDialog";
+import { useAppSelector } from "../../../../store";
 
 const Driver = () => {
   const [isDocumentModalOpen, setIsDocumentModalOpen] = useState({
@@ -25,16 +27,26 @@ const Driver = () => {
   });
   const [allDriversDocuments, setAllDriversDocuments] = useState({
     data: [],
-    last_Page: 1,
+    last_page: 1,
   });
   const [_searchQuery, setSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isDriverDocumentsLoading, setIsDriverDocumentsLoading] =
     useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const savedPagination = useAppSelector(
+    (state) => state?.app?.app?.pagination?.driver
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(savedPagination?.currentPage) || 1
+  );
+  const [itemsPerPage, setItemsPerPage] = useState(
+    Number(savedPagination?.itemsPerPage) || 10
+  );
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);
@@ -54,7 +66,7 @@ const Driver = () => {
   const getDriversDocuments = async () => {
     try {
       setIsDriverDocumentsLoading(true);
-      const result = await apiGetDriversDocuments({ page: currentPage });
+      const result = await apiGetDriversDocuments({ page: currentPage, perPage: itemsPerPage });
       if (result?.status === 200) {
         console.log(result, "res========");
         setAllDriversDocuments(result?.data?.list);
@@ -71,19 +83,15 @@ const Driver = () => {
   };
 
   const onDelete = async (id) => {
-    if (id) {
-      const result = await apiDeleteDriversDocument({ id });
-      if (result?.status === 200) {
-        console.log(result, "res========");
-        handleRefresh();
-        // setAllDriversDocuments(result?.data?.list?.data);
-      }
-    }
+    if (!id) return;
+    setDeleteTarget({ id });
+    setIsDeleteOpen(true);
   };
 
   useEffect(() => {
     getDriversDocuments();
-  }, [currentPage, refreshTrigger]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, itemsPerPage, refreshTrigger]);
 
   if (isDriverDocumentsLoading) {
     return (
@@ -118,9 +126,12 @@ const Driver = () => {
         </div>
       </div>
       <CardContainer className="p-5">
-        <div className="flex items-center gap-5 justify-between">
-          <SearchBar onSearchChange={handleSearchChange} />
-        </div>
+        {Array.isArray(allDriversDocuments.data) &&
+        allDriversDocuments.data.length > 0 ? (
+          <div className="flex items-center gap-5 justify-between">
+            <SearchBar onSearchChange={handleSearchChange} />
+          </div>
+        ) : null}
         <div>
           <DataDetailsTable
             rowType="driverDocuments"
@@ -147,16 +158,20 @@ const Driver = () => {
             ]}
           />
         </div>
-        <div className="mt-4 border-t border-[#E9E9E9] pt-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={allDriversDocuments.last_Page}
-            itemsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handleItemsPerPageChange}
-            itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-          />
-        </div>
+        {Array.isArray(allDriversDocuments.data) &&
+        allDriversDocuments.data.length > 0 ? (
+          <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={allDriversDocuments.last_page}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              onItemsPerPageChange={handleItemsPerPageChange}
+              itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+              pageKey="driver"
+            />
+          </div>
+        ) : null}
       </CardContainer>
       <Modal size="sm" isOpen={isDocumentModalOpen.isOpen} className="p-10">
         {isDocumentModalOpen.type === "new" ? (
@@ -172,6 +187,36 @@ const Driver = () => {
           />
         )}
       </Modal>
+      <ConfirmDialog
+        isOpen={isDeleteOpen}
+        title="Delete document type?"
+        message={`Are you sure you want to delete this document? This action cannot be undone.`}
+        confirmText="Delete"
+        confirmType="filled"
+        onCancel={() => {
+          setIsDeleteOpen(false);
+          setDeleteTarget(null);
+        }}
+        onConfirm={async () => {
+          if (!deleteTarget?.id) return;
+          try {
+            setIsDeleteLoading(true);
+            const result = await apiDeleteDriversDocument({
+              id: deleteTarget.id,
+            });
+            if (result?.status === 200) {
+              setIsDeleteOpen(false);
+              setDeleteTarget(null);
+              handleRefresh();
+            }
+          } catch (err) {
+            console.error("Delete driver document failed", err);
+          } finally {
+            setIsDeleteLoading(false);
+          }
+        }}
+        isLoading={isDeleteLoading}
+      />
     </div>
   );
 };

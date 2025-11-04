@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import CustomSelect from "../CustomSelect";
 import LeftArrowIcon from "../../svg/LeftArrowIcon";
 import RightArrowIcon from "../../svg/RightArrowIcon";
+import { useAppDispatch, useAppSelector, setPaginationConfig } from "../../../store";
 
 const VARIANT_CONFIG = {
   0: "bg-[#ffffff] border border-[#ededed]",
@@ -22,16 +23,39 @@ const Pagination = ({
     { value: 100, label: "100 / page" },
   ],
   className = "",
+  pageKey,
 }) => {
+  const didInitRef = useRef(false);
+  const dispatch = useAppDispatch?.() || null;
+  const savedConfig = useAppSelector((state) => state?.app?.app?.pagination?.[pageKey]);
+
+  useEffect(() => {
+    if (!pageKey || didInitRef.current) return;
+    didInitRef.current = true;
+    if (!savedConfig) return;
+    const nextItems = Number(savedConfig?.itemsPerPage) || itemsPerPage;
+    const nextPage = Number(savedConfig?.currentPage) || 1;
+    if (nextItems !== itemsPerPage) {
+      onItemsPerPageChange?.(nextItems);
+    }
+    if (nextPage !== currentPage) {
+      onPageChange?.(nextPage);
+    }
+  }, [pageKey, savedConfig, itemsPerPage, currentPage, onItemsPerPageChange, onPageChange]);
+
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      onPageChange?.(currentPage - 1);
+      const next = currentPage - 1;
+      onPageChange?.(next);
+      if (pageKey && dispatch) dispatch(setPaginationConfig({ key: pageKey, currentPage: next, itemsPerPage }));
     }
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      onPageChange?.(currentPage + 1);
+      const next = currentPage + 1;
+      onPageChange?.(next);
+      if (pageKey && dispatch) dispatch(setPaginationConfig({ key: pageKey, currentPage: next, itemsPerPage }));
     }
   };
 
@@ -42,11 +66,14 @@ const Pagination = ({
       pageNumber <= totalPages
     ) {
       onPageChange?.(pageNumber);
+      if (pageKey && dispatch) dispatch(setPaginationConfig({ key: pageKey, currentPage: pageNumber, itemsPerPage }));
     }
   };
 
   const handleItemsPerPageChange = (selectedOption) => {
-    onItemsPerPageChange?.(selectedOption.value);
+    const nextItems = selectedOption.value;
+    onItemsPerPageChange?.(nextItems);
+    if (pageKey && dispatch) dispatch(setPaginationConfig({ key: pageKey, currentPage: 1, itemsPerPage: nextItems }));
   };
 
   const getCurrentItemsPerPageOption = () => {
@@ -128,6 +155,8 @@ const Pagination = ({
           options={itemsPerPageOptions}
           value={getCurrentItemsPerPageOption()}
           onChange={handleItemsPerPageChange}
+          menuPlacement="top"
+          menuPosition="fixed"
           placeholder="Items per page"
           isSearchable={false}
           className="min-w-[120px]"

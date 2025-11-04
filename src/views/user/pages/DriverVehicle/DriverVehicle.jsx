@@ -18,17 +18,29 @@ import {
   apiGetVehicleTypes,
 } from "../../../../services/VehicleService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
+import ConfirmDialog from "../../../../components/shared/ConfirmDialog";
+import { useAppSelector } from "../../../../store";
 
 const DriverVehicle = () => {
   const [_searchQuery, setSearchQuery] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const savedPagination = useAppSelector(
+    (state) => state?.app?.app?.pagination?.driverVehicle
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(savedPagination?.currentPage) || 1
+  );
+  const [itemsPerPage, setItemsPerPage] = useState(
+    Number(savedPagination?.itemsPerPage) || 10
+  );
   const [isVehiclesLoading, setIsVehiclesLoading] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [allVehicleTypes, setAllVehicleTypes] = useState({
     data: [],
     last_page: 1,
   });
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -49,7 +61,7 @@ const DriverVehicle = () => {
   const getVehicles = async () => {
     try {
       setIsVehiclesLoading(true);
-      const result = await apiGetVehicleTypes({ page: currentPage });
+      const result = await apiGetVehicleTypes({ page: currentPage, perPage: itemsPerPage });
       if (result?.status === 200) {
         console.log(result, "all-data");
         setAllVehicleTypes(result?.data?.list);
@@ -62,19 +74,15 @@ const DriverVehicle = () => {
   };
 
   const onDelete = async (id) => {
-    if (id) {
-      const result = await apiDeleteVehicleType({ id });
-      if (result?.status === 200) {
-        console.log(result, "res========");
-        handleRefresh();
-        // setAllDriversDocuments(result?.data?.list?.data);
-      }
-    }
+    if (!id) return;
+    setDeleteTarget({ id });
+    setIsDeleteOpen(true);
   };
 
   useEffect(() => {
     getVehicles();
-  }, [currentPage, refreshTrigger]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, refreshTrigger, itemsPerPage]);
 
   if (isVehiclesLoading) {
     return (
@@ -106,9 +114,12 @@ const DriverVehicle = () => {
         </div>
       </div>
       <CardContainer className="p-5">
-        <div className="flex items-center gap-5 justify-between">
-          <SearchBar onSearchChange={handleSearchChange} />
-        </div>
+        {Array.isArray(allVehicleTypes.data) &&
+        allVehicleTypes.data.length > 0 ? (
+          <div className="flex items-center gap-5 justify-between">
+            <SearchBar onSearchChange={handleSearchChange} />
+          </div>
+        ) : null}
         <div>
           <DataDetailsTable
             rowType="vehicleType"
@@ -138,17 +149,49 @@ const DriverVehicle = () => {
             ]}
           />
         </div>
-        <div className="mt-4 border-t border-[#E9E9E9] pt-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={allVehicleTypes.last_page}
-            itemsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handleItemsPerPageChange}
-            itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-          />
-        </div>
+        {Array.isArray(allVehicleTypes.data) &&
+        allVehicleTypes.data.length > 0 ? (
+          <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={allVehicleTypes.last_page}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              onItemsPerPageChange={handleItemsPerPageChange}
+              itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+              pageKey="driverVehicle"
+            />
+          </div>
+        ) : null}
       </CardContainer>
+      <ConfirmDialog
+        isOpen={isDeleteOpen}
+        title="Delete vehicle type?"
+        message={`Are you sure you want to delete this vehicle type? This action cannot be undone.`}
+        confirmText="Delete"
+        confirmType="filled"
+        onCancel={() => {
+          setIsDeleteOpen(false);
+          setDeleteTarget(null);
+        }}
+        onConfirm={async () => {
+          if (!deleteTarget?.id) return;
+          try {
+            setIsDeleteLoading(true);
+            const result = await apiDeleteVehicleType({ id: deleteTarget.id });
+            if (result?.status === 200) {
+              setIsDeleteOpen(false);
+              setDeleteTarget(null);
+              handleRefresh();
+            }
+          } catch (err) {
+            console.error("Delete vehicle type failed", err);
+          } finally {
+            setIsDeleteLoading(false);
+          }
+        }}
+        isLoading={isDeleteLoading}
+      />
     </div>
   );
 };

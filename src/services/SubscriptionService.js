@@ -17,9 +17,11 @@ export async function apiGetSubscriptionCardDetails(params) {
 }
 
 export async function apiGetSubscriptions(params) {
+  const url = params ? replaceSlash(params, GET_SUBSCRIPTIONS) : GET_SUBSCRIPTIONS;
   return ApiService.fetchData({
-    url: params ? replaceSlash(params, GET_SUBSCRIPTIONS) : GET_SUBSCRIPTIONS,
+    url,
     method: METHOD_GET,
+    params: typeof params === 'object' ? params : undefined,
   });
 }
 

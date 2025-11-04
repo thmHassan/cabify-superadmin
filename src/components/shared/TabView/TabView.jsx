@@ -46,7 +46,7 @@ const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
           <Button
             key={index}
             onClick={() => {
-              onTabChange(index);
+              if (onTabChange) onTabChange(index);
               handleTabChange(index, title);
             }}
           >

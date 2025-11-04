@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import * as Yup from "yup";
 import PageTitle from "../../../../components/ui/PageTitle/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
 import PlusIcon from "../../../../components/svg/PlusIcon";
@@ -20,16 +21,14 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import { GeoJSON } from "react-leaflet";
 import ApiService from "../../../../services/ApiService";
-
-// No dummy data: start empty and reflect exactly what the API returns
-const PLOTS = [];
+import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
+import { ZONES_LOCATION_VALIDATION_SCHEMA } from "../../validators/pages/zonesLocation.VALIDATION.JS";
 
 const ZonesLocation = () => {
   const [isOpenLocationModal, setIsOpenLocationModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [plots, setPlots] = useState(PLOTS);
-  const [polygons, setPolygons] = useState([]);
+  // Derived lists are computed from `records`; no need to keep separate plots/polygons state
   const [newFeature, setNewFeature] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [totalItems, setTotalItems] = useState(25);
@@ -41,6 +40,7 @@ const ZonesLocation = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const formikRef = useRef(null);
 
   const computedTotalPages = useMemo(
     () => Math.ceil(totalItems / itemsPerPage),
@@ -106,7 +106,8 @@ const ZonesLocation = () => {
 
   const sanitizeBackendJsonString = (jsonString) => {
     if (typeof jsonString !== "string") return jsonString;
-    return jsonString.replace(/\"'([^\"]+)\"/g, '\"$1\"');
+    // eslint-disable-next-line no-useless-escape
+    return jsonString.replace(/\"'([^\"]+)\"/g, '"$1"');
   };
 
   const parseBackendFeature = (featuresString, fallbackName) => {
@@ -204,20 +205,12 @@ const ZonesLocation = () => {
       const resp = await ApiService.getPlotList({ page });
       const payload = resp?.data?.list || {};
       const data = Array.isArray(payload?.data) ? payload.data : [];
-      const names = [];
-      const features = [];
       const recs = [];
       data.forEach((item) => {
         const name = item?.name || "";
         const parsed = parseBackendFeature(item?.features, name);
-        if (name) names.push(name);
-        if (parsed) {
-          features.push(parsed);
-          recs.push({ id: item?.id, name, feature: parsed });
-        }
+        if (parsed) recs.push({ id: item?.id, name, feature: parsed });
       });
-      setPlots(names);
-      setPolygons(features);
       setRecords(recs);
       setTotalItems(Number(payload?.total) || data.length);
       setTotalPages(Number(payload?.last_page) || 1);
@@ -230,14 +223,29 @@ const ZonesLocation = () => {
 
   useEffect(() => {
     fetchPlots(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const handleCreated = (e) => {
-    const { layer, layerType } = e;
+    const { layer } = e;
     const geojson = layer.toGeoJSON();
     const normalized = normalizeFeatureToSingleArray(geojson);
     setNewFeature(normalized);
   };
+
+  useEffect(() => {
+    if (formikRef.current) {
+      formikRef.current.setFieldValue("featureSelected", !!newFeature);
+    }
+  }, [newFeature]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen w-full">
+        <AppLogoLoader />
+      </div>
+    );
+  }
 
   return (
     <div className="p-10 min-h-[calc(100vh-85px)]">
@@ -405,7 +413,12 @@ const ZonesLocation = () => {
           <div>
             <Formik
               enableReinitialize
-              initialValues={{ name: editingRecord?.name || "" }}
+              innerRef={formikRef}
+              initialValues={{
+                name: editingRecord?.name || "",
+                featureSelected: !!newFeature,
+              }}
+              validationSchema={ZONES_LOCATION_VALIDATION_SCHEMA}
               onSubmit={async ({ name }, { setSubmitting }) => {
                 const trimmed = (name || "").trim();
                 if (!trimmed) {
@@ -473,91 +486,90 @@ const ZonesLocation = () => {
                 }
               }}
             >
-              {({ values, isSubmitting }) => (
-                <Form>
-                  <div className="flex flex-wrap gap-5 mb-10">
-                    <div className="w-full mb-5">
-                      <label
-                        htmlFor="plot-name"
-                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                      >
-                        Plot Name
-                      </label>
-                      <div className="h-16">
-                        <Field
-                          id="plot-name"
-                          type="text"
-                          name="name"
-                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                          placeholder="Enter Plot Name"
-                        />
-                      </div>
-                      <ErrorMessage
+              <Form>
+                <div className="flex flex-wrap gap-5 mb-10">
+                  <div className="w-full mb-5">
+                    <label
+                      htmlFor="plot-name"
+                      className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                    >
+                      Plot Name
+                    </label>
+                    <div className="h-16">
+                      <Field
+                        id="plot-name"
+                        type="text"
                         name="name"
+                        className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                        placeholder="Enter Plot Name"
+                      />
+                    </div>
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                  <div className="h-[412px] rounded-[15px] w-full">
+                    <CardContainer type={1} className="w-full h-full">
+                      <MapContainer
+                        center={[32.5, 72.5]}
+                        zoom={6}
+                        style={{ height: "350px" }}
+                      >
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <FeatureGroup>
+                          <EditControl
+                            position="topright"
+                            onCreated={handleCreated}
+                            draw={{
+                              rectangle: { showArea: false },
+                              polygon: { showArea: false },
+                              polyline: false,
+                              circle: false,
+                              marker: false,
+                              circlemarker: false,
+                            }}
+                          />
+                        </FeatureGroup>
+                      </MapContainer>
+                      <div className="text-sm text-[#6C6C6C] mt-2">
+                        {newFeature
+                          ? "Shape selected. You can Create the plot."
+                          : "Tip: Use the polygon or rectangle tool to draw the plot area, then click Create."}
+                      </div>
+                      <Field type="hidden" name="featureSelected" />
+                      <ErrorMessage
+                        name="featureSelected"
                         component="div"
                         className="text-red-500 text-sm mt-1"
                       />
-                    </div>
-                    <div className="h-[412px] rounded-[15px] w-full">
-                      <CardContainer type={1} className="w-full h-full">
-                        <MapContainer
-                          center={[32.5, 72.5]}
-                          zoom={6}
-                          style={{ height: "350px" }}
-                        >
-                          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                          <FeatureGroup>
-                            <EditControl
-                              position="topright"
-                              onCreated={handleCreated}
-                              draw={{
-                                rectangle: { showArea: false },
-                                polygon: { showArea: false },
-                                polyline: false,
-                                circle: false,
-                                marker: false,
-                                circlemarker: false,
-                              }}
-                            />
-                          </FeatureGroup>
-                        </MapContainer>
-                        <div className="text-sm text-[#6C6C6C] mt-2">
-                          {newFeature
-                            ? "Shape selected. You can Create the plot."
-                            : "Tip: Use the polygon or rectangle tool to draw the plot area, then click Create."}
-                        </div>
-                      </CardContainer>
-                    </div>
+                    </CardContainer>
                   </div>
-                  <div className="flex gap-5 justify-end">
-                    <Button
-                      btnSize="md"
-                      type="filledGray"
-                      className="!px-10 !pt-4 pb-[15px] leading-[25px]"
-                      onClick={() => {
-                        setNewFeature(null);
-                        setEditingRecord(null);
-                        setIsOpenLocationModal(false);
-                      }}
-                    >
-                      <span>Cancel</span>
-                    </Button>
-                    <Button
-                      btnType="submit"
-                      btnSize="md"
-                      type="filled"
-                      className="!px-10 !pt-4 pb-[15px] leading-[25px]"
-                      disabled={
-                        isSubmitting ||
-                        !newFeature ||
-                        !(values.name || "").trim()
-                      }
-                    >
-                      <span>Create</span>
-                    </Button>
-                  </div>
-                </Form>
-              )}
+                </div>
+                <div className="flex gap-5 justify-end">
+                  <Button
+                    btnSize="md"
+                    type="filledGray"
+                    className="!px-10 !pt-4 pb-[15px] leading-[25px]"
+                    onClick={() => {
+                      setNewFeature(null);
+                      setEditingRecord(null);
+                      setIsOpenLocationModal(false);
+                    }}
+                  >
+                    <span>Cancel</span>
+                  </Button>
+                  <Button
+                    btnType="submit"
+                    btnSize="md"
+                    type="filled"
+                    className="!px-10 !pt-4 pb-[15px] leading-[25px]"
+                  >
+                    <span>Create</span>
+                  </Button>
+                </div>
+              </Form>
             </Formik>
           </div>
         </div>
@@ -565,7 +577,9 @@ const ZonesLocation = () => {
       <ConfirmDialog
         isOpen={isDeleteOpen}
         title="Delete plot?"
-        message={`Are you sure you want to delete \"${deleteTarget?.name || "this plot"}\"? This action cannot be undone.`}
+        message={`Are you sure you want to delete "${
+          deleteTarget?.name || "this plot"
+        }"? This action cannot be undone.`}
         confirmText="Delete"
         confirmType="filled"
         onCancel={() => {

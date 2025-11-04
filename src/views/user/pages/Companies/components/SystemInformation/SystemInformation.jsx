@@ -2,13 +2,13 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import Button from "../../../../../../components/ui/Button/Button";
 import Switch from "../../../../../../components/ui/Switch";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
-import { systemInformationSchema } from "../../validators/companyValidation";
+import { SYSTEM_INFORMATION_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
 
 const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
   const { values, setTouched, validateForm } = formEl;
 
   const onNext = async () => {
-    const fieldsToValidate = Object.keys(systemInformationSchema);
+    const fieldsToValidate = Object.keys(SYSTEM_INFORMATION_VALIDATION_SCHEMA);
     setTouched(
       fieldsToValidate.reduce((acc, key) => ({ ...acc, [key]: true }), {})
     );

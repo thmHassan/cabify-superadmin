@@ -10,75 +10,6 @@ import CustomSelect from "../../../../../../components/ui/CustomSelect";
 import SearchBar from "../../../../../../components/shared/SearchBar";
 import Pagination from "../../../../../../components/ui/Pagination";
 
-const usageMonitoringData = [
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active"],
-    metrics: [
-      { label: "API Calls Today", value: "12,500" },
-      { label: "Map Requests", value: "8,500" },
-      { label: "VoIP Minutes", value: "1,250" },
-      { label: "Dispatchers", value: "5/10" },
-    ],
-    lastSeen: "2 minute ago",
-  },
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active"],
-    metrics: [
-      { label: "API Calls Today", value: "12,500" },
-      { label: "Map Requests", value: "8,500" },
-      { label: "VoIP Minutes", value: "1,250" },
-      { label: "Dispatchers", value: "0/8" },
-    ],
-    lastSeen: "2 minute ago",
-  },
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active"],
-    metrics: [
-      { label: "API Calls Today", value: "12,500" },
-      { label: "Map Requests", value: "8,500" },
-      { label: "VoIP Minutes", value: "1,250" },
-      { label: "Dispatchers", value: "0/8" },
-    ],
-    lastSeen: "2 minute ago",
-  },
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active"],
-    metrics: [
-      { label: "API Calls Today", value: "12,500" },
-      { label: "Map Requests", value: "8,500" },
-      { label: "VoIP Minutes", value: "1,250" },
-      { label: "Dispatchers", value: "0/8" },
-    ],
-    lastSeen: "2 minute ago",
-  },
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active"],
-    metrics: [
-      { label: "API Calls Today", value: "12,500" },
-      { label: "Map Requests", value: "8,500" },
-      { label: "VoIP Minutes", value: "1,250" },
-      { label: "Dispatchers", value: "0/8" },
-    ],
-    lastSeen: "2 minute ago",
-  },
-  {
-    name: "Metro Taxi Co.",
-    status: ["Active"],
-    metrics: [
-      { label: "API Calls Today", value: "12,500" },
-      { label: "Map Requests", value: "8,500" },
-      { label: "VoIP Minutes", value: "1,250" },
-      { label: "Dispatchers", value: "0/8" },
-    ],
-    lastSeen: "2 minute ago",
-  },
-];
-
 const CompanyUsage = ({ data }) => {
   const [_searchQuery, setSearchQuery] = useState("");
   const [_selectedStatus, setSelectedStatus] = useState(STATUS_OPTIONS[0]);
@@ -113,36 +44,40 @@ const CompanyUsage = ({ data }) => {
 
   return (
     <CardContainer className="p-5">
-      <div className="flex items-center gap-5 justify-between">
-        <SearchBar onSearchChange={handleSearchChange} />
-        <div className="flex gap-5">
-          <CustomSelect
-            variant={2}
-            options={STATUS_OPTIONS}
-            value={_selectedStatus}
-            onChange={handleStatusChange}
-            placeholder="All Status"
-          />
-          <CustomSelect
-            variant={2}
-            options={PLAN_OPTIONS}
-            value={_selectedPlan}
-            onChange={handlePlanChange}
-            placeholder="All Plans"
+      {Array.isArray(data) && data.length > 0 ? (
+        <div className="flex items-center gap-5 justify-between">
+          <SearchBar onSearchChange={handleSearchChange} />
+          <div className="flex gap-5">
+            <CustomSelect
+              variant={2}
+              options={STATUS_OPTIONS}
+              value={_selectedStatus}
+              onChange={handleStatusChange}
+              placeholder="All Status"
+            />
+            <CustomSelect
+              variant={2}
+              options={PLAN_OPTIONS}
+              value={_selectedPlan}
+              onChange={handlePlanChange}
+              placeholder="All Plans"
+            />
+          </div>
+        </div>
+      ) : null}
+      <DataDetailsTable rowType="usageMonitoring" companies={data} />
+      {Array.isArray(data) && data.length > 0 ? (
+        <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            itemsPerPageOptions={PAGE_SIZE_OPTIONS}
           />
         </div>
-      </div>
-      <DataDetailsTable rowType="usageMonitoring" companies={data} />
-      <div className="mt-4 border-t border-[#E9E9E9] pt-4">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-          onItemsPerPageChange={handleItemsPerPageChange}
-          itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-        />
-      </div>
+      ) : null}
     </CardContainer>
   );
 };

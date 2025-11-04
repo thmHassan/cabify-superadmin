@@ -1,28 +1,16 @@
-import React, { useEffect, useState } from "react";
-import PlusIcon from "../../../../components/svg/PlusIcon";
-import Button from "../../../../components/ui/Button/Button";
+import { useEffect, useState } from "react";
 import SnapshotCard from "../../../../components/shared/SnapshotCard";
 import CompaniesIcon from "../../../../components/svg/CompaniesIcon";
 import SubscriptionIcon from "../../../../components/svg/SubscriptionIcon";
 import RevenueIcon from "../../../../components/svg/RevenueIcon";
-import UptimeIcon from "../../../../components/svg/UptimeIcon";
-import CardContainer from "../../../../components/shared/CardContainer";
-import CardTitle from "../../../../components/ui/CardTitle";
-import CardSubtitle from "../../../../components/ui/CardSubtitle";
-import ChildText from "../../../../components/ui/ChildText.jsx/ChildText";
-import CloseIcon from "../../../../components/svg/CloseIcon";
-import WarningIcon from "../../../../components/svg/WarningIcon";
-import PaymentAlertIcon from "../../../../components/svg/PaymentAlertIcon";
-import WatchIcon from "../../../../components/svg/WatchIcon";
 import PageSubTitle from "../../../../components/ui/PageSubTitle";
 import PageTitle from "../../../../components/ui/PageTitle";
-import Tag from "../../../../components/ui/Tag";
 import RecentCompaniesActivity from "./components/RecentCompaniesActivity";
-import RecentSystemAlerts from "./components/RecentSystemAlerts";
 import PaymentAlerts from "./components/PaymentAlerts/PaymentAlerts";
 import ApiStatus from "./components/ApiStatus/ApiStatus";
 import { apiGetDashboardDetails } from "../../../../services/DashboardService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
+import ApiService from "../../../../services/ApiService";
 
 const DASHBOARD_CARDS = [
   {
@@ -55,22 +43,35 @@ const DASHBOARD_CARDS = [
     backgroundColor: "#fdf3e7",
     color: "#C29569",
   },
-  {
-    title: "System Uptime",
-    value: 24,
-    change: "+3 from last hour",
-    icon: {
-      component: UptimeIcon,
-    },
-    backgroundColor: "#e9f2ff",
-    color: "#3C71B7",
-  },
 ];
 
 const Overview = () => {
   const [isDashboardDetailsLoading, setIsDashboardDetailsLoading] =
     useState(false);
   const [dashboardDetails, setDashboardDetails] = useState({});
+  const [companies, setCompanies] = useState([]);
+  const [companiesLoading, setCompaniesLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchRecent = async () => {
+      try {
+        setCompaniesLoading(true);
+        const response = await ApiService.getCompanyList({
+          page: 1,
+          status: "active",
+        });
+        const list = response?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setCompanies(rows.slice(0, 3));
+      } catch {
+        console.log("Failed to load recent companies");
+        setCompanies([]);
+      } finally {
+        setCompaniesLoading(false);
+      }
+    };
+    fetchRecent();
+  }, []);
   const getDashboardDetails = async () => {
     try {
       setIsDashboardDetailsLoading(true);
@@ -90,7 +91,7 @@ const Overview = () => {
     getDashboardDetails();
   }, []);
 
-  if (isDashboardDetailsLoading) {
+  if (isDashboardDetailsLoading || companiesLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full">
         <AppLogoLoader />
@@ -99,7 +100,7 @@ const Overview = () => {
   }
 
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
+    <div className="p-4 sm:p-6 lg:p-10 min-h-[calc(100vh-85px)]">
       <div className="flex flex-col gap-2.5 mb-[30px]">
         <div className="flex justify-between">
           <PageTitle title="Admin Dashboard" />
@@ -112,7 +113,7 @@ const Overview = () => {
         </div>
       </div>
       <div className="flex flex-col gap-5">
-        <div className="flex gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard
               key={index}
@@ -120,12 +121,12 @@ const Overview = () => {
             />
           ))}
         </div>
-        <div className="flex gap-5">
-          <RecentCompaniesActivity />
+        <div className="w-full">
+          <RecentCompaniesActivity companies={companies} />
           {/* <RecentSystemAlerts /> */}
         </div>
         <PaymentAlerts />
-        <ApiStatus />
+        <ApiStatus data={dashboardDetails} />
       </div>
     </div>
   );

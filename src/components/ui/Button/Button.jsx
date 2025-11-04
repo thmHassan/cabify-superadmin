@@ -27,18 +27,36 @@ const Button = ({
   className,
   children,
   onClick,
+  ripple = false,
   ...rest
 }) => {
+  const handleClick = (e) => {
+    // Run user's onClick immediately (navigation shouldn't wait on ripple)
+    if (typeof onClick === "function") onClick(e);
+
+    if (ripple) {
+      // Defer ripple to next tick to avoid any sync work delaying navigation
+      const button = e.currentTarget;
+      setTimeout(() => {
+        if (!button.isConnected) return; // component unmounted due to navigation
+        const overlay = document.createElement("span");
+        overlay.className = "td-ripple-overlay";
+        button.appendChild(overlay);
+        overlay.addEventListener("animationend", () => overlay.remove());
+      }, 0);
+    }
+  };
+
   return (
     <button
       type={btnType}
       className={classNames(
-        "font-poppins-semibold",
+        "font-poppins-semibold relative overflow-hidden",
         variant[type],
         SIZE_CONFIG[btnSize],
         className
       )}
-      onClick={onClick}
+      onClick={handleClick}
       {...rest}
     >
       {children}

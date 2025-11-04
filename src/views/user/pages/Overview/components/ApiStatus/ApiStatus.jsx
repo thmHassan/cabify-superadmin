@@ -2,7 +2,7 @@ import React from "react";
 import CardContainer from "../../../../../../components/shared/CardContainer";
 import CardSubtitle from "../../../../../../components/ui/CardSubtitle";
 
-const ApiStatus = () => {
+const ApiStatus = ({ data }) => {
   return (
     <div className="flex flex-col gap-5">
       <CardContainer className="p-6 flex justify-between">
@@ -19,11 +19,27 @@ const ApiStatus = () => {
             <CardSubtitle type={1} subtitle="Google Maps API" />
             <div className="flex items-center justify-between">
               <CardSubtitle variant={1} type={1} subtitle="Requests:" />
-              <CardSubtitle variant={1} type={1} subtitle="850K" />
+              <CardSubtitle
+                variant={1}
+                type={1}
+                subtitle={
+                  data?.apiStatus?.google_map?.requests
+                    ? `${data?.apiStatus?.google_map?.requests}k`
+                    : "0"
+                }
+              />
             </div>
             <div className="flex items-center justify-between">
               <CardSubtitle variant={1} type={1} subtitle="Cost:" />
-              <CardSubtitle variant={1} type={1} subtitle="$420" />
+              <CardSubtitle
+                variant={1}
+                type={1}
+                subtitle={
+                  data?.apiStatus?.google_map?.cost
+                    ? `$${data?.apiStatus?.google_map?.cost}`
+                    : "0"
+                }
+              />
             </div>
             <div className="flex items-center justify-between">
               <CardSubtitle variant={1} type={1} subtitle="Status:" />
@@ -41,11 +57,27 @@ const ApiStatus = () => {
             <CardSubtitle type={1} subtitle="Twilio API" />
             <div className="flex items-center justify-between">
               <CardSubtitle variant={1} type={1} subtitle="Minutes:" />
-              <CardSubtitle variant={1} type={1} subtitle="1,250" />
+              <CardSubtitle
+                variant={1}
+                type={1}
+                subtitle={
+                  data?.apiStatus?.twillio_api?.minutes
+                    ? `${data?.apiStatus?.twillio_api?.minutes}`
+                    : "0"
+                }
+              />
             </div>
             <div className="flex items-center justify-between">
               <CardSubtitle variant={1} type={1} subtitle="Cost:" />
-              <CardSubtitle variant={1} type={1} subtitle="$125" />
+              <CardSubtitle
+                variant={1}
+                type={1}
+                subtitle={
+                  data?.apiStatus?.twillio_api?.cost
+                    ? `$${data?.apiStatus?.twillio_api?.cost}`
+                    : "0"
+                }
+              />
             </div>
             <div className="flex items-center justify-between">
               <CardSubtitle variant={1} type={1} subtitle="Status:" />

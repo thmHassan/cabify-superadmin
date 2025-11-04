@@ -1,13 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import Modal from "../../../../../../components/shared/Modal";
 import TabView from "../../../../../../components/shared/TabView/TabView";
 import ImageUploadIcon from "../../../../../../components/svg/ImageUploadIcon";
 import BasicInformation from "../BasicInformation";
 import EnablementInformation from "../EnablementInformation";
 import ServicesInformation from "../ServicesInformation";
 import SystemInformation from "../SystemInformation";
-import ApiService from "../../../../../../services/ApiService";
-import { completeCompanySchema } from "../../validators/companyValidation";
 import {
   convertToFormData,
   toBoolean,
@@ -18,6 +15,7 @@ import { apiGetCompanyDetailsById } from "../../../../../../services/CompanyServ
 import _ from "lodash";
 import { MODAL_CONFIG } from "../../configs/ModalConfigs";
 import { Form, Formik } from "formik";
+import { COMPANY_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
 
 const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
 
@@ -330,39 +328,9 @@ const AddCompanyModal = ({
 
   return (
     <div>
-      <div
-        className="w-[120px] h-[120px] rounded-full bg-[#EEEEEE] flex justify-center items-center mx-auto mb-5 overflow-hidden cursor-pointer"
-        onClick={handlePickImage}
-        title="Click to upload"
-      >
-        {imagePreviewUrl ? (
-          <img
-            src={imagePreviewUrl}
-            alt="Company"
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <ImageUploadIcon />
-        )}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleImageChange}
-        />
-      </div>
-      <div className="text-[26px] leading-9 font-semibold text-[#252525] mb-7 text-center">
-        <span>Add New Company</span>
-      </div>
-      {submitError && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {submitError}
-        </div>
-      )}
       <Formik
         initialValues={initialValues}
-        validationSchema={completeCompanySchema}
+        validationSchema={COMPANY_VALIDATION_SCHEMA}
         onSubmit={onSubmit}
         validateOnChange={true}
         validateOnBlur={true}
@@ -372,6 +340,40 @@ const AddCompanyModal = ({
           console.log(values, "values=====");
           return (
             <Form>
+              <div
+                className="w-[120px] h-[120px] rounded-full bg-[#EEEEEE] flex justify-center items-center mx-auto mb-5 overflow-hidden cursor-pointer"
+                onClick={handlePickImage}
+                title="Click to upload"
+              >
+                {imagePreviewUrl ? (
+                  <img
+                    src={imagePreviewUrl}
+                    alt="Company"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <ImageUploadIcon />
+                )}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </div>
+              <div className="text-[26px] leading-9 font-semibold text-[#252525] mb-7 text-center mx-auto max-w-[75%] w-full">
+                <span className="w-full text-center block truncate">
+                  {!_.isEmpty(values.company_name)
+                    ? values.company_name
+                    : "Add New Company"}
+                </span>
+              </div>
+              {submitError && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {submitError}
+                </div>
+              )}
               <TabView
                 tabs={TABS_CONFIGS}
                 setIsOpen={setIsOpen}

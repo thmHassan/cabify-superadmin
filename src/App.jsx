@@ -8,7 +8,7 @@ import AllRoutes from "./components/routes/AllRoutes";
 import ScrollToTop from "./components/shared/ScrollToTop";
 import Loading from "./components/shared/Loading/Loading";
 
-const environment = "development";
+const environment = import.meta.env.VITE_NODE_ENV;
 
 if (appConfig.enableMock) {
   mockServer({ environment });

@@ -21,6 +21,7 @@ import { Form, Formik } from "formik";
 import _ from "lodash";
 import CardSubtitle from "../../../../components/ui/CardSubtitle";
 import EditSubAdminModal from "./components/EditSubAdminModal";
+import { useAppSelector } from "../../../../store";
 
 const PERMISSION_CONFIG = [
   { label: "Users", value: "users" },
@@ -57,8 +58,15 @@ const SubAdminManagement = () => {
   const [isViewPermissionModal, setIsViewPermissionModal] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const savedPagination = useAppSelector(
+    (state) => state?.app?.app?.pagination?.subAdminManagement
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(savedPagination?.currentPage) || 1
+  );
+  const [itemsPerPage, setItemsPerPage] = useState(
+    Number(savedPagination?.itemsPerPage) || 10
+  );
 
   const handleSearchChange = (value) => {
     setSearchQuery(value);
@@ -78,7 +86,7 @@ const SubAdminManagement = () => {
   const getSubAdmins = async () => {
     try {
       setIsSubAdminsLoading(true);
-      const result = await apiGetSubAdmins({ page: currentPage });
+      const result = await apiGetSubAdmins({ page: currentPage, perPage: itemsPerPage });
       if (result?.status === 200) {
         setAllSubAdmins(result?.data?.list);
       }
@@ -95,7 +103,8 @@ const SubAdminManagement = () => {
 
   useEffect(() => {
     getSubAdmins();
-  }, [currentPage, refreshTrigger]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, itemsPerPage, refreshTrigger]);
 
   if (isSubAdminsLoading) {
     return (
@@ -136,9 +145,11 @@ const SubAdminManagement = () => {
         </div>
       </div>
       <CardContainer className="p-5">
-        <div className="flex items-center gap-5 justify-between">
-          <SearchBar onSearchChange={handleSearchChange} />
-        </div>
+        {Array.isArray(allSubAdmins.data) && allSubAdmins.data.length > 0 ? (
+          <div className="flex items-center gap-5 justify-between">
+            <SearchBar onSearchChange={handleSearchChange} />
+          </div>
+        ) : null}
         <div>
           <DataDetailsTable
             rowType="subAdminManagement"
@@ -173,16 +184,19 @@ const SubAdminManagement = () => {
             ]}
           />
         </div>
-        <div className="mt-4 border-t border-[#E9E9E9] pt-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={allSubAdmins.last_page}
-            itemsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handleItemsPerPageChange}
-            itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-          />
-        </div>
+        {Array.isArray(allSubAdmins.data) && allSubAdmins.data.length > 0 ? (
+          <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={allSubAdmins.last_page}
+              itemsPerPage={itemsPerPage}
+              onPageChange={handlePageChange}
+              onItemsPerPageChange={handleItemsPerPageChange}
+              itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+            pageKey="subAdminManagement"
+            />
+          </div>
+        ) : null}
       </CardContainer>
       <Modal isOpen={isDocumentModalOpen.isOpen} className="p-10">
         {isDocumentModalOpen.type === "new" ? (
@@ -203,15 +217,6 @@ const SubAdminManagement = () => {
           initialValues={{
             permissions: allPermissions,
           }}
-          // onSubmit={onSubmit}
-          //   validationSchema={SIGNIN_VALIDATION_SCHEMA}
-          //   onSubmit={(values, { setSubmitting }) => {
-          //     if (!disableSubmit) {
-          //       onSignIn(values, setSubmitting);
-          //     } else {
-          //       setSubmitting(false);
-          //     }
-          //   }}
         >
           {({ values, setFieldValue }) => {
             console.log(values, "values====");

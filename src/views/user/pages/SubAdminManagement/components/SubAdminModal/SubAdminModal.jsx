@@ -1,5 +1,6 @@
 import _ from "lodash";
 import React, { useState } from "react";
+import * as Yup from "yup";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import CommonImageUploader from "../../../../../../components/shared/CommonImageUploader";
 import ImageUploadIcon from "../../../../../../components/svg/ImageUploadIcon";
@@ -10,6 +11,10 @@ import PageSubTitle from "../../../../../../components/ui/PageSubTitle";
 import FormikCheckbox from "../../../../../../components/ui/FormikCheckbox";
 import Button from "../../../../../../components/ui/Button/Button";
 import ViewPermissions from "../ViewPermissions";
+import {
+  SUB_ADMIN_EDIT_VALIDATION_SCHEMA,
+  SUB_ADMIN_NEW_VALIDATION_SCHEMA,
+} from "../../../../validators/pages/subAdmin.validation";
 
 const SubAdminModal = ({
   submitError,
@@ -47,21 +52,23 @@ const SubAdminModal = ({
         icon={<ImageUploadIcon />}
       />
       <div className="pt-[35px]">
+        {/** Validation schema **/}
+        {/** name/email always required; password fields only when creating new **/}
+        {/** Keep schema in render to read `type` prop without extra hooks **/}
+        {(() => {
+          return null;
+        })()}
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
-          //   validationSchema={SIGNIN_VALIDATION_SCHEMA}
-          //   onSubmit={(values, { setSubmitting }) => {
-          //     if (!disableSubmit) {
-          //       onSignIn(values, setSubmitting);
-          //     } else {
-          //       setSubmitting(false);
-          //     }
-          //   }}
+          validationSchema={
+            type === "new"
+              ? SUB_ADMIN_NEW_VALIDATION_SCHEMA
+              : SUB_ADMIN_EDIT_VALIDATION_SCHEMA
+          }
           enableReinitialize={true}
         >
           {({ values, setFieldValue }) => {
-            // console.log(values, "valu===");
             return (
               <Form>
                 <div className="flex flex-wrap gap-5 mb-[60px]">
@@ -163,6 +170,11 @@ const SubAdminModal = ({
                     <ViewPermissions
                       values={values}
                       setFieldValue={setFieldValue}
+                    />
+                    <ErrorMessage
+                      name="permissions"
+                      component="div"
+                      className="text-red-500 text-sm mt-2"
                     />
                   </div>
                 </div>

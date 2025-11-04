@@ -4,6 +4,8 @@ import { ErrorMessage, Field } from "formik";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import Button from "../../../../../../components/ui/Button/Button";
 
+const options = [{ value: "local", label: "Local" }];
+
 const VehicleInformationForm = ({ formEl }) => {
   const { values, setFieldValue } = formEl;
   return (
@@ -25,7 +27,7 @@ const VehicleInformationForm = ({ formEl }) => {
             />
           </div>
           <ErrorMessage
-            name="email"
+            name="vehicle_type_name"
             component="div"
             className="text-red-500 text-sm mt-1"
           />
@@ -44,10 +46,11 @@ const VehicleInformationForm = ({ formEl }) => {
               value={values.order_no}
               onChange={(val) => setFieldValue("order_no", val)}
               placeholder="Select Order No"
+              options={options}
             />
           </div>
           <ErrorMessage
-            name="email"
+            name="order_no"
             component="div"
             className="text-red-500 text-sm mt-1"
           />
@@ -66,36 +69,16 @@ const VehicleInformationForm = ({ formEl }) => {
               value={values.vehicle_type_service}
               onChange={(val) => setFieldValue("vehicle_type_service", val)}
               placeholder="Select Vehicle Type Service "
+              options={options}
             />
           </div>
           <ErrorMessage
-            name="email"
+            name="vehicle_type_service"
             component="div"
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-40px)/3)]">
-          <label
-            htmlFor="Map API Provider"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
-            Recommended Price (Miles)*
-          </label>
-          <div className="h-16">
-            <Field
-              type="text"
-              name="email"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-              placeholder="$0"
-            />
-          </div>
-          <ErrorMessage
-            name="email"
-            component="div"
-            className="text-red-500 text-sm mt-1"
-          />
-        </div>
-        <div className="w-[calc((100%-40px)/3)]">
+        <div className="w-[calc((100%-20px)/2)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -111,12 +94,12 @@ const VehicleInformationForm = ({ formEl }) => {
             />
           </div>
           <ErrorMessage
-            name="email"
+            name="minimum_price"
             component="div"
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-40px)/3)]">
+        <div className="w-[calc((100%-20px)/2)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -132,7 +115,7 @@ const VehicleInformationForm = ({ formEl }) => {
             />
           </div>
           <ErrorMessage
-            name="email"
+            name="minimum_distance"
             component="div"
             className="text-red-500 text-sm mt-1"
           />
@@ -171,7 +154,7 @@ const VehicleInformationForm = ({ formEl }) => {
             </Field>
           </div>
           <ErrorMessage
-            name="email"
+            name="vehicle_image"
             component="div"
             className="text-red-500 text-sm mt-1"
           />
@@ -194,7 +177,7 @@ const VehicleInformationForm = ({ formEl }) => {
             />
           </div>
           <ErrorMessage
-            name="email"
+            name="backup_bid_vehicle_type"
             component="div"
             className="text-red-500 text-sm mt-1"
           />

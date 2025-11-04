@@ -26,12 +26,15 @@ const FormSelection = ({
       borderRadius: "8px",
       height: "64px",
       width: "100%",
-      borderColor: state.isFocused ? "#2563eb" : "#8D8D8D",
-      boxShadow: "-4px 4px 6px 0px #0000001F",
+      borderColor: state.isFocused ? "#1f41bb" : "#8D8D8D",
+      boxShadow: state.isFocused
+        ? "0 0 0 2px #1f41bb inset, -4px 4px 6px 0px #0000001F"
+        : "-4px 4px 6px 0px #0000001F",
+      transition: "none",
       fontSize: "16px",
       lineHeight: "22px",
       fontWeight: "600",
-      "&:hover": { borderColor: "#2563eb" },
+      "&:hover": { borderColor: "#1f41bb" },
       "&placeholder": { color: "#6C6C6C" },
     }),
     menu: (base) => ({
@@ -66,6 +69,7 @@ const FormSelection = ({
     <Select
       name={name}
       options={options}
+      className="form-selection"
       value={
         isMulti
           ? options.filter((opt) => value?.includes(opt.value))

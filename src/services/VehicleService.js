@@ -10,9 +10,11 @@ import { replaceSlash } from "../utils/functions/common.function";
 import ApiService from "./ApiService";
 
 export async function apiGetVehicleTypes(params) {
+  const url = params ? replaceSlash(params, GET_VEHICLE_TYPES) : GET_VEHICLE_TYPES;
   return ApiService.fetchData({
-    url: params ? replaceSlash(params, GET_VEHICLE_TYPES) : GET_VEHICLE_TYPES,
+    url,
     method: METHOD_GET,
+    params: typeof params === 'object' ? params : undefined,
   });
 }
 

@@ -5,10 +5,10 @@ import { useAppSelector } from "../../../store";
 import Base from "../../animations/Base";
 
 const SIZE_CONFIG = {
-  sm: "max-w-[520px]",
-  md: "max-w-[720px]",
-  xl: "max-w-[1000px]",
-  "2xl": "max-w-[1200px]",
+  sm: "max-w-[95%] sm:max-w-[520px]",
+  md: "max-w-[95%] sm:max-w-[720px]",
+  xl: "max-w-[95%] sm:max-w-[1000px]",
+  "2xl": "max-w-[95%] sm:max-w-[1200px]",
 };
 
 const ModalComponent = ({ size = "xl", children, className }) => {
@@ -34,7 +34,9 @@ const ModalComponent = ({ size = "xl", children, className }) => {
       ref={parentRef}
       className={classNames(
         "fixed z-[2000] top-0 left-0 w-full h-screen overflow-auto bg-[#00000050] flex justify-center",
-        isChildGreater ? "py-[140px]" : "items-center"
+        isChildGreater 
+          ? "py-4 sm:py-8 md:py-[60px] lg:py-[140px]" 
+          : "items-center py-4 sm:py-8"
       )}
     >
       <Base
@@ -44,7 +46,7 @@ const ModalComponent = ({ size = "xl", children, className }) => {
         exit={{ opacity: 0, scale: 0.9, y: 30 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
         className={classNames(
-          "w-full bg-white rounded-[25px] relative h-fit shadow-xl",
+          "w-full bg-white rounded-[15px] sm:rounded-[25px] relative h-fit shadow-xl mx-4 sm:mx-6",
           SIZE_CONFIG[size],
           className
         )}

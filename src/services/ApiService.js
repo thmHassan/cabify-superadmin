@@ -94,12 +94,12 @@ const ApiService = {
         })
     },
 
-    getCompanyList({ page = 1, status = 'all' } = {}) {
+    getCompanyList({ page = 1, status = 'active', perPage } = {}) {
         return new Promise((resolve, reject) => {
             BaseService({
                 method: 'GET',
                 url: '/super-admin/company-list',
-                params: { page, status },
+                params: { page, status, perPage },
             })
                 .then((response) => {
                     resolve(response)

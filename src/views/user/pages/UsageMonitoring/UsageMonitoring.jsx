@@ -6,9 +6,6 @@ import PlusIcon from "../../../../components/svg/PlusIcon";
 import PageSubTitle from "../../../../components/ui/PageSubTitle";
 import SnapshotCard from "../../../../components/shared/SnapshotCard";
 import ChildText from "../../../../components/ui/ChildText.jsx/ChildText";
-import CardContainer from "../../../../components/shared/CardContainer";
-import SystemUptimeIcon from "../../../../components/svg/SystemUptimeIcon";
-import ApiResponseIcon from "../../../../components/svg/ApiResponseIcon";
 import CompaniesIcon from "../../../../components/svg/CompaniesIcon";
 import APIKeysIcon from "../../../../components/svg/APIKeysIcon";
 import TabView from "../../../../components/shared/TabView/TabView";
@@ -29,28 +26,6 @@ const UsageMonitoring = () => {
   });
 
   const DASHBOARD_CARDS = [
-    {
-      title: "System Uptime",
-      value: "99.9%",
-      change: "+0.1% from last hour",
-      icon: {
-        component: SystemUptimeIcon,
-      },
-      backgroundColor: "#eeedff",
-      color: "#534CB4",
-    },
-    {
-      title: "API Response Time",
-      value: "120ms",
-      change: "-15ms vs last hour",
-      icon: {
-        component: ApiResponseIcon,
-        width: 24,
-        height: 30,
-      },
-      backgroundColor: "#e5f9f0",
-      color: "#3E9972",
-    },
     {
       title: "Active Companies",
       value: allUsageMonitoring.data.activeCompanies,
@@ -142,7 +117,7 @@ const UsageMonitoring = () => {
         </div>
       </div>
       <div className="flex flex-col gap-5">
-        <div className="flex gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard key={index} data={card} />
           ))}

@@ -10,11 +10,13 @@ import { replaceSlash } from "../utils/functions/common.function";
 import ApiService from "./ApiService";
 
 export async function apiGetDriversDocuments(params) {
+  const url = params
+    ? replaceSlash(params, GET_DRIVERS_DOCUMENT)
+    : GET_DRIVERS_DOCUMENT;
   return ApiService.fetchData({
-    url: params
-      ? replaceSlash(params, GET_DRIVERS_DOCUMENT)
-      : GET_DRIVERS_DOCUMENT,
+    url,
     method: METHOD_GET,
+    params: typeof params === 'object' ? params : undefined,
   });
 }
 

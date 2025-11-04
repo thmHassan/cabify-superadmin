@@ -1,17 +1,19 @@
 import { Form, Formik } from "formik";
+import * as Yup from "yup";
 import React from "react";
 import CardContainer from "../../../../../../components/shared/CardContainer";
 import VehicleInformationForm from "../VehicleInformationForm";
 import BaseFareConfigurationForm from "../BaseFareConfigurationForm";
 import MileageRateSettingsForm from "../MileageRateSettingsForm";
 import Button from "../../../../../../components/ui/Button/Button";
+import { DRIVER_VEHICLE_VALIDATION_SCHEMA } from "../../../../validators/pages/driverVehicle.validation";
 
 const DriverVehicleForm = ({ onSubmit, initialValues }) => {
   return (
     <div className="flex flex-col gap-[30px]">
       <Formik
         initialValues={initialValues}
-        //   validationSchema={SIGNIN_VALIDATION_SCHEMA}
+        validationSchema={DRIVER_VEHICLE_VALIDATION_SCHEMA}
         onSubmit={onSubmit}
       >
         {(formEl) => (

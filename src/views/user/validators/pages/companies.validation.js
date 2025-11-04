@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 // Basic Information Validation Schema
-export const basicInformationSchema = {
+export const BASIC_INFORMATION_VALIDATION_SCHEMA = {
   company_name: Yup.string()
     .required("Company name is required")
     .min(2, "Company name must be at least 2 characters"),
@@ -37,7 +37,7 @@ export const basicInformationSchema = {
 };
 
 // Services Information Validation Schema
-export const servicesInformationSchema = {
+export const SERVICE_INFORMATION_VALIDATION_SCHEMA = {
   maps_api: Yup.string().required("Maps API is required"),
   search_api: Yup.string().required("Search API is required"),
   passengers_allowed: Yup.number()
@@ -65,7 +65,7 @@ export const servicesInformationSchema = {
 };
 
 // System Information Validation Schema
-export const systemInformationSchema = {
+export const SYSTEM_INFORMATION_VALIDATION_SCHEMA = {
   units: Yup.string().required("Units is required"),
   country_of_use: Yup.string().required("Country of use is required"),
   time_zone: Yup.string().required("Time zone is required"),
@@ -80,7 +80,7 @@ export const systemInformationSchema = {
 };
 
 // Enablement Information Validation Schema
-export const enablementInformationSchema = {
+export const ENABLEMENT_INFORMATION_VALIDATION_SCHEMA = {
   dispatcher: Yup.boolean(),
   map: Yup.boolean(),
   push_notification: Yup.boolean(),
@@ -93,9 +93,21 @@ export const enablementInformationSchema = {
   accounts: Yup.boolean(),
 };
 
-export const completeCompanySchema = Yup.object().shape({
-  ...basicInformationSchema,
-  ...servicesInformationSchema,
-  ...systemInformationSchema,
-  ...enablementInformationSchema,
+export const COMPANY_VALIDATION_SCHEMA = Yup.object().shape({
+  ...BASIC_INFORMATION_VALIDATION_SCHEMA,
+  ...SERVICE_INFORMATION_VALIDATION_SCHEMA,
+  ...SYSTEM_INFORMATION_VALIDATION_SCHEMA,
+  ...ENABLEMENT_INFORMATION_VALIDATION_SCHEMA,
+});
+
+export const COMPANY_SETTING_VALIDATION_SCHEMA = Yup.object().shape({
+  mapApiProvider: Yup.string().trim().required("Map API provider is required"),
+  callApiProvider: Yup.string()
+    .trim()
+    .required("Call API provider is required"),
+  paymentMethod: Yup.string().trim().required("Payment method is required"),
+  planType: Yup.string().trim().required("Plan type is required"),
+  mapSearchApiProvider: Yup.string()
+    .trim()
+    .required("Map search API provider is required"),
 });

@@ -12,11 +12,13 @@ import {
 import { useAppSelector } from "../../../../store";
 import { useRef, useState } from "react";
 import { convertToFormData } from "../../../../utils/functions/common.function";
+import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
+import { CHANGE_PASSWORD_SCHEMA, PROFILE_SCHEMA } from "../../validators/pages/account.validation";
 
 const Account = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [formData, setFormData] = useState({});
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector((state) => state.auth.user) || null;
 
   const fileInputRef = useRef(null);
 
@@ -70,6 +72,17 @@ const Account = () => {
     }
   };
 
+  
+
+  if (!user.name || !user.email) {
+    return (
+      <div className="flex items-center justify-center min-h-screen w-full">
+        <AppLogoLoader />
+      </div>
+    );
+  }
+
+
   return (
     <div className="p-10 flex flex-col gap-5">
       <CardContainer className="p-[30px]">
@@ -77,8 +90,9 @@ const Account = () => {
           <PageTitle title="Update Profile" />
         </div>
         <Formik
+          enableReinitialize
           initialValues={{ name: user.name || "", email: user.email || "" }}
-          // validationSchema={FORGOT_PASSWORD_VALIDATION_SCHEMA}
+          validationSchema={PROFILE_SCHEMA}
           onSubmit={onProfileUpdate}
         >
           {() => (
@@ -197,7 +211,7 @@ const Account = () => {
         </div>
         <Formik
           initialValues={{ old_password: "", new_password: "" }}
-          // validationSchema={FORGOT_PASSWORD_VALIDATION_SCHEMA}
+          validationSchema={CHANGE_PASSWORD_SCHEMA}
           onSubmit={onPasswordChange}
         >
           {() => (

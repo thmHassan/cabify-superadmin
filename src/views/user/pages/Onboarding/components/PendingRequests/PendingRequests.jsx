@@ -1,4 +1,5 @@
 import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
+import EmptyState from "../../../../../../components/shared/EmptyState";
 import RequestComponent from "../RequestComponent";
 
 const PendingRequests = ({
@@ -12,6 +13,16 @@ const PendingRequests = ({
       <div className="flex items-center justify-center min-h-screen w-full">
         <AppLogoLoader />
       </div>
+    );
+  }
+  if (!allOnboardings || allOnboardings.length === 0) {
+    return (
+      <EmptyState
+        title="No pending requests found"
+        description="There are currently no onboarding requests awaiting approval."
+        actionLabel={typeof onRefresh === "function" ? "Refresh" : undefined}
+        onAction={typeof onRefresh === "function" ? onRefresh : undefined}
+      />
     );
   }
   return (

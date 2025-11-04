@@ -33,7 +33,7 @@ const CompanyInformationModal = ({ isOpen, setIsOpen, companyId, onEdit }) => {
   return (
     <Modal isOpen={isOpen} size="2xl" className="p-10">
       <Button
-        className="bg-[#F3F3F3] absolute top-5 right-10 w-[45px] h-[45px] rounded-full flex justify-center items-center"
+        className="bg-[#F3F3F3] !absolute top-5 right-10 w-[45px] h-[45px] rounded-full flex justify-center items-center"
         onClick={() => {
           unlockBodyScroll();
           setIsOpen(false);
