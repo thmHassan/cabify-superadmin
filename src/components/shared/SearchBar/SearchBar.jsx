@@ -21,7 +21,7 @@ const SearchBar = ({ onSearchChange, variant = 0 }) => {
   return (
     <div
       className={classNames(
-        "flex-1 max-w-[400px] h-[54px] rounded-[10px] overflow-hidden relative",
+        "flex-1 max-w-[400px] h-[54px] relative rounded-[10px]",
         VARIANT_CONFIG[variant]
       )}
     >
@@ -29,7 +29,7 @@ const SearchBar = ({ onSearchChange, variant = 0 }) => {
         type="text"
         value={searchValue}
         onChange={handleSearchChange}
-        className="w-full h-full text-[#6C6C6C] focus:outline-none font-medium text-[16px] leading-[22px] py-4 pl-[54px] pr-4 bg-transparent"
+        className="w-full h-full text-[#6C6C6C] rounded-[10px] focus:outline-none font-medium text-[16px] leading-[22px] py-4 pl-[54px] pr-4 bg-transparent"
         placeholder="Search here..."
       />
       <div className="w-6 h-6 flex items-center justify-center absolute top-[15px] left-[15px]">

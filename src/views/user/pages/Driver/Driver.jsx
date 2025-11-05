@@ -29,6 +29,10 @@ const Driver = () => {
     data: [],
     last_page: 1,
   });
+  const [driverDocumentsListRaw, setDriverDocumentsListRaw] = useState([]);
+  const [driverDocumentsListDisplay, setDriverDocumentsListDisplay] = useState(
+    []
+  );
   const [_searchQuery, setSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isDriverDocumentsLoading, setIsDriverDocumentsLoading] =
@@ -66,13 +70,20 @@ const Driver = () => {
   const getDriversDocuments = async () => {
     try {
       setIsDriverDocumentsLoading(true);
-      const result = await apiGetDriversDocuments({ page: currentPage, perPage: itemsPerPage });
+      const result = await apiGetDriversDocuments({
+        page: currentPage,
+        perPage: itemsPerPage,
+      });
       if (result?.status === 200) {
         console.log(result, "res========");
-        setAllDriversDocuments(result?.data?.list);
+        const list = result?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setAllDriversDocuments(list);
+        setDriverDocumentsListRaw(rows);
       }
     } catch (errors) {
       console.log(errors, "err---");
+      setDriverDocumentsListRaw([]);
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -92,6 +103,22 @@ const Driver = () => {
     getDriversDocuments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage, refreshTrigger]);
+
+  useEffect(() => {
+    const query = _searchQuery?.toLowerCase?.() ?? "";
+
+    let filtered = [...driverDocumentsListRaw];
+
+    if (query) {
+      filtered = filtered.filter((d) => {
+        const hay = `${d.document_name ?? ""}`.toLowerCase();
+        return hay.includes(query);
+      });
+    }
+
+    setDriverDocumentsListDisplay(filtered);
+    setCurrentPage(1); // Reset to first page when filtering
+  }, [driverDocumentsListRaw, _searchQuery]);
 
   if (isDriverDocumentsLoading) {
     return (
@@ -126,8 +153,8 @@ const Driver = () => {
         </div>
       </div>
       <CardContainer className="p-5">
-        {Array.isArray(allDriversDocuments.data) &&
-        allDriversDocuments.data.length > 0 ? (
+        {Array.isArray(driverDocumentsListRaw) &&
+        driverDocumentsListRaw.length > 0 ? (
           <div className="flex items-center gap-5 justify-between">
             <SearchBar onSearchChange={handleSearchChange} />
           </div>
@@ -135,7 +162,7 @@ const Driver = () => {
         <div>
           <DataDetailsTable
             rowType="driverDocuments"
-            companies={allDriversDocuments.data}
+            companies={driverDocumentsListDisplay}
             actionOptions={[
               {
                 label: "Edit",
@@ -158,8 +185,8 @@ const Driver = () => {
             ]}
           />
         </div>
-        {Array.isArray(allDriversDocuments.data) &&
-        allDriversDocuments.data.length > 0 ? (
+        {Array.isArray(driverDocumentsListDisplay) &&
+        driverDocumentsListDisplay.length > 0 ? (
           <div className="mt-4 border-t border-[#E9E9E9] pt-4">
             <Pagination
               currentPage={currentPage}

@@ -91,6 +91,8 @@ const Subscription = () => {
     data: [],
     last_page: 1,
   });
+  const [subscriptionListRaw, setSubscriptionListRaw] = useState([]);
+  const [subscriptionListDisplay, setSubscriptionListDisplay] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [subscriptionCardDetails, setSubscriptionCardDetails] = useState({});
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState({
@@ -114,6 +116,7 @@ const Subscription = () => {
 
   const handleStatusChange = (option) => {
     setSelectedStatus(option);
+    setCurrentPage(1);
   };
 
   const handlePlanChange = (option) => {
@@ -134,12 +137,19 @@ const Subscription = () => {
   const getSubscriptions = async () => {
     try {
       setIsSubscriptionsLoading(true);
-      const result = await apiGetSubscriptions({ page: currentPage, perPage: itemsPerPage });
+      const result = await apiGetSubscriptions({
+        page: currentPage,
+        perPage: itemsPerPage,
+      });
       if (result?.status === 200) {
-        setAllSubscription(result?.data?.list);
+        const list = result?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setAllSubscription(list);
+        setSubscriptionListRaw(rows);
       }
     } catch (errors) {
       console.log(errors, "err---");
+      setSubscriptionListRaw([]);
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -172,6 +182,30 @@ const Subscription = () => {
     getSubscriptions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger, currentPage, itemsPerPage]);
+
+  useEffect(() => {
+    const query = _searchQuery?.toLowerCase?.() ?? "";
+    const plan = _selectedPlan?.value ?? "all";
+
+    let filtered = [...subscriptionListRaw];
+
+    if (query) {
+      filtered = filtered.filter((s) => {
+        const hay = `${s.plan_name ?? ""} ${s.billing_cycle ?? ""} ${
+          s.features ?? ""
+        } ${s.amount ?? ""}`.toLowerCase();
+        return hay.includes(query);
+      });
+    }
+
+    if (plan !== "all") {
+      filtered = filtered.filter(
+        (s) => (s.plan_name ?? "").toLowerCase() === plan.toLowerCase()
+      );
+    }
+
+    setSubscriptionListDisplay(filtered);
+  }, [subscriptionListRaw, _searchQuery, _selectedPlan]);
 
   if (isSubscriptionsLoading || isSubscriptionCardDetailsLoading) {
     return (
@@ -226,12 +260,78 @@ const Subscription = () => {
             <ChildText text="Existing Subscription Types" size="2xl" />
             <PageSubTitle title="Overview of all company subscriptions and billing status" />
           </div>
-          <CardContainer className="px-5 pb-5">
+          <CardContainer className="px-5 py-5">
             <div className="mb-7 pb-6 border-b-2 border-[#E9E9E9]">
-              <DataDetailsTable
-                companies={companiesData}
-                onActionClick={() => console.log("object")}
-              />
+              <div>
+                {Array.isArray(subscriptionListRaw) &&
+                subscriptionListRaw.length > 0 ? (
+                  <div className="flex items-center gap-5 justify-between">
+                    <SearchBar onSearchChange={handleSearchChange} />
+                    <div className="flex gap-5">
+                      <CustomSelect
+                        variant={2}
+                        options={STATUS_OPTIONS}
+                        value={_selectedStatus}
+                        onChange={handleStatusChange}
+                        placeholder="All Status"
+                      />
+                      <CustomSelect
+                        variant={2}
+                        options={PLAN_OPTIONS}
+                        value={_selectedPlan}
+                        onChange={handlePlanChange}
+                        placeholder="All Plans"
+                      />
+                    </div>
+                  </div>
+                ) : null}
+                <div>
+                  <DataDetailsTable
+                    companies={subscriptionListDisplay}
+                    actionOptions={[
+                      // {
+                      //   label: "View",
+                      //   onClick: (data) => {
+                      //     // setSelectedViewData(data);
+                      //     // setIsViewPermissionModal(true);
+                      //   },
+                      // },
+                      {
+                        label: "Edit",
+                        onClick: (item) => {
+                          if (item) {
+                            setSelectedId(item?.id);
+                            setIsSubscriptionModalOpen({
+                              type: "edit",
+                              isOpen: true,
+                            });
+                          }
+                        },
+                      },
+                      // {
+                      //   label: "Delete",
+                      //   onClick: () => {
+                      //     console.log("Delete clicked");
+                      //   },
+                      // },
+                    ]}
+                  />
+                </div>
+                {Array.isArray(subscriptionListDisplay) &&
+                subscriptionListDisplay.length > 0 ? (
+                  <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={allSubscription.last_page}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={handlePageChange}
+                      onItemsPerPageChange={handleItemsPerPageChange}
+                      itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                      pageKey="subscription"
+                    />
+                  </div>
+                ) : null}
+              </div>
             </div>
             <div className="flex flex-col gap-[5px] mb-5">
               <ChildText text="Subscription Management" size="2xl" />
@@ -262,34 +362,8 @@ const Subscription = () => {
               ) : null}
               <div>
                 <DataDetailsTable
-                  companies={allSubscription.data}
-                  actionOptions={[
-                    // {
-                    //   label: "View",
-                    //   onClick: (data) => {
-                    //     // setSelectedViewData(data);
-                    //     // setIsViewPermissionModal(true);
-                    //   },
-                    // },
-                    {
-                      label: "Edit",
-                      onClick: (item) => {
-                        if (item) {
-                          setSelectedId(item?.id);
-                          setIsSubscriptionModalOpen({
-                            type: "edit",
-                            isOpen: true,
-                          });
-                        }
-                      },
-                    },
-                    // {
-                    //   label: "Delete",
-                    //   onClick: () => {
-                    //     console.log("Delete clicked");
-                    //   },
-                    // },
-                  ]}
+                  companies={companiesData}
+                  onActionClick={() => console.log("object")}
                 />
               </div>
               {Array.isArray(allSubscription.data) &&
@@ -297,7 +371,7 @@ const Subscription = () => {
                 <div className="mt-4 border-t border-[#E9E9E9] pt-4">
                   <Pagination
                     currentPage={currentPage}
-                    totalPages={allSubscription.last_page}
+                    totalPages={1}
                     itemsPerPage={itemsPerPage}
                     onPageChange={handlePageChange}
                     onItemsPerPageChange={handleItemsPerPageChange}

@@ -51,6 +51,8 @@ const SubAdminManagement = () => {
     type: "new",
   });
   const [allSubAdmins, setAllSubAdmins] = useState({ data: [], last_page: 1 });
+    const [subAdminListRaw, setSubAdminListRaw] = useState([]);
+    const [subAdminListDisplay, setSubAdminListDisplay] = useState([]);
   const [isSubAdminsLoading, setIsSubAdminsLoading] = useState([]);
   const [_searchQuery, setSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -88,10 +90,14 @@ const SubAdminManagement = () => {
       setIsSubAdminsLoading(true);
       const result = await apiGetSubAdmins({ page: currentPage, perPage: itemsPerPage });
       if (result?.status === 200) {
-        setAllSubAdmins(result?.data?.list);
+        const list = result?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setAllSubAdmins(list);
+        setSubAdminListRaw(rows);
       }
     } catch (errors) {
       console.log(errors, "err---");
+      setSubAdminListRaw([]);
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -105,6 +111,22 @@ const SubAdminManagement = () => {
     getSubAdmins();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage, refreshTrigger]);
+
+  useEffect(() => {
+    const query = _searchQuery?.toLowerCase?.() ?? "";
+
+    let filtered = [...subAdminListRaw];
+
+    if (query) {
+      filtered = filtered.filter((s) => {
+        const hay = `${s.name ?? ""} ${s.email ?? ""}`.toLowerCase();
+        return hay.includes(query);
+      });
+    }
+
+    setSubAdminListDisplay(filtered);
+    setCurrentPage(1); // Reset to first page when filtering
+  }, [subAdminListRaw, _searchQuery]);
 
   if (isSubAdminsLoading) {
     return (
@@ -145,7 +167,7 @@ const SubAdminManagement = () => {
         </div>
       </div>
       <CardContainer className="p-5">
-        {Array.isArray(allSubAdmins.data) && allSubAdmins.data.length > 0 ? (
+        {Array.isArray(subAdminListRaw) && subAdminListRaw.length > 0 ? (
           <div className="flex items-center gap-5 justify-between">
             <SearchBar onSearchChange={handleSearchChange} />
           </div>
@@ -153,7 +175,7 @@ const SubAdminManagement = () => {
         <div>
           <DataDetailsTable
             rowType="subAdminManagement"
-            companies={allSubAdmins.data}
+            companies={subAdminListDisplay}
             onViewClick={(data) => {
               setSelectedViewData(data);
               setIsViewPermissionModal(true);
@@ -184,7 +206,8 @@ const SubAdminManagement = () => {
             ]}
           />
         </div>
-        {Array.isArray(allSubAdmins.data) && allSubAdmins.data.length > 0 ? (
+        {Array.isArray(subAdminListDisplay) &&
+        subAdminListDisplay.length > 0 ? (
           <div className="mt-4 border-t border-[#E9E9E9] pt-4">
             <Pagination
               currentPage={currentPage}
@@ -193,7 +216,7 @@ const SubAdminManagement = () => {
               onPageChange={handlePageChange}
               onItemsPerPageChange={handleItemsPerPageChange}
               itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-            pageKey="subAdminManagement"
+              pageKey="subAdminManagement"
             />
           </div>
         ) : null}

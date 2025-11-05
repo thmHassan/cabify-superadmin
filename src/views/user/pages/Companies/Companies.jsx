@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { debounce } from "lodash";
 import CompaniesIcon from "../../../../components/svg/CompaniesIcon";
 import ActiveCompaniesIcon from "../../../../components/svg/ActiveCompaniesIcon";
 import MonthlyRevenueIcon from "../../../../components/svg/MonthlyRevenueIcon";
@@ -92,9 +93,25 @@ const Companies = () => {
     },
   ];
 
-  const handleSearchChange = (value) => {
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
+
+  const debouncedSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedSearchQuery(searchValue);
+    }, 500)
+  );
+
+  const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
-  };
+    debouncedSearchRef.current(value);
+  }, []);
+
+  useEffect(() => {
+    const debouncedFn = debouncedSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
 
   const handleStatusChange = (option) => {
     setSelectedStatus(option);
@@ -130,7 +147,8 @@ const Companies = () => {
   const fetchCompanyList = async (
     page = 1,
     status = "active",
-    perPage = itemsPerPage
+    perPage = itemsPerPage,
+    search = ""
   ) => {
     try {
       setTableLoading(true);
@@ -138,6 +156,7 @@ const Companies = () => {
         page,
         status,
         perPage,
+        search: search || undefined,
       });
       const list = response?.data?.list;
       console.log(list, "list");
@@ -169,7 +188,7 @@ const Companies = () => {
     const statusParam = _selectedStatus?.value ?? "all";
 
     console.log(statusParam, "statusparam");
-    fetchCompanyList(1, statusParam, itemsPerPage);
+    fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger]);
 
@@ -187,22 +206,10 @@ const Companies = () => {
   };
 
   useEffect(() => {
-    const query = _searchQuery?.toLowerCase?.() ?? "";
     const plan = _selectedPlan?.value ?? "all";
-
     let filtered = [...companyListRaw];
 
-    console.log(filtered, "filtered");
-
-    if (query) {
-      filtered = filtered.filter((c) => {
-        const hay = `${c.company_name ?? ""} ${c.email ?? ""} ${
-          c.city ?? ""
-        }`.toLowerCase();
-        return hay.includes(query);
-      });
-    }
-
+    // Only filter by plan on client-side if needed
     if (plan !== "all") {
       filtered = filtered.filter(
         (c) => (c.subscription_type ?? "").toLowerCase() === plan.toLowerCase()
@@ -210,13 +217,25 @@ const Companies = () => {
     }
 
     setCompanyListDisplay(mapToTableRows(filtered));
-  }, [companyListRaw, _searchQuery, _selectedPlan]);
+  }, [companyListRaw, _selectedPlan]);
 
   useEffect(() => {
     const statusParam = _selectedStatus?.value ?? "all";
-    fetchCompanyList(currentPage, statusParam, itemsPerPage);
+    setCurrentPage(1); // Reset to page 1 when search or status changes
+    fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, _selectedStatus, itemsPerPage]);
+  }, [debouncedSearchQuery, _selectedStatus, itemsPerPage]);
+
+  useEffect(() => {
+    const statusParam = _selectedStatus?.value ?? "all";
+    fetchCompanyList(
+      currentPage,
+      statusParam,
+      itemsPerPage,
+      debouncedSearchQuery
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   if (cardsLoading || tableLoading) {
     return (
@@ -263,8 +282,7 @@ const Companies = () => {
           </div>
           <div>
             <CardContainer className="p-5 bg-[#F5F5F5]">
-              {Array.isArray(companyListDisplay) &&
-              companyListDisplay.length > 0 ? (
+              {Array.isArray(companyListRaw) && companyListRaw.length > 0 ? (
                 <div className="flex items-center gap-5 justify-between">
                   <SearchBar onSearchChange={handleSearchChange} />
                   <div className="flex gap-5">
