@@ -9,7 +9,7 @@ import { setTabViewScreen } from "../../../store";
 const ALIGN_CONFIG = {
   left: "flex-start",
   right: "flex-end",
-  center: "justify-center",
+  center: "justify-start",
 };
 
 const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
@@ -41,7 +41,7 @@ const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
 
   return (
     <div>
-      <div className={classNames("flex gap-5 mb-[52px]", ALIGN_CONFIG[align])}>
+      <div className={classNames("flex w-full gap-3 sm:gap-5 mb-5 sm:mb-[52px] px-2 overflow-x-auto whitespace-nowrap", ALIGN_CONFIG[align])}>
         {tabs.map(({ title }, index) => (
           <Button
             key={index}
@@ -49,7 +49,7 @@ const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
               if (onTabChange) onTabChange(index);
               handleTabChange(index, title);
             }}
-          >
+            className="min-w-max"          >
             <Tag variant={currentTab === index ? "blue" : "gray"} size="lg">
               {title}
             </Tag>

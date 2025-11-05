@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import WalletIcon from "../../../../components/svg/WalletIcon";
 import WatchIcon from "../../../../components/svg/WatchIcon";
 import PageTitle from "../../../../components/ui/PageTitle";
@@ -19,7 +20,7 @@ import {
 import Pagination from "../../../../components/ui/Pagination";
 import SearchBar from "../../../../components/shared/SearchBar";
 import CustomSelect from "../../../../components/ui/CustomSelect";
-import { lockBodyScroll } from "../../../../utils/functions/common.function";
+import { lockBodyScroll, unlockBodyScroll } from "../../../../utils/functions/common.function";
 import Modal from "../../../../components/shared/Modal";
 import {
   apiGetSubscriptionCardDetails,
@@ -28,6 +29,7 @@ import {
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import EditSubscriptionModal from "./components/EditSubscriptionModal";
 import { useAppSelector } from "../../../../store";
+import Base from "../../../../components/animations/Base";
 
 const DASHBOARD_CARDS = [
   {
@@ -99,6 +101,7 @@ const Subscription = () => {
     isOpen: false,
     type: "new",
   });
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const savedPagination = useAppSelector(
     (state) => state?.app?.app?.pagination?.subscription
@@ -133,6 +136,16 @@ const Subscription = () => {
   };
 
   const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
+
+  const openFilter = () => {
+    setIsFilterOpen(true);
+    lockBodyScroll();
+  };
+
+  const closeFilter = () => {
+    setIsFilterOpen(false);
+    unlockBodyScroll();
+  };
 
   const getSubscriptions = async () => {
     try {
@@ -218,9 +231,9 @@ const Subscription = () => {
   console.log(allSubscription, "allSubscription=====");
 
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="Subscriptions" />
           <Button
             type="filled"
@@ -229,11 +242,14 @@ const Subscription = () => {
               lockBodyScroll();
               setIsSubscriptionModalOpen({ type: "new", isOpen: true });
             }}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
           >
-            <div className="flex gap-[15px] items-center">
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <PlusIcon />
-              <span>GC Subscription</span>
+              <span>
+                <span className="hidden sm:inline-block">GC</span>&nbsp;
+                <span>Subscription</span>
+              </span>
             </div>
           </Button>
         </div>
@@ -241,7 +257,7 @@ const Subscription = () => {
           <PageSubTitle title="Manage company subscriptions, billing, and plan changes" />
         </div>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col sm:gap-5 gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard
@@ -256,18 +272,33 @@ const Subscription = () => {
           ))}
         </div>
         <div>
-          <div className="flex flex-col gap-[5px] mb-[30px]">
+          <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
             <ChildText text="Existing Subscription Types" size="2xl" />
             <PageSubTitle title="Overview of all company subscriptions and billing status" />
           </div>
-          <CardContainer className="px-5 py-5">
-            <div className="mb-7 pb-6 border-b-2 border-[#E9E9E9]">
+          <CardContainer className="p-3 sm:p-4 lg:p-5">
+            <div className="mb-4 sm:mb-7 pb-4 sm:pb-6 border-b-2 border-[#E9E9E9]">
               <div>
                 {Array.isArray(subscriptionListRaw) &&
                 subscriptionListRaw.length > 0 ? (
-                  <div className="flex items-center gap-5 justify-between">
-                    <SearchBar onSearchChange={handleSearchChange} />
-                    <div className="flex gap-5">
+                  <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+                    <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
+                      <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+                    </div>
+                    {/* Mobile filter trigger */}
+                    <div className="flex justify-end md:hidden">
+                      <button
+                        type="button"
+                        className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
+                        onClick={openFilter}
+                      >
+                        {/* simple filter funnel icon */}
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M3 5H21L14 13V20L10 18V13L3 5Z" stroke="#333333" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
                       <CustomSelect
                         variant={2}
                         options={STATUS_OPTIONS}
@@ -319,7 +350,7 @@ const Subscription = () => {
                 </div>
                 {Array.isArray(subscriptionListDisplay) &&
                 subscriptionListDisplay.length > 0 ? (
-                  <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+                  <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                     <Pagination
                       currentPage={currentPage}
                       totalPages={allSubscription.last_page}
@@ -333,16 +364,93 @@ const Subscription = () => {
                 ) : null}
               </div>
             </div>
-            <div className="flex flex-col gap-[5px] mb-5">
+            {/* Mobile Filter Bottom Sheet */}
+            <AnimatePresence>
+              {isFilterOpen && (
+                <div className="fixed inset-0 z-[2000] md:hidden">
+                  <div
+                    className="absolute inset-0 bg-black/40"
+                    onClick={closeFilter}
+                  ></div>
+                  <Base
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "100%" }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-base font-semibold text-[#333]">Filter</span>
+                      <button
+                        type="button"
+                        aria-label="Close filter"
+                        className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
+                        onClick={closeFilter}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 6L18 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
+                          <path d="M18 6L6 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <CustomSelect
+                        variant={2}
+                        options={STATUS_OPTIONS}
+                        value={_selectedStatus}
+                        onChange={(opt) => {
+                          handleStatusChange(opt);
+                        }}
+                        placeholder="All Status"
+                        className="min-w-0"
+                      />
+                      <CustomSelect
+                        variant={2}
+                        options={PLAN_OPTIONS}
+                        value={_selectedPlan}
+                        onChange={(opt) => {
+                          handlePlanChange(opt);
+                        }}
+                        placeholder="All Plans"
+                        className="min-w-0"
+                      />
+                      <button
+                        type="button"
+                        className="mt-1 w-full py-3 rounded-lg bg-[#1F41BB] text-white font-medium"
+                        onClick={closeFilter}
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </Base>
+                </div>
+              )}
+            </AnimatePresence>
+            <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
               <ChildText text="Subscription Management" size="2xl" />
               <PageSubTitle title="Overview of all company subscriptions and billing status" />
             </div>
             <div>
               {Array.isArray(allSubscription.data) &&
               allSubscription.data.length > 0 ? (
-                <div className="flex items-center gap-5 justify-between">
-                  <SearchBar onSearchChange={handleSearchChange} />
-                  <div className="flex gap-5">
+                <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+                  <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
+                    <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+                  </div>
+                  {/* Mobile filter trigger */}
+                  <div className="flex justify-end md:hidden">
+                    <button
+                      type="button"
+                      className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
+                      onClick={openFilter}
+                    >
+                      {/* simple filter funnel icon */}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 5H21L14 13V20L10 18V13L3 5Z" stroke="#333333" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
                     <CustomSelect
                       variant={2}
                       options={STATUS_OPTIONS}
@@ -368,7 +476,7 @@ const Subscription = () => {
               </div>
               {Array.isArray(allSubscription.data) &&
               allSubscription.data.length > 0 ? (
-                <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
                     currentPage={currentPage}
                     totalPages={1}
@@ -384,7 +492,7 @@ const Subscription = () => {
           </CardContainer>
         </div>
       </div>
-      <Modal isOpen={isSubscriptionModalOpen.isOpen} className="p-10">
+      <Modal isOpen={isSubscriptionModalOpen.isOpen} className="p-4 sm:p-6 lg:p-10">
         {isSubscriptionModalOpen.type === "new" ? (
           <AddSubscriptionModal
             setIsOpen={setIsSubscriptionModalOpen}

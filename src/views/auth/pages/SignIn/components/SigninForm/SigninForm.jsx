@@ -51,7 +51,7 @@ const SigninForm = ({
     <Loading
       loading={isLoading}
       type="fullscreen"
-      customLoader={<AppLogoLoader size={80} />}
+      customLoader={<AppLogoLoader />}
     >
       <Formik
         initialValues={initialValues}
@@ -66,8 +66,8 @@ const SigninForm = ({
       >
         {() => (
           <Form>
-            <div className="flex flex-col gap-[15px]">{children}</div>
-            <div className="pt-2.5 pb-5">
+            <div className="flex flex-col gap-3 sm:gap-4 lg:gap-[15px]">{children}</div>
+            <div className="pt-2 sm:pt-2.5 pb-4 sm:pb-5">
               <Button onClick={() => navigate(FORGOT_PASSWORD_PATH)}>
                 <PageSubTitle
                   title="Forgot Password?"
@@ -79,7 +79,7 @@ const SigninForm = ({
               <Button
                 btnType="submit"
                 type="filled"
-                className="py-4 w-full rounded-lg text-[18px] leading-6 capitalize"
+                className="py-3 sm:py-3.5 lg:py-4 w-full rounded-lg text-base sm:text-lg lg:text-[18px] leading-5 sm:leading-6 capitalize"
                 disabled={isLoading}
               >
                 <span>{isLoading ? "Logging in..." : "login"}</span>

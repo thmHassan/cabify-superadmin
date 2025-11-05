@@ -62,13 +62,19 @@ const CustomSelect = ({
       ...provided,
       color: "#6C6C6C",
       fontWeight: "500",
-      fontSize: "16px",
+      fontSize: "14px",
+      "@media (min-width: 640px)": {
+        fontSize: "16px",
+      },
     }),
     singleValue: (provided) => ({
       ...provided,
       color: "#6C6C6C",
       fontWeight: "500",
-      fontSize: "16px",
+      fontSize: "14px",
+      "@media (min-width: 640px)": {
+        fontSize: "16px",
+      },
     }),
     menu: (provided) => ({
       ...provided,
@@ -87,7 +93,10 @@ const CustomSelect = ({
       color: state.isSelected ? "white" : "#374151",
       padding: "12px 16px",
       cursor: "pointer",
-      fontSize: "16px",
+      fontSize: "14px",
+      "@media (min-width: 640px)": {
+        fontSize: "16px",
+      },
       fontWeight: "500",
     }),
   };

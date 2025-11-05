@@ -18,9 +18,9 @@ const TYPE_CONFIG = {
 const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
   console.log(data, "data====");
   return (
-    <CardContainer className="p-[30px]">
-      <div className="flex justify-between">
-        <div>
+    <CardContainer className="p-5 2xl:p-[30px]">
+      <div className="flex flex-col lg:flex-row lg:justify-between gap-4 sm:gap-5">
+        <div className="flex-1">
           <Button onClick={() => onEdit(data)}>
             <CardSubtitle
               subtitle={data?.company_name}
@@ -28,12 +28,12 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
               className="capitalize"
             />
           </Button>
-          <div className="flex gap-[15px] mt-2.5 mb-[22px]">
-            <div className="flex flex-col gap-[15px] pr-[32px]">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-[15px] mt-2.5 sm:mt-2.5 mb-4 sm:mb-[22px]">
+            <div className="flex flex-col gap-2.5 sm:gap-[15px] pr-0 sm:pr-[32px]">
               <PageSubTitle title={data?.company_admin_name}></PageSubTitle>
               <PageSubTitle title={data?.email} />
             </div>
-            <div className="flex flex-col gap-[15px]">
+            <div className="flex flex-col gap-2.5 sm:gap-[15px]">
               <PageSubTitle title={data?.contact_person} />
               <PageSubTitle
                 title={`Submitted: ${moment(data?.created_at).format(
@@ -43,28 +43,28 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-end gap-[15px]">
+        <div className="flex flex-col items-start lg:items-end gap-3 sm:gap-[15px]">
           <Tag
             variant={TYPE_CONFIG[type]}
             size="lg"
-            className="min-w-[186px] text-center capitalize"
+            className="w-full sm:w-auto sm:min-w-[186px] text-center capitalize"
           >
             <span>{type}</span>
           </Tag>
-          <div className="flex gap-[15px]">
+          <div className="flex flex-wrap gap-2.5 sm:gap-[15px] w-full sm:w-auto">
             <Tag
               variant="white"
               size="lg"
-              className="text-center !px-5 !rounded-[10px]"
+              className="text-center !px-4 sm:!px-5 !rounded-[10px] flex-1 sm:flex-none"
             >
               <PageSubTitle title="REQ-001" className="!text-[#6C6C6C]" />
             </Tag>
             <Tag
               variant="white"
               size="lg"
-              className="text-center !px-5 !rounded-[10px]"
+              className="text-center !px-4 sm:!px-5 !rounded-[10px] flex-1 sm:flex-none"
             >
-              <div className="flex gap-2.5 items-center">
+              <div className="flex gap-2 sm:gap-2.5 items-center justify-center">
                 <div>
                   <WebsiteIcon />
                 </div>
@@ -77,8 +77,8 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
           </div>
         </div>
       </div>
-      <div className="flex gap-5 mb-5">
-        <div className="w-[calc((100%-40px)/3)]">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-4 sm:mb-5">
+        <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <InfoTableCard
             innerCardContainerClassNames="min-h-[calc(100%-45px)]"
             title="Services Configuration"
@@ -89,7 +89,7 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
             ]}
           />
         </div>
-        <div className="w-[calc((100%-40px)/3)]">
+        <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <InfoTableCard
             innerCardContainerClassNames="min-h-[calc(100%-45px)]"
             title="Fleet Information"
@@ -100,7 +100,7 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
             ]}
           />
         </div>
-        <div className="w-[calc((100%-40px)/3)]">
+        <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <InfoTableCard
             innerCardContainerClassNames="min-h-[calc(100%-45px)]"
             title="Pricing & Commission"

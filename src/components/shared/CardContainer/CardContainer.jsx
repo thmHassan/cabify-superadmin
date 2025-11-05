@@ -15,7 +15,7 @@ const CardContainer = ({ children, border = 0, type = 0, className }) => {
   return (
     <div
       className={classNames(
-        "rounded-[20px]",
+        "rounded-[20px] xs:rounded-xl sm:rounded-[20px]",
         BORDER_CONFIG[border],
         CONTAINER_CONFIG[type],
         className

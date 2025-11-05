@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
+import { AnimatePresence } from "framer-motion";
 import { debounce } from "lodash";
 import CompaniesIcon from "../../../../components/svg/CompaniesIcon";
 import ActiveCompaniesIcon from "../../../../components/svg/ActiveCompaniesIcon";
@@ -21,7 +22,8 @@ import {
 import Pagination from "../../../../components/ui/Pagination";
 import CompanyInformationModal from "./components/CompanyInformationModal";
 import DataDetailsTable from "../../../../components/shared/DataDetailsTable";
-import { lockBodyScroll } from "../../../../utils/functions/common.function";
+import { lockBodyScroll, unlockBodyScroll } from "../../../../utils/functions/common.function";
+import Base from "../../../../components/animations/Base";
 import ApiService from "../../../../services/ApiService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import Modal from "../../../../components/shared/Modal";
@@ -57,6 +59,7 @@ const Companies = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [cardsLoading, setCardsLoading] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
 
@@ -129,6 +132,16 @@ const Companies = () => {
   const handleItemsPerPageChange = (newItemsPerPage) => {
     setItemsPerPage(newItemsPerPage);
     setCurrentPage(1);
+  };
+
+  const openFilter = () => {
+    setIsFilterOpen(true);
+    lockBodyScroll();
+  };
+
+  const closeFilter = () => {
+    setIsFilterOpen(false);
+    unlockBodyScroll();
   };
 
   const fetchCompanyCards = async () => {
@@ -248,44 +261,76 @@ const Companies = () => {
   console.log(totalItems, "totalItems===");
 
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="Companies" />
-          <Button
-            type="filled"
-            btnSize="2xl"
-            onClick={() => {
-              lockBodyScroll();
-              setIsCompanyModalOpen({ type: "new", isOpen: true });
-            }}
-            className="-mb-3"
-          >
-            <div className="flex gap-[15px] items-center">
-              <PlusIcon />
-              <span>Add Company</span>
-            </div>
-          </Button>
+          <div className="">
+            <Button
+              type="filled"
+              btnSize="2xl"
+              onClick={() => {
+                lockBodyScroll();
+                setIsCompanyModalOpen({ type: "new", isOpen: true });
+              }}
+              className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
+            >
+              <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
+                <PlusIcon />
+                <span>
+                  <span className="hidden sm:inline-block">Add</span>&nbsp;
+                  <span>Company</span>
+                </span>
+              </div>
+            </Button>
+          </div>
         </div>
-        <PageSubTitle title="Manage taxi companies, their services, and subscriptions" />
+        <PageSubTitle
+          title="Manage taxi companies, their services, and subscriptions"
+          className="sm:w-[calc(100%-240px)]"
+        />
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col sm:gap-5 gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
-            <SnapshotCard key={index} isChange={false} data={card} />
+            <SnapshotCard
+              key={index}
+              isChange={false}
+              data={card}
+              className={
+                DASHBOARD_CARDS.length - 1 === index
+                  ? "sm:col-span-2 xl:col-span-1"
+                  : "col-span-1"
+              }
+            />
           ))}
         </div>
         <div>
-          <div className="flex flex-col gap-[9px] mb-5">
+          <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
             <ChildText size="2xl" text="Company Directory" />
             <PageSubTitle title="Manage taxi companies, their services, and subscriptions" />
           </div>
           <div>
-            <CardContainer className="p-5 bg-[#F5F5F5]">
+            <CardContainer className="p-3 sm:p-4 lg:p-5 bg-[#F5F5F5]">
               {Array.isArray(companyListRaw) && companyListRaw.length > 0 ? (
-                <div className="flex items-center gap-5 justify-between">
-                  <SearchBar onSearchChange={handleSearchChange} />
-                  <div className="flex gap-5">
+                <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+                  <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
+                    <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+                  </div>
+                  {/* Mobile filter trigger */}
+                  <div className="flex justify-end md:hidden">
+                    <button
+                      type="button"
+                      className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
+                      onClick={openFilter}
+                    >
+                      {/* simple filter funnel icon */}
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 5H21L14 13V20L10 18V13L3 5Z" stroke="#333333" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
                     <CustomSelect
                       variant={2}
                       options={STATUS_OPTIONS}
@@ -327,7 +372,7 @@ const Companies = () => {
               />
               {Array.isArray(companyListDisplay) &&
               companyListDisplay.length > 0 ? (
-                <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
@@ -340,6 +385,68 @@ const Companies = () => {
                 </div>
               ) : null}
             </CardContainer>
+            {/* Mobile Filter Bottom Sheet */}
+            <AnimatePresence>
+              {isFilterOpen && (
+                <div className="fixed inset-0 z-[2000] md:hidden">
+                  <div
+                    className="absolute inset-0 bg-black/40"
+                    onClick={closeFilter}
+                  ></div>
+                  <Base
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "100%" }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-base font-semibold text-[#333]">Filter</span>
+                      <button
+                        type="button"
+                        aria-label="Close filter"
+                        className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
+                        onClick={closeFilter}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 6L18 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
+                          <path d="M18 6L6 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <CustomSelect
+                        variant={2}
+                        options={STATUS_OPTIONS}
+                        value={_selectedStatus}
+                        onChange={(opt) => {
+                          handleStatusChange(opt);
+                        }}
+                        placeholder="All Status"
+                        className="min-w-0"
+                      />
+                      <CustomSelect
+                        variant={2}
+                        options={PLAN_OPTIONS}
+                        value={_selectedPlan}
+                        onChange={(opt) => {
+                          handlePlanChange(opt);
+                        }}
+                        placeholder="All Plans"
+                        className="min-w-0"
+                      />
+                      <button
+                        type="button"
+                        className="mt-1 w-full py-3 rounded-lg bg-[#1F41BB] text-white font-medium"
+                        onClick={closeFilter}
+                      >
+                        Apply
+                      </button>
+                    </div>
+                  </Base>
+                </div>
+              )}
+            </AnimatePresence>
             <CompanyInformationModal
               isOpen={isCompanyInformationModalOpen}
               setIsOpen={setIsCompanyInformationModalOpen}
@@ -352,7 +459,7 @@ const Companies = () => {
           </div>
         </div>
       </div>
-      <Modal isOpen={isCompanyModalOpen.isOpen} className="p-10">
+      <Modal isOpen={isCompanyModalOpen.isOpen} className="p-4 sm:p-6 lg:p-10">
         <AddCompanyModal
           isCompanyModalOpen={isCompanyModalOpen}
           setIsOpen={setIsCompanyModalOpen}

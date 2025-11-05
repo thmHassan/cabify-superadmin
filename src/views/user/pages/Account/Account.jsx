@@ -84,9 +84,9 @@ const Account = () => {
 
 
   return (
-    <div className="p-10 flex flex-col gap-5">
-      <CardContainer className="p-[30px]">
-        <div className="flex justify-between mb-[33px]">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)] flex flex-col gap-4 sm:gap-5">
+      <CardContainer className="p-3 sm:p-4 lg:p-5">
+        <div className="flex justify-between mb-6 sm:mb-8 lg:mb-[33px]">
           <PageTitle title="Update Profile" />
         </div>
         <Formik
@@ -97,56 +97,56 @@ const Account = () => {
         >
           {() => (
             <Form>
-              <div className="flex gap-5 mb-[25px]">
-                <div className="w-[calc(100%-398px)]">
-                  <div className="flex gap-5">
-                    <div className="w-[calc((100%-20px)/2)]">
+              <div className="flex flex-col lg:flex-row gap-4 sm:gap-5 mb-6 sm:mb-[25px]">
+                <div className="w-full lg:w-[calc(100%-398px)]">
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+                    <div className="w-full sm:w-[calc((100%-20px)/2)]">
                       <label
                         htmlFor="company name"
-                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                        className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
                       >
                         Name
                       </label>
-                      <div className="h-16">
+                      <div className="h-14 sm:h-16">
                         <Field
                           type="text"
                           name="name"
-                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          className="px-4 sm:px-5 py-4 sm:py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-sm sm:text-base leading-5 sm:leading-[22px] font-semibold"
                           placeholder="Enter company name"
                         />
                       </div>
                       <ErrorMessage
                         name="name"
                         component="div"
-                        className="text-red-500 text-sm mt-1"
+                        className="text-red-500 text-xs sm:text-sm mt-1"
                       />
                     </div>
-                    <div className="w-[calc((100%-20px)/2)]">
+                    <div className="w-full sm:w-[calc((100%-20px)/2)]">
                       <label
                         htmlFor="company name"
-                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                        className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
                       >
                         Email
                       </label>
-                      <div className="h-16">
+                      <div className="h-14 sm:h-16">
                         <Field
                           type="text"
                           name="email"
-                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          className="px-4 sm:px-5 py-4 sm:py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-sm sm:text-base leading-5 sm:leading-[22px] font-semibold"
                           placeholder="Enter company name"
                         />
                       </div>
                       <ErrorMessage
                         name="email"
                         component="div"
-                        className="text-red-500 text-sm mt-1"
+                        className="text-red-500 text-xs sm:text-sm mt-1"
                       />
                     </div>
                   </div>
                 </div>
-                <div className="w-[378px] h-[152px] shadow-[-4px_4px_6px_0px_#0000001F] bg-[#ffffff] rounded-lg flex items-center px-5 gap-5">
+                <div className="w-full lg:w-[378px] h-auto lg:h-[152px] shadow-[-4px_4px_6px_0px_#0000001F] bg-[#ffffff] rounded-lg flex flex-col sm:flex-row items-center px-4 sm:px-5 gap-4 sm:gap-5 py-4 sm:py-0">
                   <div
-                    className="w-[102px] h-[102px] bg-[#f2f2f2] rounded-[15px] overflow-hidden flex justify-center items-center cursor-pointer"
+                    className="w-[80px] h-[80px] sm:w-[102px] sm:h-[102px] bg-[#f2f2f2] rounded-[15px] overflow-hidden flex justify-center items-center cursor-pointer flex-shrink-0"
                     onClick={handlePickImage}
                     title="Click to upload"
                   >
@@ -167,10 +167,10 @@ const Account = () => {
                       onChange={handleImageChange}
                     />
                   </div>
-                  <div className="w-[calc(100%-122px)] flex gap-[15px]">
+                  <div className="w-full sm:w-[calc(100%-122px)] flex flex-col sm:flex-row gap-3 sm:gap-[15px]">
                     <Button
                       type="filledGray"
-                      className="rounded-lg w-[calc((100%-15px)/2)] !pt-4 !pb-[15px]"
+                      className="rounded-lg w-full sm:w-[calc((100%-15px)/2)] !pt-3 sm:!pt-4 !pb-3 sm:!pb-[15px]"
                       onClick={() => {
                         setFormData((prev) => ({
                           ...prev,
@@ -186,7 +186,7 @@ const Account = () => {
                     </Button>
                     <Button
                       type="filled"
-                      className="rounded-lg w-[calc((100%-15px)/2)] !pt-4 !pb-[15px]"
+                      className="rounded-lg w-full sm:w-[calc((100%-15px)/2)] !pt-3 sm:!pt-4 !pb-3 sm:!pb-[15px]"
                       onClick={handlePickImage}
                     >
                       <span>Change</span>
@@ -197,7 +197,7 @@ const Account = () => {
               <Button
                 btnType="submit"
                 type="filled"
-                className="rounded-lg !pt-4 !pb-[15px] !px-10"
+                className="rounded-lg !pt-3 sm:!pt-4 !pb-3 sm:!pb-[15px] !px-8 sm:!px-10 w-full sm:w-auto"
               >
                 <PageSubTitle title="Save" className="!text-[#ffffff]" />
               </Button>
@@ -205,8 +205,8 @@ const Account = () => {
           )}
         </Formik>
       </CardContainer>
-      <CardContainer className="p-[30px]">
-        <div className="flex justify-between mb-[33px]">
+      <CardContainer className="p-3 sm:p-4 lg:p-5">
+        <div className="flex justify-between mb-6 sm:mb-8 lg:mb-[33px]">
           <PageTitle title="Change Password" />
         </div>
         <Formik
@@ -216,20 +216,20 @@ const Account = () => {
         >
           {() => (
             <Form>
-              <div className="flex gap-5 mb-[25px]">
-                <div className="w-[calc(100%-398px)]">
-                  <div className="flex gap-5">
-                    <div className="w-[calc((100%-20px)/2)]">
+              <div className="flex gap-4 sm:gap-5 mb-6 sm:mb-[25px]">
+                <div className="w-full">
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+                    <div className="w-full sm:w-[calc((100%-20px)/2)]">
                       <label
                         htmlFor="company name"
-                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                        className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
                       >
                         Old Password
                       </label>
-                      <div className="h-16">
+                      <div className="h-14 sm:h-16">
                         <Password
                           name="old_password"
-                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          className="px-4 sm:px-5 py-4 sm:py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-sm sm:text-base leading-5 sm:leading-[22px] font-semibold"
                           placeholder="Enter Old Password"
                           autoComplete="off"
                         />
@@ -237,20 +237,20 @@ const Account = () => {
                       <ErrorMessage
                         name="old_password"
                         component="div"
-                        className="text-red-500 text-sm mt-1"
+                        className="text-red-500 text-xs sm:text-sm mt-1"
                       />
                     </div>
-                    <div className="w-[calc((100%-20px)/2)]">
+                    <div className="w-full sm:w-[calc((100%-20px)/2)]">
                       <label
                         htmlFor="company name"
-                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                        className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
                       >
                         New Password
                       </label>
-                      <div className="h-16">
+                      <div className="h-14 sm:h-16">
                         <Password
                           name="new_password"
-                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          className="px-4 sm:px-5 py-4 sm:py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-sm sm:text-base leading-5 sm:leading-[22px] font-semibold"
                           placeholder="Enter your password"
                           autoComplete="off"
                         />
@@ -258,7 +258,7 @@ const Account = () => {
                       <ErrorMessage
                         name="new_password"
                         component="div"
-                        className="text-red-500 text-sm mt-1"
+                        className="text-red-500 text-xs sm:text-sm mt-1"
                       />
                     </div>
                   </div>
@@ -267,7 +267,7 @@ const Account = () => {
               <Button
                 btnType="submit"
                 type="filled"
-                className="rounded-lg !pt-4 !pb-[15px] !px-10"
+                className="rounded-lg !pt-3 sm:!pt-4 !pb-3 sm:!pb-[15px] !px-8 sm:!px-10 w-full sm:w-auto"
               >
                 <PageSubTitle title="Save" className="!text-[#ffffff]" />
               </Button>

@@ -1,21 +1,22 @@
 import React from "react";
 import AppLogoIcon from "../../svg/AppLogoIcon";
 
-const AppLogoLoader = ({ size = 120, className = "" }) => {
+const AppLogoLoader = () => {
   return (
-    <div className="flex items-center justify-center min-h-[200px] w-full">
-      <div className={`flex items-center justify-center `}>
+    <div className="flex items-center justify-center min-h-[100px] sm:min-h-[150px] lg:min-h-[200px] w-full py-4 sm:py-8 lg:py-12">
+      <div className="flex items-center justify-center w-full max-w-[120px] sm:max-w-[200px]">
         <div
+          className="w-full"
           style={{
             animation: "logoBlink 1.5s ease-in-out infinite",
-            width: "100%",
-            height: "100%",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <AppLogoIcon />
+          <div className="w-full h-auto">
+            <AppLogoIcon className="w-full h-auto" />
+          </div>
         </div>
         <style jsx>{`
           @keyframes logoBlink {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useAuth from "../../../utils/hooks/useAuth";
 import SettingIcon from "../../svg/SettingIcon";
 import NotificationIcon from "../../svg/NotificationIcon";
@@ -10,10 +10,12 @@ import SearchBar from "../../shared/SearchBar/SearchBar";
 import { useAppSelector } from "../../../store";
 import UserDropdown from "../../shared/UserDropdown";
 import { FaSignOutAlt, FaUser } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ACCOUNT_PATH } from "../../../constants/routes.path.constant/user.route.path.constant";
 import AppLogoLoader from "../../shared/AppLogoLoader";
 import SearchIcon from "../../svg/SearchIcon";
+import DrawerIcon from "../../svg/DrawerIcon";
+import CloseIcon from "../../svg/CloseIcon";
 
 const UserPageContainer = ({ children }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -24,10 +26,28 @@ const UserPageContainer = ({ children }) => {
   const user = useAppSelector((state) => state.auth.user);
   console.log(user, "user======");
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Fallback to admin role if superadmin role is not found in NAV_ELEMENTS
   const userRole = user.role || "admin";
   const navElements = NAV_ELEMENTS[userRole] || NAV_ELEMENTS["admin"];
+
+  // Close sidebar on route change for small screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    // Close sidebar when location changes on small screens
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(false);
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [location]);
 
   const handleProfile = () => navigate(ACCOUNT_PATH);
   const handleLogout = async () => {
@@ -48,16 +68,15 @@ const UserPageContainer = ({ children }) => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
-        <div className="px-6 lg:px-8 mb-6 lg:mb-10 flex items-center justify-between">
+        <div className="px-6 lg:px-8 mb-6 lg:mb-10 flex items-center justify-between relative">
           <AppLogoIcon />
           <button
             type="button"
-            className="lg:hidden w-10 h-10 grid place-items-center rounded-md hover:bg-[#f3f3f3]"
+            className="lg:hidden w-10 h-10 grid place-items-center rounded-md hover:bg-[#f3f3f3] absolute right-3 -top-1.5"
             aria-label="Close menu"
             onClick={() => setIsSidebarOpen(false)}
           >
-            <span className="block w-5 h-[2px] bg-[#111] rotate-45 translate-y-[1px]"></span>
-            <span className="block w-5 h-[2px] bg-[#111] -rotate-45 -translate-y-[1px] -mt-[2px]"></span>
+           <CloseIcon width={18} height={18} fill="#3D3D3D"/>
           </button>
         </div>
         <div className="flex flex-col gap-[30px]">
@@ -66,7 +85,7 @@ const UserPageContainer = ({ children }) => {
               <div className="text-[#7A7A7A] px-6 lg:px-8 text-sm leading-[19px] font-semibold mb-[18px]">
                 {title}
               </div>
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col sm:gap-5 gap-4">
                 {routes.map((navItem, iIndex) => {
                   return <NavElement key={iIndex} navItem={navItem} />;
                 })}
@@ -84,35 +103,46 @@ const UserPageContainer = ({ children }) => {
         onClick={() => setIsSidebarOpen(false)}
       ></div>
       <div className="w-full lg:w-[calc(100%-300px)] lg:ml-[300px]">
-        <div className="h-[85px] bg-[#F5F5F5] px-3 sm:pl-[15px] sm:pr-[25px] pt-4 pb-[15px] flex items-center justify-between fixed w-full lg:w-[calc(100%-300px)] z-50">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0 w-full pr-5">
+        <div className="h-16 sm:h-[85px] bg-[#F5F5F5] px-2 sm:px-3 lg:pl-[15px] lg:pr-[25px] py-2 sm:pt-4 sm:pb-[15px] flex items-center justify-between fixed w-full lg:w-[calc(100%-300px)] z-50">
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 min-w-0 w-full pr-2 sm:pr-5">
             <button
               type="button"
-              className="lg:hidden w-10 h-10 grid place-items-center rounded-md hover:bg-[#ffffff] border border-[#e5e5e5]"
+              className="lg:hidden w-10 h-10 sm:w-[54px] sm:h-[54px] grid place-items-center bg-[#ffffff] rounded-lg mr-0.5 hover:bg-[#ffffff] flex-shrink-0"
               aria-label="Open menu"
               onClick={() => setIsSidebarOpen(true)}
             >
-              <span className="block w-5 h-[2px] bg-[#111]"></span>
-              <span className="block w-5 h-[2px] bg-[#111] my-[5px]"></span>
-              <span className="block w-5 h-[2px] bg-[#111]"></span>
+              <span className="sm:block hidden">
+                <DrawerIcon width={30} height={30} fill="#000000" />
+              </span>
+              <span className="sm:hidden block">
+                <DrawerIcon width={24} height={24} fill="#000000" />
+              </span>
             </button>
             <button
-              className="flex sm:hidden min-w-[50px] h-[50px] rounded-full bg-[#FFFFFF] justify-center items-center"
+              className="flex sm:hidden min-w-[40px] h-[40px] sm:min-w-[50px] sm:h-[50px] rounded-full bg-[#FFFFFF] justify-center items-center flex-shrink-0"
               aria-label="Open search"
               onClick={() => setIsMobileSearchOpen(true)}
             >
-              <SearchIcon />
+              <SearchIcon width={18} height={18} />
             </button>
             <div className="min-w-0 flex-1 hidden sm:block">
               <SearchBar />
             </div>
           </div>
-          <div className="flex gap-3 sm:gap-5 items-center">
-            <div className="flex min-w-[50px] h-[50px] rounded-full bg-[#FFFFFF] justify-center items-center">
-              <SettingIcon />
+          <div className="flex gap-1.5 sm:gap-3 lg:gap-5 items-center flex-shrink-0">
+            <div className="flex min-w-[40px] h-[40px] sm:min-w-[50px] sm:h-[50px] rounded-full bg-[#FFFFFF] justify-center items-center">
+              <div className="w-[18px] h-[18px] sm:w-[25px] sm:h-[26px] flex items-center justify-center">
+                <SettingIcon width={18} height={18} className="w-full h-full" />
+              </div>
             </div>
-            <div className="flex min-w-[50px] h-[50px] rounded-full bg-[#FFFFFF] justify-center items-center">
-              <NotificationIcon />
+            <div className="flex min-w-[40px] h-[40px] sm:min-w-[50px] sm:h-[50px] rounded-full bg-[#FFFFFF] justify-center items-center">
+              <div className="w-[18px] h-[20px] sm:w-[22px] sm:h-[24px] flex items-center justify-center">
+                <NotificationIcon
+                  width={18}
+                  height={20}
+                  className="w-full h-full"
+                />
+              </div>
             </div>
             <UserDropdown
               options={[
@@ -125,22 +155,22 @@ const UserPageContainer = ({ children }) => {
                 {
                   label: isLoggingOut ? "Logging out..." : "Logout",
                   icon: isLoggingOut
-                    ? () => <AppLogoLoader size={50} />
+                    ? () => <AppLogoLoader />
                     : FaSignOutAlt,
                   onClick: handleLogout,
                   disabled: isLoggingOut,
                 },
               ]}
             >
-              <div className="max-w-[200px] w-full rounded-[30px] bg-[#ffffff] py-[5px] px-[5px] sm:pl-[5px] sm:pr-5 flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full overflow-hidden">
+              <div className="max-w-[200px] w-full rounded-[30px] bg-[#ffffff] py-1 sm:py-[5px] px-1 sm:px-[5px] lg:pl-[5px] lg:pr-5 flex items-center gap-1.5 sm:gap-3">
+                <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
                   <img
                     src={userImage}
                     alt=""
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="hidden sm:flex font-semibold w-[calc(100%-56px)] text-[18px] leading-[25px] min-w-[119px] truncate capitalize">
+                <div className="hidden sm:flex font-semibold w-[calc(100%-56px)] text-base sm:text-[18px] leading-5 sm:leading-[25px] min-w-[119px] truncate capitalize">
                   <span>{user.name}</span>
                 </div>
               </div>
@@ -149,13 +179,13 @@ const UserPageContainer = ({ children }) => {
         </div>
         {/* Mobile sticky search bar under the header */}
         {isMobileSearchOpen && (
-          <div className="sm:hidden fixed top-[64px] left-0 right-0 z-50 bg-[#F5F5F5] border-t border-[#e5e5e5] px-3 py-2 flex items-center gap-2">
-            <div className="min-w-0 flex-1">
-              <SearchBar />
+          <div className="sm:hidden fixed top-16 left-0 right-0 z-50 bg-[#F5F5F5] border-t border-[#e5e5e5] px-3 py-2 flex items-center gap-2">
+            <div className="w-full">
+              <SearchBar className="!w-full !max-w-full" />
             </div>
             <button
               type="button"
-              className="w-10 h-10 rounded-full bg-[#ffffff] border border-[#e5e5e5] grid place-items-center"
+              className="w-10 h-10 absolute right-5 rounded-full bg-[#ffffff] border border-[#e5e5e5] grid place-items-center"
               aria-label="Close search"
               onClick={() => setIsMobileSearchOpen(false)}
             >
@@ -184,8 +214,8 @@ const UserPageContainer = ({ children }) => {
         )}
         <div
           className={`${
-            isMobileSearchOpen ? "mt-[128px]" : "mt-[64px]"
-          } sm:mt-[85px] min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]`}
+            isMobileSearchOpen ? "mt-[112px]" : "mt-16"
+          } sm:mt-[85px] min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)] transition-all duration-300 ease-in-out`}
         >
           {children}
         </div>

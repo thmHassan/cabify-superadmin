@@ -68,8 +68,8 @@ const EnablementInformation = ({
 
   return (
     <>
-      <div className="flex flex-wrap gap-5 mb-[60px]">
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+      <div className="flex flex-wrap gap-4 sm:gap-5 mb-6 sm:mb-[60px]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="dispatcher"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -78,7 +78,7 @@ const EnablementInformation = ({
           </label>
           <Switch name="dispatcher" />
         </div>
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="map"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -87,7 +87,7 @@ const EnablementInformation = ({
           </label>
           <Switch name="map" />
         </div>
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="push_notification"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -96,7 +96,7 @@ const EnablementInformation = ({
           </label>
           <Switch name="push_notification" />
         </div>
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="usage_monitoring"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -105,7 +105,7 @@ const EnablementInformation = ({
           </label>
           <Switch name="usage_monitoring" />
         </div>
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="revenue_statements"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -114,7 +114,7 @@ const EnablementInformation = ({
           </label>
           <Switch name="revenue_statements" />
         </div>
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="zone"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -123,7 +123,7 @@ const EnablementInformation = ({
           </label>
           <Switch name="zone" />
         </div>
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="manage_zones"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -132,7 +132,7 @@ const EnablementInformation = ({
           </label>
           <Switch name="manage_zones" />
         </div>
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="cms"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -141,7 +141,7 @@ const EnablementInformation = ({
           </label>
           <Switch name="cms" />
         </div>
-        <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+        <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
           <label
             htmlFor="lost_found"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "

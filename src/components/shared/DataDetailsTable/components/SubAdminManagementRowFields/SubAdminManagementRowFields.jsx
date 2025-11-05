@@ -20,7 +20,7 @@ const SubAdminManagementRowFields = ({ actionOptions, data, onViewClick }) => {
             variant="blue"
             layout="border"
             onClick={() => onViewClick(data)}
-            className="cursor-pointer"
+            className="cursor-pointer whitespace-nowrap"
           >
             <span>View Permissions</span>
           </Tag>

@@ -248,9 +248,9 @@ const ZonesLocation = () => {
   }
 
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="Plots" />
           <Button
             type="filled"
@@ -259,9 +259,9 @@ const ZonesLocation = () => {
               lockBodyScroll();
               setIsOpenLocationModal(true);
             }}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
           >
-            <div className="flex gap-[15px] items-center">
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <PlusIcon />
               <span>Add New Plots</span>
             </div>
@@ -271,19 +271,70 @@ const ZonesLocation = () => {
           <PageSubTitle title="These plots will be pushed to all customer panels for their help or they can choose their own plots by creating in their own panels" />
         </div>
       </div>
-      <CardContainer className="p-5 flex flex-col gap-5 min-h-[calc(100vh-(230px+85px))] h-full">
-        <div>
-          <SearchBar onSearchChange={setSearchQuery} />
+      <CardContainer className="p-3 sm:p-4 lg:p-5 flex flex-col gap-4 sm:gap-5 min-h-[calc(100vh-(230px+64px))] sm:min-h-[calc(100vh-(230px+85px))] h-full">
+        {/* Map - appears first on mobile, hidden on desktop (shown in two-column layout) */}
+        <div className="order-1 lg:hidden relative z-0">
+          <div className="h-[400px] sm:h-[500px] w-full relative overflow-hidden">
+            <CardContainer type={1} className="w-full h-full relative">
+              <MapContainer
+                center={[32.5, 72.5]}
+                zoom={6}
+                style={{ height: "100%", position: "relative", zIndex: 0 }}
+                className="h-full"
+              >
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <FeatureGroup>
+                  <EditControl
+                    position="topright"
+                    onCreated={handleCreated}
+                    draw={{
+                      rectangle: { showArea: false },
+                      polygon: { showArea: false },
+                      polyline: false,
+                      circle: false,
+                      marker: false,
+                      circlemarker: false,
+                    }}
+                  />
+
+                  {filteredPolygons.length === 0
+                    ? null
+                    : filteredPolygons.map((feature, idx) => (
+                        <GeoJSON
+                          key={idx}
+                          data={toGeoJSONForMap(feature)}
+                          style={() => ({
+                            color: "#0A84FF",
+                            weight: 2,
+                            fillColor: "#0A84FF",
+                            fillOpacity: 0.3,
+                          })}
+                        />
+                      ))}
+                </FeatureGroup>
+              </MapContainer>
+              {filteredPolygons.length === 0 && (
+                <div className="w-full text-center text-sm sm:text-base text-[#6C6C6C] font-semibold mt-2">
+                  No plots to display on map
+                </div>
+              )}
+            </CardContainer>
+          </div>
         </div>
-        <div className="flex gap-2.5">
-          <div className="w-[calc((100%-10px)/2)]">
-            <div className="flex flex-col gap-5">
+        {/* Search bar - appears second on mobile, first on desktop */}
+        <div className="order-2 lg:order-1">
+          <SearchBar onSearchChange={setSearchQuery} className="w-full md:max-w-[400px] max-w-full" />
+        </div>
+        {/* Plots list and Map - appears third on mobile, second on desktop */}
+        <div className="order-3 lg:order-2 flex flex-col lg:flex-row gap-4 sm:gap-5">
+          <div className="w-full lg:w-[calc((100%-20px)/2)]">
+            <div className="flex flex-col gap-4 sm:gap-5">
               {filteredPlots.length === 0 ? (
                 <CardContainer
                   type={1}
-                  className="!rounded-[15px] px-[30px] py-8 flex justify-between items-center"
+                  className="!rounded-[15px] px-4 sm:px-6 lg:px-[30px] py-6 sm:py-8 flex justify-between items-center"
                 >
-                  <div className="w-full text-center text-[#6C6C6C] font-semibold">
+                  <div className="w-full text-center text-sm sm:text-base text-[#6C6C6C] font-semibold">
                     No Plots Added
                   </div>
                 </CardContainer>
@@ -292,7 +343,7 @@ const ZonesLocation = () => {
                   <CardContainer
                     type={1}
                     key={index}
-                    className="!rounded-[15px] px-[30px] py-8 flex justify-between items-center relative"
+                    className="!rounded-[15px] px-4 sm:px-6 lg:px-[30px] py-6 sm:py-8 flex justify-between items-center relative"
                   >
                     <div>
                       <CardSubtitle type={1} subtitle={plot} />
@@ -308,7 +359,7 @@ const ZonesLocation = () => {
                       <ThreeDotsIcon />
                     </Button>
                     {openMenuIndex === index && (
-                      <div className="absolute top-[60px] right-[20px] bg-white border border-[#E9E9E9] rounded-[10px] shadow-md z-10 w-[140px] overflow-hidden">
+                      <div className="absolute top-[60px] right-2 sm:right-[20px] bg-white border border-[#E9E9E9] rounded-[10px] shadow-md z-10 w-[140px] overflow-hidden">
                         <button
                           className="w-full text-left px-4 py-2 hover:bg-[#F5F5F5] text-sm"
                           onClick={() => {
@@ -341,15 +392,30 @@ const ZonesLocation = () => {
                   </CardContainer>
                 ))
               )}
+              {/* Pagination - appears after listing */}
+              {filteredPlots.length > 0 && (
+                <div className="border-t border-[#E9E9E9] pt-3 sm:pt-4 mt-4">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages || computedTotalPages}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={handlePageChange}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                    itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                  />
+                </div>
+              )}
             </div>
           </div>
-          <div className="w-[calc((100%-10px)/2)]">
-            <div className="h-[674px] w-full">
-              <CardContainer type={1} className="w-full h-full">
+          {/* Map container for desktop - appears on the right side */}
+          <div className="hidden lg:block w-[calc((100%-20px)/2)] relative z-0">
+            <div className="h-[674px] w-full relative overflow-hidden">
+              <CardContainer type={1} className="w-full h-full relative">
                 <MapContainer
                   center={[32.5, 72.5]}
                   zoom={6}
-                  style={{ height: "600px" }}
+                  style={{ height: "100%", position: "relative", zIndex: 0 }}
+                  className="h-full"
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                   <FeatureGroup>
@@ -383,7 +449,7 @@ const ZonesLocation = () => {
                   </FeatureGroup>
                 </MapContainer>
                 {filteredPolygons.length === 0 && (
-                  <div className="w-full text-center text-[#6C6C6C] font-semibold mt-2">
+                  <div className="w-full text-center text-sm sm:text-base text-[#6C6C6C] font-semibold mt-2">
                     No plots to display on map
                   </div>
                 )}
@@ -391,20 +457,10 @@ const ZonesLocation = () => {
             </div>
           </div>
         </div>
-        <div className="border-t border-[#E9E9E9] pt-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages || computedTotalPages}
-            itemsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-            onItemsPerPageChange={handleItemsPerPageChange}
-            itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-          />
-        </div>
       </CardContainer>
-      <Modal size="md" isOpen={isOpenLocationModal} className="p-10">
+      <Modal size="md" isOpen={isOpenLocationModal} className="p-4 sm:p-6 lg:p-10">
         <div>
-          <div className="mb-10">
+          <div className="mb-6 sm:mb-10">
             <CardSubtitle
               type={2}
               subtitle={editingRecord ? "Edit Plot" : "Add New Plot"}
@@ -487,35 +543,36 @@ const ZonesLocation = () => {
               }}
             >
               <Form>
-                <div className="flex flex-wrap gap-5 mb-10">
-                  <div className="w-full mb-5">
+                <div className="flex flex-wrap gap-4 sm:gap-5 mb-6 sm:mb-10">
+                  <div className="w-full mb-4 sm:mb-5">
                     <label
                       htmlFor="plot-name"
-                      className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                      className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
                     >
                       Plot Name
                     </label>
-                    <div className="h-16">
+                    <div className="h-14 sm:h-16">
                       <Field
                         id="plot-name"
                         type="text"
                         name="name"
-                        className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                        className="px-4 sm:px-5 py-4 sm:py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-sm sm:text-base leading-5 sm:leading-[22px] font-semibold"
                         placeholder="Enter Plot Name"
                       />
                     </div>
                     <ErrorMessage
                       name="name"
                       component="div"
-                      className="text-red-500 text-sm mt-1"
+                      className="text-red-500 text-xs sm:text-sm mt-1"
                     />
                   </div>
-                  <div className="h-[412px] rounded-[15px] w-full">
-                    <CardContainer type={1} className="w-full h-full">
+                  <div className="h-[300px] sm:h-[350px] lg:h-[412px] rounded-[15px] w-full relative overflow-hidden">
+                    <CardContainer type={1} className="w-full h-full relative">
                       <MapContainer
                         center={[32.5, 72.5]}
                         zoom={6}
-                        style={{ height: "350px" }}
+                        style={{ height: "100%", position: "relative", zIndex: 0 }}
+                        className="h-full"
                       >
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                         <FeatureGroup>
@@ -533,7 +590,7 @@ const ZonesLocation = () => {
                           />
                         </FeatureGroup>
                       </MapContainer>
-                      <div className="text-sm text-[#6C6C6C] mt-2">
+                      <div className="text-xs sm:text-sm text-[#6C6C6C] mt-2 px-2">
                         {newFeature
                           ? "Shape selected. You can Create the plot."
                           : "Tip: Use the polygon or rectangle tool to draw the plot area, then click Create."}
@@ -542,16 +599,16 @@ const ZonesLocation = () => {
                       <ErrorMessage
                         name="featureSelected"
                         component="div"
-                        className="text-red-500 text-sm mt-1"
+                        className="text-red-500 text-xs sm:text-sm mt-1"
                       />
                     </CardContainer>
                   </div>
                 </div>
-                <div className="flex gap-5 justify-end">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-end">
                   <Button
                     btnSize="md"
                     type="filledGray"
-                    className="!px-10 !pt-4 pb-[15px] leading-[25px]"
+                    className="w-full sm:w-auto !px-8 sm:!px-10 !pt-3 sm:!pt-4 pb-3 sm:pb-[15px] leading-5 sm:leading-[25px]"
                     onClick={() => {
                       setNewFeature(null);
                       setEditingRecord(null);
@@ -564,7 +621,7 @@ const ZonesLocation = () => {
                     btnType="submit"
                     btnSize="md"
                     type="filled"
-                    className="!px-10 !pt-4 pb-[15px] leading-[25px]"
+                    className="w-full sm:w-auto !px-8 sm:!px-10 !pt-3 sm:!pt-4 pb-3 sm:pb-[15px] leading-5 sm:leading-[25px]"
                   >
                     <span>Create</span>
                   </Button>

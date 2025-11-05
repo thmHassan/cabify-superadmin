@@ -1,6 +1,6 @@
 import React from "react";
 
-const SettingIcon = ({ width = 25, height = 26, fill = "#333333" }) => {
+const SettingIcon = ({ width = 25, height = 26, fill = "#333333", className }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +8,8 @@ const SettingIcon = ({ width = 25, height = 26, fill = "#333333" }) => {
       height={height}
       viewBox="0 0 25 26"
       fill="none"
+      className={className}
+      style={className ? { width: '100%', height: '100%' } : undefined}
     >
       <path
         d="M12.3139 16.6C14.3021 16.6 15.9139 14.9882 15.9139 13C15.9139 11.0118 14.3021 9.4 12.3139 9.4C10.3256 9.4 8.71387 11.0118 8.71387 13C8.71387 14.9882 10.3256 16.6 12.3139 16.6Z"

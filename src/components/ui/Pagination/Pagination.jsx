@@ -106,12 +106,12 @@ const Pagination = ({
   const pageNumbers = getPageNumbers();
 
   return (
-    <div className={`flex items-center justify-between ${className}`}>
-      <div className="flex items-center gap-4">
+    <div className={`flex items-center justify-between gap-2 sm:gap-0 ${className}`}>
+      <div className="flex items-center gap-2 sm:gap-4">
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
-          className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg font-medium transition-colors ${
+          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-base sm:text-lg font-medium transition-colors ${
             currentPage === 1
               ? "text-[#B0B0B0] cursor-not-allowed"
               : "text-[#6C6C6C] hover:bg-[#F5F5F5] cursor-pointer"
@@ -120,12 +120,12 @@ const Pagination = ({
           <LeftArrowIcon />
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           {pageNumbers.map((pageNumber) => (
             <button
               key={pageNumber}
               onClick={() => handlePageClick(pageNumber)}
-              className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${
+              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-xs sm:text-sm font-medium transition-colors ${
                 pageNumber === currentPage
                   ? "bg-[#1F41BB] text-white"
                   : `text-[#6C6C6C] hover:bg-[#F5F5F5] cursor-pointer ${VARIANT_CONFIG[variant]}`
@@ -139,7 +139,7 @@ const Pagination = ({
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg font-medium transition-colors ${
+          className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-base sm:text-lg font-medium transition-colors ${
             currentPage === totalPages
               ? "text-[#B0B0B0] cursor-not-allowed"
               : "text-[#6C6C6C] hover:bg-[#F5F5F5] cursor-pointer"
@@ -149,7 +149,7 @@ const Pagination = ({
         </button>
       </div>
 
-      <div className="min-w-[120px]">
+      <div className="min-w-[90px] sm:min-w-[100px] 2xl:min-w-[120px]">
         <CustomSelect
           variant={variant}
           options={itemsPerPageOptions}
@@ -159,7 +159,7 @@ const Pagination = ({
           menuPosition="fixed"
           placeholder="Items per page"
           isSearchable={false}
-          className="min-w-[120px]"
+          className="min-w-[90px] sm:min-w-[100px] 2xl:min-w-[120px]"
         />
       </div>
     </div>

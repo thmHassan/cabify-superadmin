@@ -19,7 +19,7 @@ const ApprovedRequests = ({ allOnboardings, onEdit, isOnboardingLoading }) => {
     );
   }
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5">
       {allOnboardings.map((data, index) => (
         <RequestComponent
           key={index}

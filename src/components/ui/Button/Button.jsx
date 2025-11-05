@@ -15,7 +15,7 @@ const variant = {
 };
 
 const SIZE_CONFIG = {
-  "2xl": "text-2xl leading-[33px] px-[25px] pt-3.5 pb-[13px] rounded-[10px]",
+  "2xl": "2xl:text-2xl sm:text-xl xs:text-lg text-base 2xl:leading-[33px] sm:leading-6 xs:leading-5 leading-[14px] px-[25px] sm:pt-3.5 pt-2.5 pb-[13px] rounded-[10px]",
   md: "text-base leading-[22px] px-[18px] py-[9px] rounded-lg",
   sm: "text-sm",
 };

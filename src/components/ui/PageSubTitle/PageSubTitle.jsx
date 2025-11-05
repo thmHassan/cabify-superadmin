@@ -11,7 +11,7 @@ const PageSubTitle = ({ title, className, textColor = 0 }) => {
   return (
     <p
       className={classNames(
-        "text-[18px] leading-[25px] font-semibold",
+        "2xl:text-[18px] sm:text-base text-sm 2xl:leading-[25px] sm:leading-5 leading-4 font-semibold",
         COLOR_CONFIG[textColor],
         className
       )}

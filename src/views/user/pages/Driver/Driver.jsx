@@ -104,6 +104,14 @@ const Driver = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage, refreshTrigger]);
 
+  // Reset to page 1 only when search query changes
+  useEffect(() => {
+    if (_searchQuery) {
+      setCurrentPage(1);
+    }
+  }, [_searchQuery]);
+
+  // Filter the data based on search query
   useEffect(() => {
     const query = _searchQuery?.toLowerCase?.() ?? "";
 
@@ -117,7 +125,6 @@ const Driver = () => {
     }
 
     setDriverDocumentsListDisplay(filtered);
-    setCurrentPage(1); // Reset to first page when filtering
   }, [driverDocumentsListRaw, _searchQuery]);
 
   if (isDriverDocumentsLoading) {
@@ -129,9 +136,9 @@ const Driver = () => {
   }
 
   return (
-    <div className="p-10">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="Default Document Type" />
           <Button
             type="filled"
@@ -140,9 +147,9 @@ const Driver = () => {
               lockBodyScroll();
               setIsDocumentModalOpen({ type: "new", isOpen: true });
             }}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
           >
-            <div className="flex gap-[15px] items-center">
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <PlusIcon />
               <span>Add New Document</span>
             </div>
@@ -152,11 +159,13 @@ const Driver = () => {
           <PageSubTitle title="Manage driver documents across all panels" />
         </div>
       </div>
-      <CardContainer className="p-5">
+      <CardContainer className="p-3 sm:p-4 lg:p-5">
         {Array.isArray(driverDocumentsListRaw) &&
         driverDocumentsListRaw.length > 0 ? (
-          <div className="flex items-center gap-5 justify-between">
-            <SearchBar onSearchChange={handleSearchChange} />
+          <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+            <div className="w-full sm:flex-1">
+              <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+            </div>
           </div>
         ) : null}
         <div>
@@ -187,7 +196,7 @@ const Driver = () => {
         </div>
         {Array.isArray(driverDocumentsListDisplay) &&
         driverDocumentsListDisplay.length > 0 ? (
-          <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+          <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
             <Pagination
               currentPage={currentPage}
               totalPages={allDriversDocuments.last_page}
@@ -200,7 +209,7 @@ const Driver = () => {
           </div>
         ) : null}
       </CardContainer>
-      <Modal size="sm" isOpen={isDocumentModalOpen.isOpen} className="p-10">
+      <Modal size="sm" isOpen={isDocumentModalOpen.isOpen} className="p-4 sm:p-6 lg:p-10">
         {isDocumentModalOpen.type === "new" ? (
           <AddDriverDocumentModal
             setIsOpen={setIsDocumentModalOpen}

@@ -96,17 +96,17 @@ const UsageMonitoring = () => {
   }
 
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="Usage Monitoring" />
           <Button
             type="filled"
             btnSize="2xl"
             // onClick={() => setIsAddSubscriptionModalOpen(true)}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
           >
-            <div className="flex gap-[15px] items-center">
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <PlusIcon />
               <span>Download Report</span>
             </div>
@@ -116,14 +116,14 @@ const UsageMonitoring = () => {
           <PageSubTitle title="Real-time monitoring of system performance and company usage" />
         </div>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col sm:gap-5 gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard key={index} data={card} />
           ))}
         </div>
         <div>
-          <div className="flex flex-col gap-[5px] mb-5">
+          <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
             <ChildText text="Subscription Management" size="2xl" />
             <PageSubTitle title="Overview of all company subscriptions and billing status" />
           </div>

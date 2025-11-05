@@ -33,10 +33,10 @@ const ModalComponent = ({ size = "xl", children, className }) => {
     <div
       ref={parentRef}
       className={classNames(
-        "fixed z-[2000] top-0 left-0 w-full h-screen overflow-auto bg-[#00000050] flex justify-center",
+        "fixed z-[2000] top-0 left-0 w-full h-screen overflow-y-auto bg-[#00000050] flex justify-center",
         isChildGreater 
           ? "py-4 sm:py-8 md:py-[60px] lg:py-[140px]" 
-          : "items-center py-4 sm:py-8"
+          : "items-start sm:items-center py-4 sm:py-8"
       )}
     >
       <Base
@@ -46,7 +46,7 @@ const ModalComponent = ({ size = "xl", children, className }) => {
         exit={{ opacity: 0, scale: 0.9, y: 30 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
         className={classNames(
-          "w-full bg-white rounded-[15px] sm:rounded-[25px] relative h-fit shadow-xl mx-4 sm:mx-6",
+          "w-full bg-white rounded-[15px] sm:rounded-[25px] relative h-fit shadow-xl mx-4 sm:mx-6 my-4 sm:my-0",
           SIZE_CONFIG[size],
           className
         )}
