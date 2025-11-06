@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const CommonImageUploader = ({
   onChange,
@@ -12,6 +12,12 @@ const CommonImageUploader = ({
 }) => {
   const [imagePreview, setImagePreview] = useState(defaultImage);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (defaultImage) {
+      setImagePreview(defaultImage);
+    }
+  }, [defaultImage]);
 
   const handlePickImage = () => {
     if (fileInputRef.current) fileInputRef.current.click();
@@ -28,15 +34,17 @@ const CommonImageUploader = ({
     };
     reader.readAsDataURL(file);
   };
+  const hasResponsiveSize = className?.includes("w-") || className?.includes("h-") || className?.includes("size");
   return (
-    <div className={classNames("flex flex-col gap-5 items-center", className)}>
+    <div className={classNames("flex flex-col gap-4 sm:gap-5 items-center", className?.split(" ").filter(c => !c.includes("w-") && !c.includes("h-") && !c.includes("size")).join(" "))}>
       <div
         onClick={handlePickImage}
         title="Click to upload"
-        style={{ width: size, height: size }}
+        style={!hasResponsiveSize ? { width: size, height: size } : undefined}
         className={classNames(
           "flex justify-center items-center bg-[#EEEEEE] overflow-hidden cursor-pointer transition hover:opacity-80",
-          rounded ? "rounded-full" : "rounded-lg"
+          rounded ? "rounded-full" : "rounded-lg",
+          hasResponsiveSize ? className?.split(" ").filter(c => c.includes("w-") || c.includes("h-") || c.includes("size")).join(" ") : ""
         )}
       >
         {imagePreview ? (
@@ -74,7 +82,7 @@ const CommonImageUploader = ({
       </div>
 
       {label && (
-        <div className="text-[26px] leading-9 font-semibold text-[#252525] text-center">
+        <div className="text-lg sm:text-xl lg:text-[26px] leading-7 sm:leading-8 lg:leading-9 font-semibold text-[#252525] text-center">
           <span>{label}</span>
         </div>
       )}
