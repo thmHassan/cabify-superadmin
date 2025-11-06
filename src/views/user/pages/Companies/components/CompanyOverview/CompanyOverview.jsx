@@ -31,6 +31,7 @@ const CompanyOverview = ({ companyId = "test2" }) => {
     if (companyId) {
       fetchCompanyDetails();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId]);
 
   if (loading) {
@@ -77,8 +78,8 @@ const CompanyOverview = ({ companyId = "test2" }) => {
   console.log(companyDetails, "companyDetails");
   return (
     <div>
-      <div className="flex gap-2.5 mb-5">
-        <div className="w-[calc((100%-20px)/3)]">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-2.5 mb-4 sm:mb-5">
+        <div className="w-full lg:w-[calc((100%-20px)/3)]">
           <InfoTableCard
             title="Map API Usage"
             serviceName={companyDetails?.data?.map_api?.map_api_name || "N/A"}
@@ -119,7 +120,7 @@ const CompanyOverview = ({ companyId = "test2" }) => {
             ]}
           />
         </div>
-        <div className="w-[calc((100%-20px)/3)]">
+        <div className="w-full lg:w-[calc((100%-20px)/3)]">
           <InfoTableCard
             title="Call API Usage"
             serviceName={companyDetails?.data?.call_api?.call_api_name || "N/A"}
@@ -156,7 +157,7 @@ const CompanyOverview = ({ companyId = "test2" }) => {
             features={["Call Recording", "Call Forwarding", "Voicemail", "SMS"]}
           />
         </div>
-        <div className="w-[calc((100%-20px)/3)]">
+        <div className="w-full lg:w-[calc((100%-20px)/3)]">
           <InfoTableCard
             title="Payment Information"
             serviceName={
@@ -198,37 +199,38 @@ const CompanyOverview = ({ companyId = "test2" }) => {
         </div>
       </div>
       <div>
-        <div className="mb-5">
-          <h4 className="text-[#000000] text-[22px] leading-[30px] font-semibold text-center">
+        <div className="mb-4 sm:mb-5">
+          <h4 className="text-[#000000] text-lg sm:text-xl lg:text-[22px] leading-7 sm:leading-8 lg:leading-[30px] font-semibold text-center">
             Usage Statistics
           </h4>
         </div>
-        <div className="border-[0.5px] border-[#00000050] rounded-[10px] overflow-hidden">
-          <table className="w-full">
+        <div className="w-full overflow-x-auto">
+          <div className="border-[0.5px] border-[#00000050] rounded-[10px] inline-block min-w-full">
+            <table className="w-full" style={{ minWidth: '600px' }}>
             <thead>
               <tr>
-                <th className="text-left bg-[#F5F7F9] pt-5 pb-[18px] px-[30px]">
+                <th className="text-left bg-[#F5F7F9] pt-4 sm:pt-5 pb-4 sm:pb-[18px] px-4 sm:px-[30px]">
                   <ChildText
                     size="md"
                     text="Monthly Growth"
                     className="!text-[#00000080]"
                   />
                 </th>
-                <th className="text-left bg-[#F5F7F9] pt-5 pb-[18px] px-[30px]">
+                <th className="text-left bg-[#F5F7F9] pt-4 sm:pt-5 pb-4 sm:pb-[18px] px-4 sm:px-[30px]">
                   <ChildText
                     size="md"
                     text="Total Booking"
                     className="!text-[#00000080]"
                   />
                 </th>
-                <th className="text-left bg-[#F5F7F9] pt-5 pb-[18px] px-[30px]">
+                <th className="text-left bg-[#F5F7F9] pt-4 sm:pt-5 pb-4 sm:pb-[18px] px-4 sm:px-[30px]">
                   <ChildText
                     size="md"
                     text="Active Drivers"
                     className="!text-[#00000080]"
                   />
                 </th>
-                <th className="text-left bg-[#F5F7F9] pt-5 pb-[18px] px-[30px]">
+                <th className="text-left bg-[#F5F7F9] pt-4 sm:pt-5 pb-4 sm:pb-[18px] px-4 sm:px-[30px]">
                   <ChildText
                     size="md"
                     text="Customer Rating"
@@ -239,14 +241,14 @@ const CompanyOverview = ({ companyId = "test2" }) => {
             </thead>
             <tbody>
               <tr>
-                <td className="px-[30px] py-5">
+                <td className="px-4 sm:px-[30px] py-3 sm:py-5">
                   <ChildText
                     size="md"
                     text="+12%"
                     className="!text-[#10B981]"
                   />
                 </td>
-                <td className="px-[30px] py-5">
+                <td className="px-4 sm:px-[30px] py-3 sm:py-5">
                   <ChildText
                     size="md"
                     text={
@@ -256,7 +258,7 @@ const CompanyOverview = ({ companyId = "test2" }) => {
                     className="!text-[#3D3D3D]"
                   />
                 </td>
-                <td className="px-[30px] py-5">
+                <td className="px-4 sm:px-[30px] py-3 sm:py-5">
                   <ChildText
                     size="md"
                     text={
@@ -266,7 +268,7 @@ const CompanyOverview = ({ companyId = "test2" }) => {
                     className="!text-[#3D3D3D]"
                   />
                 </td>
-                <td className="px-[30px] py-5">
+                <td className="px-4 sm:px-[30px] py-3 sm:py-5">
                   <ChildText
                     size="md"
                     text={
@@ -279,6 +281,7 @@ const CompanyOverview = ({ companyId = "test2" }) => {
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>

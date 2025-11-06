@@ -8,8 +8,8 @@ const COLOR_CONFIG = {
 };
 
 const VARIANT_CONFIG = {
-  0: "text-2xl leading-[33px]",
-  1: "text-xl leading-[27px]",
+  0: "2xl:text-2xl sm:text-lg text-base 2xl:leading-[33px] sm:leading-7 leading-6",
+  1: "2xl:text-xl sm:text-base text-sm 2xl:leading-[27px] sm:leading-5 leading-4",
 };
 
 const CardSubtitle = ({ type = 0, variant = 0, subtitle, className }) => {

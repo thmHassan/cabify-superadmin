@@ -5,7 +5,7 @@ import EmptyState from "../EmptyState";
 const DataDetailsTable = ({ rowType, companies, actionOptions, ...rest }) => {
   const hasData = Array.isArray(companies) && companies.length > 0;
   return (
-    <div className="pt-5 overflow-auto">
+    <div className="sm:pt-5 overflow-auto">
       {hasData ? (
         <table className="w-full border-collapse table-auto">
           <tbody>

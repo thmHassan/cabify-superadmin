@@ -1,13 +1,15 @@
 import React from "react";
 
-const NotificationIcon = () => {
+const NotificationIcon = ({ width = 22, height = 24, className }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="22"
-      height="24"
+      width={width}
+      height={height}
       viewBox="0 0 22 24"
       fill="none"
+      className={className}
+      style={className ? { width: '100%', height: '100%' } : undefined}
     >
       <path
         d="M14.6164 19.5801H7.27673C7.27673 20.5534 7.66338 21.4869 8.3516 22.1751C9.03983 22.8633 9.97327 23.25 10.9466 23.25C11.9199 23.25 12.8533 22.8633 13.5415 22.1751C14.2298 21.4869 14.6164 20.5534 14.6164 19.5801Z"

@@ -21,9 +21,9 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
 
   return (
     <>
-      <div className="mb-[60px] flex flex-col gap-5">
-        <div className="flex flex-wrap gap-5 border-b-[0.7px] border-[#6C6C6C] pb-5">
-          <div className="w-[calc((100%-20px)/2)]">
+      <div className="mb-6 sm:mb-[60px] flex flex-col gap-5">
+        <div className="flex flex-wrap gap-4 sm:gap-5 border-b-[0.7px] border-[#6C6C6C] pb-5">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="units"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -44,7 +44,7 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div className="w-[calc((100%-20px)/2)]">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="country_of_use"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -65,7 +65,7 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div className="w-[calc((100%-20px)/2)]">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="time_zone"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -88,7 +88,7 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
           </div>
         </div>
         <div className="flex flex-col gap-5">
-          <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
             <label
               htmlFor="stripe_enable"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -101,7 +101,7 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
               name="stripe_enable"
             />
           </div>
-          <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
             <label
               htmlFor="enable_smtp"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -117,7 +117,7 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
             />
           </div>
           {values.stripe_enable && (
-            <div className="w-[calc((100%-20px)/2)]">
+            <div className="w-full sm:w-[calc((100%-20px)/2)]">
               <label
                 htmlFor="stripe_enablement"
                 className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "

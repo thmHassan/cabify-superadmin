@@ -3,6 +3,7 @@ import WalletIcon from "../../../../svg/WalletIcon";
 import CommonTableRowFields from "../CommonTableRowFields/CommonTableRowFields";
 import Tag from "../../../../ui/Tag";
 import ChildText from "../../../../ui/ChildText.jsx/ChildText";
+import classNames from "classnames";
 
 const UsageMonitoringTableRow = (props) => {
   const { data, actionOptions } = props;
@@ -35,28 +36,34 @@ const UsageMonitoringTableRow = (props) => {
     >
       <td className="min-w-[631px] w-full">
         <div className="min-h-[120px] py-[30px]">
-          <div className="flex gap-[30px] items-center min-h-max">
+          <div className="flex gap-[30px] items-center min-h-max pr-8">
             {metrics.map(({ label, value }, index) => (
               <Tag key={index} variant="mediumGray" size="lg">
                 <div className="flex flex-col gap-1 items-center">
-                  <span className="text-xs font-semibold">{label}</span>
+                  <span className="text-xs font-semibold whitespace-nowrap">
+                    {label}
+                  </span>
                   <ChildText
                     text={value}
-                    className={
+                    className={classNames(
+                      "whitespace-nowrap",
                       label === "Dispatchers"
                         ? "!text-[#F59E0B]"
                         : "!text-[#333333]"
-                    }
+                    )}
                   />
                 </div>
               </Tag>
             ))}
             <Tag variant="blue" size="lg">
               <div className="flex flex-col gap-1 items-center">
-                <span className="text-xs font-semibold opacity-75">
+                <span className="text-xs font-semibold opacity-75 whitespace-nowrap">
                   Last Seen
                 </span>
-                <ChildText text="2 minute ago" className="!text-[#FFFFFF]" />
+                <ChildText
+                  text="2 minute ago"
+                  className="!text-[#FFFFFF] whitespace-nowrap"
+                />
               </div>
             </Tag>
           </div>

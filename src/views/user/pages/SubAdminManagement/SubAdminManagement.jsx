@@ -51,6 +51,8 @@ const SubAdminManagement = () => {
     type: "new",
   });
   const [allSubAdmins, setAllSubAdmins] = useState({ data: [], last_page: 1 });
+    const [subAdminListRaw, setSubAdminListRaw] = useState([]);
+    const [subAdminListDisplay, setSubAdminListDisplay] = useState([]);
   const [isSubAdminsLoading, setIsSubAdminsLoading] = useState([]);
   const [_searchQuery, setSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -88,10 +90,14 @@ const SubAdminManagement = () => {
       setIsSubAdminsLoading(true);
       const result = await apiGetSubAdmins({ page: currentPage, perPage: itemsPerPage });
       if (result?.status === 200) {
-        setAllSubAdmins(result?.data?.list);
+        const list = result?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setAllSubAdmins(list);
+        setSubAdminListRaw(rows);
       }
     } catch (errors) {
       console.log(errors, "err---");
+      setSubAdminListRaw([]);
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -105,6 +111,29 @@ const SubAdminManagement = () => {
     getSubAdmins();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage, refreshTrigger]);
+
+  // Reset to page 1 only when search query changes
+  useEffect(() => {
+    if (_searchQuery) {
+      setCurrentPage(1);
+    }
+  }, [_searchQuery]);
+
+  // Filter the data based on search query
+  useEffect(() => {
+    const query = _searchQuery?.toLowerCase?.() ?? "";
+
+    let filtered = [...subAdminListRaw];
+
+    if (query) {
+      filtered = filtered.filter((s) => {
+        const hay = `${s.name ?? ""} ${s.email ?? ""}`.toLowerCase();
+        return hay.includes(query);
+      });
+    }
+
+    setSubAdminListDisplay(filtered);
+  }, [subAdminListRaw, _searchQuery]);
 
   if (isSubAdminsLoading) {
     return (
@@ -125,9 +154,9 @@ const SubAdminManagement = () => {
     JSON.parse(JSON.parse(selectedViewData?.permissions));
 
   return (
-    <div className="p-10">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="Sub Admin Management" />
           <Button
             type="filled"
@@ -136,24 +165,27 @@ const SubAdminManagement = () => {
               lockBodyScroll();
               setIsDocumentModalOpen({ type: "new", isOpen: true });
             }}
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
           >
-            <div className="flex gap-[15px] items-center">
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <PlusIcon />
               <span>Add Sub Admin</span>
             </div>
           </Button>
         </div>
       </div>
-      <CardContainer className="p-5">
-        {Array.isArray(allSubAdmins.data) && allSubAdmins.data.length > 0 ? (
-          <div className="flex items-center gap-5 justify-between">
-            <SearchBar onSearchChange={handleSearchChange} />
+      <CardContainer className="p-3 sm:p-4 lg:p-5">
+        {Array.isArray(subAdminListRaw) && subAdminListRaw.length > 0 ? (
+          <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+            <div className="w-full sm:flex-1">
+              <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+            </div>
           </div>
         ) : null}
         <div>
           <DataDetailsTable
             rowType="subAdminManagement"
-            companies={allSubAdmins.data}
+            companies={subAdminListDisplay}
             onViewClick={(data) => {
               setSelectedViewData(data);
               setIsViewPermissionModal(true);
@@ -184,8 +216,9 @@ const SubAdminManagement = () => {
             ]}
           />
         </div>
-        {Array.isArray(allSubAdmins.data) && allSubAdmins.data.length > 0 ? (
-          <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+        {Array.isArray(subAdminListDisplay) &&
+        subAdminListDisplay.length > 0 ? (
+          <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
             <Pagination
               currentPage={currentPage}
               totalPages={allSubAdmins.last_page}
@@ -193,12 +226,12 @@ const SubAdminManagement = () => {
               onPageChange={handlePageChange}
               onItemsPerPageChange={handleItemsPerPageChange}
               itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-            pageKey="subAdminManagement"
+              pageKey="subAdminManagement"
             />
           </div>
         ) : null}
       </CardContainer>
-      <Modal isOpen={isDocumentModalOpen.isOpen} className="p-10">
+      <Modal isOpen={isDocumentModalOpen.isOpen} className="p-4 sm:p-6 lg:p-10">
         {isDocumentModalOpen.type === "new" ? (
           <AddSubAdminModal
             setIsDocumentModalOpen={setIsDocumentModalOpen}
@@ -212,7 +245,7 @@ const SubAdminManagement = () => {
           />
         )}
       </Modal>
-      <Modal isOpen={isViewPermissionModal} className="p-10">
+      <Modal isOpen={isViewPermissionModal} className="p-4 sm:p-6 lg:p-10">
         <Formik
           initialValues={{
             permissions: allPermissions,
@@ -222,7 +255,7 @@ const SubAdminManagement = () => {
             console.log(values, "values====");
             return (
               <Form>
-                <div className="mb-[32px] text-center">
+                <div className="mb-6 sm:mb-8 lg:mb-[32px] text-center">
                   <CardSubtitle type={2} subtitle="View Permission" />
                 </div>
                 <ViewPermissions
@@ -230,11 +263,11 @@ const SubAdminManagement = () => {
                   setFieldValue={setFieldValue}
                   readonly={true}
                 />
-                <div className="flex gap-5 justify-end mt-10">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-end mt-6 sm:mt-10">
                   <Button
                     btnSize="md"
                     type="filledGray"
-                    className="!px-8 pt-4 pb-[15px] leading-[25px]"
+                    className="w-full sm:w-auto !px-8 pt-3 sm:pt-4 pb-3 sm:pb-[15px] leading-5 sm:leading-[25px]"
                     onClick={() => {
                       unlockBodyScroll();
                       setIsViewPermissionModal(false);

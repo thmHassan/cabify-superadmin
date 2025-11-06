@@ -9,7 +9,7 @@ import WatchIcon from "../../../../../../components/svg/WatchIcon";
 const PaymentAlerts = () => {
   return (
     <div className="flex flex-col gap-5">
-      <CardContainer className="p-6 flex justify-between">
+      <CardContainer className="sm:p-5 flex sm:flex-row sm:gap-0 gap-1 flex-col justify-between sm:items-center p-4">
         <CardSubtitle type={1} subtitle="$ Payment Alerts" />
         <CardSubtitle
           variant={1}
@@ -17,12 +17,12 @@ const PaymentAlerts = () => {
           subtitle="Companies requiring immediate attention"
         />
       </CardContainer>
-      <CardContainer className="p-5 flex gap-5 justify-between items-center">
-        <div className="flex gap-5">
+      <CardContainer className="sm:p-5 flex lg:flex-row flex-col md:gap-5 sm:gap-3 gap-2 justify-between lg:items-center p-4">
+        <div className="flex gap-5 items-center lg:w-[calc(100%-326.75px)] w-full">
           <div className="w-[60px] h-[60px] bg-[#EF4444] rounded-full flex justify-center items-center">
             <PaymentAlertIcon />
           </div>
-          <div className="flex flex-col gap-[5px]">
+          <div className="flex flex-col gap-[5px] w-[calc(100%-80px)]">
             <CardSubtitle variant={1} type={1} subtitle="$ Payment Alerts" />
             <ChildText
               size="md"
@@ -30,21 +30,29 @@ const PaymentAlerts = () => {
             />
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button type="filled" btnSize="md">
+        <div className="flex gap-3 lg:ml-0 ml-20 xs:flex-row flex-col">
+          <Button
+            type="filled"
+            btnSize="md"
+            className="xs:w-[calc(50%-10px)] md:w-auto w-full"
+          >
             Send Reminder
           </Button>
-          <Button type="outline" btnSize="md">
+          <Button
+            type="outline"
+            btnSize="md"
+            className="xs:w-[calc(50%-10px)] md:w-auto w-full"
+          >
             Send Reminder
           </Button>
         </div>
       </CardContainer>
-      <CardContainer className="p-5 flex gap-5 justify-between items-center">
-        <div className="flex gap-5">
+      <CardContainer className="sm:p-5 flex lg:flex-row flex-col md:gap-5 sm:gap-3 gap-2 justify-between lg:items-center p-4">
+        <div className="flex gap-5 items-center lg:w-[calc(100%-326.75px)] w-full">
           <div className="w-[60px] h-[60px] bg-[#F59E0B] rounded-full flex justify-center items-center">
             <WatchIcon />
           </div>
-          <div className="flex flex-col gap-[5px]">
+          <div className="flex flex-col gap-[5px] w-[calc(100%-80px)]">
             <CardSubtitle
               variant={1}
               type={1}
@@ -56,11 +64,19 @@ const PaymentAlerts = () => {
             />
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button type="filled" btnSize="md">
+        <div className="flex gap-3 lg:ml-0 ml-20 xs:flex-row flex-col">
+          <Button
+            type="filled"
+            btnSize="md"
+            className="xs:w-[calc(50%-10px)] md:w-auto w-full"
+          >
             Send Reminder
           </Button>
-          <Button type="outline" btnSize="md">
+          <Button
+            type="outline"
+            btnSize="md"
+            className="xs:w-[calc(50%-10px)] md:w-auto w-full"
+          >
             Send Reminder
           </Button>
         </div>

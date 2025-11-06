@@ -10,7 +10,7 @@ const PageTitle = ({ title, textColor = 0, className }) => {
   return (
     <h2
       className={classNames(
-        "font-semibold text-[40px] leading-[55px]",
+        "font-semibold 2xl:text-[40px] sm:text-3xl text-2xl 2xl:leading-[55px] sm:leading-9 leading-7",
         COLOR_CONFIG[textColor],
         className
       )}

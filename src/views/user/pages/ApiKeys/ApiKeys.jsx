@@ -20,7 +20,7 @@ import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import { apiGetApiKeys } from "../../../../services/ApiKeySerevice";
 import _ from "lodash";
 
-const APIKeys = () => {
+const ApiKeys = () => {
   const [isAddDocumentModalOpen, setIsAddDocumentModalOpen] = useState(false);
   const [isApiKeysLoading, setIsApiKeysLoading] = useState(false);
   const [allApiKeys, setAllApiKeys] = useState([]);
@@ -96,9 +96,9 @@ const APIKeys = () => {
   }
 
   return (
-    <div className="p-10">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="API Key Management" />
           <Button
             type="filled"
@@ -107,19 +107,22 @@ const APIKeys = () => {
               lockBodyScroll();
               setIsAddDocumentModalOpen(true);
             }}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
           >
-            <div className="flex gap-[15px] items-center">
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <PlusIcon />
-              <span>Add New Document</span>
+              <span className="hidden sm:inline-block">Add New</span>
+              <span>Document</span>
             </div>
           </Button>
         </div>
         <PageSubTitle title="Manage API keys for system access and authentication" />
       </div>
-      <CardContainer className="p-5">
-        <div className="flex items-center gap-5 justify-between">
-          <SearchBar onSearchChange={handleSearchChange} />
+      <CardContainer className="p-3 sm:p-4 lg:p-5">
+        <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+          <div className="w-full sm:flex-1">
+            <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+          </div>
         </div>
         <div>
           <DataDetailsTable
@@ -128,7 +131,7 @@ const APIKeys = () => {
             isOnActionClick={false}
           />
         </div>
-        <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+        <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -139,12 +142,12 @@ const APIKeys = () => {
           />
         </div>
       </CardContainer>
-      <Modal size="sm" isOpen={isAddDocumentModalOpen} className="p-10">
+      <Modal size="sm" isOpen={isAddDocumentModalOpen} className="p-4 sm:p-6 lg:p-10">
         <CardSubtitle
           subtitle="Add Document Type"
           className="!text-[#252525] !text-center"
         />
-        <div className="pt-[35px]">
+        <div className="pt-6 sm:pt-8 lg:pt-[35px]">
           <FieldTitle label="Document Name" />
           <Formik
             initialValues={{}}
@@ -159,21 +162,21 @@ const APIKeys = () => {
           >
             {() => (
               <Form>
-                <div className="pt-2 flex flex-col gap-5">
-                  <div className="h-16">
+                <div className="pt-2 flex flex-col gap-4 sm:gap-5">
+                  <div className="h-14 sm:h-16">
                     <Field
                       type="text"
                       name="email"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      className="px-4 sm:px-5 py-4 sm:py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-sm sm:text-base leading-5 sm:leading-[22px] font-semibold"
                       placeholder="Enter Document"
                     />
                   </div>
                 </div>
-                <div className="flex gap-5 justify-end mt-10">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-end mt-6 sm:mt-10">
                   <Button
                     btnSize="md"
                     type="filledGray"
-                    className="!px-8 pt-4 pb-[15px] leading-[25px]"
+                    className="w-full sm:w-auto !px-8 pt-3 sm:pt-4 pb-3 sm:pb-[15px] leading-5 sm:leading-[25px]"
                     onClick={() => {
                       unlockBodyScroll();
                       setIsAddDocumentModalOpen(false);
@@ -184,7 +187,7 @@ const APIKeys = () => {
                   <Button
                     btnSize="md"
                     type="filled"
-                    className="!px-8 pt-4 pb-[15px] leading-[25px]"
+                    className="w-full sm:w-auto !px-8 pt-3 sm:pt-4 pb-3 sm:pb-[15px] leading-5 sm:leading-[25px]"
                   >
                     <span>Create</span>
                   </Button>
@@ -198,4 +201,4 @@ const APIKeys = () => {
   );
 };
 
-export default APIKeys;
+export default ApiKeys;

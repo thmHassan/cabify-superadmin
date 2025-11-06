@@ -30,8 +30,8 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
 
   return (
     <>
-      <div className="flex flex-wrap gap-5 mb-[60px]">
-        <div className="w-[calc((100%-20px)/2)]">
+      <div className="flex flex-wrap gap-4 sm:gap-5 mb-6 sm:mb-[60px]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="company name"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -52,7 +52,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="company admin"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -73,7 +73,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="username"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -94,7 +94,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="password"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -116,7 +116,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="company_id"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -137,7 +137,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="contact_person"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -158,7 +158,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="email"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -267,11 +267,11 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
       </div>
-      <div className="flex gap-5 justify-end">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-end">
         <Button
           btnSize="md"
           type="filledGray"
-          className="!px-10 pt-4 pb-[15px] leading-[25px]"
+          className="!px-10 pt-4 pb-[15px] leading-[25px] w-full sm:w-auto"
           onClick={() => {
             unlockBodyScroll();
             setIsOpen({ type: "new", isOpen: false });
@@ -282,7 +282,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
         <Button
           btnSize="md"
           type="filled"
-          className="!px-10 pt-4 pb-[15px] leading-[25px]"
+          className="!px-10 pt-4 pb-[15px] leading-[25px] w-full sm:w-auto"
           onClick={onNext}
         >
           <span>Next</span>

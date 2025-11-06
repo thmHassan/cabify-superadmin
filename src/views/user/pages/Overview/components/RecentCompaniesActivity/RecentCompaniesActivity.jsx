@@ -13,7 +13,7 @@ const RecentCompaniesActivity = ({ companies }) => {
   return (
     // <CardContainer className="px-5 pb-5 pt-[30px] flex flex-col gap-5 w-[calc((100%-20px)/2)]">
     <CardContainer className="px-5 pb-5 pt-[30px] flex flex-col gap-5 w-full">
-      <div className="mb-2.5">
+      <div className="mb-2.5 flex flex-col 2xl:gap-0 sm:gap-[1px]">
         <CardTitle title="Recent Companies Activity" />
         <CardSubtitle subtitle="Latest company registrations and subscription changes" />
       </div>
@@ -21,7 +21,7 @@ const RecentCompaniesActivity = ({ companies }) => {
         {companies.map((c) => (
           <div
             key={c.id ?? c.company_id}
-            className="rounded-[15px] bg-[#ffffff] p-5 flex justify-between h-[120px] hover:scale-[1.01] transition-all duration-300 hover:shadow-[rgba(149,157,165,0.2)_0px_8px_24px]"
+            className="rounded-[15px] bg-[#ffffff] p-5 flex justify-between 2xl:h-[120px] over:scale-[1.01] transition-all duration-300 hover:shadow-[rgba(149,157,165,0.2)_0px_8px_24px]"
           >
             <div>
               <div className="mb-[5px]">
@@ -30,7 +30,7 @@ const RecentCompaniesActivity = ({ companies }) => {
               <p className="text-[#6C6C6C] text-sm leading-[19px] font-semibold mb-[5px]">
                 New company registered
               </p>
-              <div className="flex gap-10">
+              <div className="flex gap-x-10 gap-y-1 flex-wrap">
                 <ChildText text={`Plan: ${c.subscription_type ?? "-"}`} />
                 {c.created_at && (
                   <ChildText text={new Date(c.created_at).toLocaleString()} />

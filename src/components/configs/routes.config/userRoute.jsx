@@ -104,7 +104,7 @@ const userRoute = [
   {
     key: KEY.API_KEYS_KEY,
     path: PATH.API_KEYS_PATH,
-    component: lazy(() => import("../../../views/user/pages/APIKeys")),
+    component: lazy(() => import("../../../views/user/pages/ApiKeys")),
     authority: [],
   },
   {

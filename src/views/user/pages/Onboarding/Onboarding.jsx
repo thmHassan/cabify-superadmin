@@ -190,9 +190,9 @@ const Onboarding = () => {
   }
 
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="Onboarding Requests" />
           <Button
             type="filled"
@@ -201,11 +201,12 @@ const Onboarding = () => {
               lockBodyScroll();
               setIsManualRequestModal({ isOpen: true, type: "new" });
             }}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
           >
-            <div className="flex gap-[15px] items-center">
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <PlusIcon />
-              <span>Add Manual Request</span>
+              <span className="hidden sm:inline-block">Add</span>
+              <span>Manual Request</span>
             </div>
           </Button>
         </div>
@@ -222,7 +223,7 @@ const Onboarding = () => {
           onEdit={onEdit}
         />
       </div>
-      <Modal isOpen={isManualRequestModal.isOpen} className="p-10">
+      <Modal isOpen={isManualRequestModal.isOpen} className="p-4 sm:p-6 lg:p-10">
         <AddCompanyModal
           modalType="onboarding"
           isCompanyModalOpen={isManualRequestModal}

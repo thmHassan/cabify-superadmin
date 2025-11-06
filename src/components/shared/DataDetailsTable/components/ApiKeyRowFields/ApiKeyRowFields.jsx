@@ -17,21 +17,21 @@ const ApiKeyRowFields = ({ actionOptions, data }) => {
           <Tag
             variant="mediumGray"
             size="md"
-            className="!py-2.5 !leading-[19px] !px-5"
+            className="!py-2.5 !leading-[19px] !px-5 whitespace-nowrap"
           >
             <span>{key}</span>
           </Tag>
           <Tag
             variant="mediumGray"
             size="md"
-            className="!py-2.5 !leading-[19px] !px-5"
+            className="!py-2.5 !leading-[19px] !px-5 whitespace-nowrap"
           >
             <span>Created: {created}</span>
           </Tag>
           <Tag
             variant="mediumGray"
             size="md"
-            className="!py-2.5 !leading-[19px] !px-5"
+            className="!py-2.5 !leading-[19px] !px-5 whitespace-nowrap"
           >
             <span>Last used: {lastUsed}</span>
           </Tag>

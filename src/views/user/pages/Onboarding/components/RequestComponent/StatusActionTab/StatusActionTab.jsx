@@ -18,11 +18,11 @@ const StatusActionTab = ({ id, onRefresh }) => {
     }
   };
   return (
-    <div className="flex gap-[15px] justify-end">
+    <div className="flex flex-col sm:flex-row gap-3 sm:gap-[15px] justify-end">
       <Button
         btnSize="md"
         type="filledRed"
-        className="!px-[30px] !py-[13px] !leading-6"
+        className="w-full sm:w-auto !px-6 sm:!px-[30px] !py-3 sm:!py-[13px] !leading-5 sm:!leading-6"
         onClick={() => onChangeOnboardingStatus("rejected")}
       >
         <span>Reject</span>
@@ -30,7 +30,7 @@ const StatusActionTab = ({ id, onRefresh }) => {
       <Button
         btnSize="md"
         type="filledGreen"
-        className="!px-[30px] !py-[13px] !leading-6"
+        className="w-full sm:w-auto !px-6 sm:!px-[30px] !py-3 sm:!py-[13px] !leading-5 sm:!leading-6"
         onClick={() => onChangeOnboardingStatus("approved")}
       >
         <span>Accept</span>

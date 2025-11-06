@@ -3,7 +3,7 @@ import GraphIcon from "../../svg/GraphIcon";
 import ChildText from "../../ui/ChildText.jsx/ChildText";
 import classNames from "classnames";
 
-const SnapshotCard = ({ data, isChange = true }) => {
+const SnapshotCard = ({ data, className, isChange = true }) => {
   const {
     title,
     value,
@@ -14,7 +14,10 @@ const SnapshotCard = ({ data, isChange = true }) => {
   } = data;
   return (
     <div
-      className="w-full h-[200px] rounded-[15px] p-[15px] flex gap-[18px]"
+      className={classNames(
+        "w-full 2xl:h-[200px] h-[150px] rounded-[15px] p-[15px] flex gap-[18px]",
+        className
+      )}
       style={{
         background: backgroundColor,
       }}
@@ -48,7 +51,7 @@ const SnapshotCard = ({ data, isChange = true }) => {
             </div>
           )}
         </div>
-        <div className="font-semibold text-[50px] leading-[68px] text-[#252525]">
+        <div className="font-semibold 2xl:text-[50px] text-4xl 2xl:leading-[68px] leading-8 text-[#252525]">
           <span>{value}</span>
         </div>
       </div>

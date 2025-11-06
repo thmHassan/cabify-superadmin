@@ -29,6 +29,10 @@ const Driver = () => {
     data: [],
     last_page: 1,
   });
+  const [driverDocumentsListRaw, setDriverDocumentsListRaw] = useState([]);
+  const [driverDocumentsListDisplay, setDriverDocumentsListDisplay] = useState(
+    []
+  );
   const [_searchQuery, setSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isDriverDocumentsLoading, setIsDriverDocumentsLoading] =
@@ -66,13 +70,20 @@ const Driver = () => {
   const getDriversDocuments = async () => {
     try {
       setIsDriverDocumentsLoading(true);
-      const result = await apiGetDriversDocuments({ page: currentPage, perPage: itemsPerPage });
+      const result = await apiGetDriversDocuments({
+        page: currentPage,
+        perPage: itemsPerPage,
+      });
       if (result?.status === 200) {
         console.log(result, "res========");
-        setAllDriversDocuments(result?.data?.list);
+        const list = result?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setAllDriversDocuments(list);
+        setDriverDocumentsListRaw(rows);
       }
     } catch (errors) {
       console.log(errors, "err---");
+      setDriverDocumentsListRaw([]);
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -93,6 +104,29 @@ const Driver = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage, refreshTrigger]);
 
+  // Reset to page 1 only when search query changes
+  useEffect(() => {
+    if (_searchQuery) {
+      setCurrentPage(1);
+    }
+  }, [_searchQuery]);
+
+  // Filter the data based on search query
+  useEffect(() => {
+    const query = _searchQuery?.toLowerCase?.() ?? "";
+
+    let filtered = [...driverDocumentsListRaw];
+
+    if (query) {
+      filtered = filtered.filter((d) => {
+        const hay = `${d.document_name ?? ""}`.toLowerCase();
+        return hay.includes(query);
+      });
+    }
+
+    setDriverDocumentsListDisplay(filtered);
+  }, [driverDocumentsListRaw, _searchQuery]);
+
   if (isDriverDocumentsLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full">
@@ -102,9 +136,9 @@ const Driver = () => {
   }
 
   return (
-    <div className="p-10">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
+        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
           <PageTitle title="Default Document Type" />
           <Button
             type="filled"
@@ -113,9 +147,9 @@ const Driver = () => {
               lockBodyScroll();
               setIsDocumentModalOpen({ type: "new", isOpen: true });
             }}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
           >
-            <div className="flex gap-[15px] items-center">
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <PlusIcon />
               <span>Add New Document</span>
             </div>
@@ -125,17 +159,19 @@ const Driver = () => {
           <PageSubTitle title="Manage driver documents across all panels" />
         </div>
       </div>
-      <CardContainer className="p-5">
-        {Array.isArray(allDriversDocuments.data) &&
-        allDriversDocuments.data.length > 0 ? (
-          <div className="flex items-center gap-5 justify-between">
-            <SearchBar onSearchChange={handleSearchChange} />
+      <CardContainer className="p-3 sm:p-4 lg:p-5">
+        {Array.isArray(driverDocumentsListRaw) &&
+        driverDocumentsListRaw.length > 0 ? (
+          <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+            <div className="w-full sm:flex-1">
+              <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+            </div>
           </div>
         ) : null}
         <div>
           <DataDetailsTable
             rowType="driverDocuments"
-            companies={allDriversDocuments.data}
+            companies={driverDocumentsListDisplay}
             actionOptions={[
               {
                 label: "Edit",
@@ -158,9 +194,9 @@ const Driver = () => {
             ]}
           />
         </div>
-        {Array.isArray(allDriversDocuments.data) &&
-        allDriversDocuments.data.length > 0 ? (
-          <div className="mt-4 border-t border-[#E9E9E9] pt-4">
+        {Array.isArray(driverDocumentsListDisplay) &&
+        driverDocumentsListDisplay.length > 0 ? (
+          <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
             <Pagination
               currentPage={currentPage}
               totalPages={allDriversDocuments.last_page}
@@ -173,7 +209,7 @@ const Driver = () => {
           </div>
         ) : null}
       </CardContainer>
-      <Modal size="sm" isOpen={isDocumentModalOpen.isOpen} className="p-10">
+      <Modal size="sm" isOpen={isDocumentModalOpen.isOpen} className="p-4 sm:p-6 lg:p-10">
         {isDocumentModalOpen.type === "new" ? (
           <AddDriverDocumentModal
             setIsOpen={setIsDocumentModalOpen}

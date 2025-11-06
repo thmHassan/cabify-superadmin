@@ -26,13 +26,12 @@ const PendingRequests = ({
     );
   }
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5">
       {allOnboardings.map((data, index) => (
-        <div>
+        <div key={index}>
           {/* {index} */}
           <RequestComponent
             onEdit={onEdit}
-            key={index}
             type="pending"
             data={data}
             onRefresh={onRefresh}

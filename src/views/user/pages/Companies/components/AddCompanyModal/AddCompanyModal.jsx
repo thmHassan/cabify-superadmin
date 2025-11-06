@@ -341,7 +341,7 @@ const AddCompanyModal = ({
           return (
             <Form>
               <div
-                className="w-[120px] h-[120px] rounded-full bg-[#EEEEEE] flex justify-center items-center mx-auto mb-5 overflow-hidden cursor-pointer"
+                className="w-20 h-20 sm:w-[100px] sm:h-[100px] lg:w-[120px] lg:h-[120px] rounded-full bg-[#EEEEEE] flex justify-center items-center mx-auto mb-4 sm:mb-5 overflow-hidden cursor-pointer"
                 onClick={handlePickImage}
                 title="Click to upload"
               >
@@ -362,7 +362,7 @@ const AddCompanyModal = ({
                   onChange={handleImageChange}
                 />
               </div>
-              <div className="text-[26px] leading-9 font-semibold text-[#252525] mb-7 text-center mx-auto max-w-[75%] w-full">
+              <div className="text-xl sm:text-2xl lg:text-[26px] leading-7 sm:leading-8 lg:leading-9 font-semibold text-[#252525] mb-4 sm:mb-6 lg:mb-7 text-center mx-auto max-w-full sm:max-w-[85%] lg:max-w-[75%] w-full px-2">
                 <span className="w-full text-center block truncate">
                   {!_.isEmpty(values.company_name)
                     ? values.company_name

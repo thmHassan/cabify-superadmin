@@ -84,9 +84,9 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
 
   return (
     <>
-      <div className="mb-[60px] flex flex-col gap-5">
-        <div className="flex flex-wrap gap-5">
-          <div className="w-[calc((100%-20px)/2)]">
+      <div className="mb-6 sm:mb-[60px] flex flex-col gap-5">
+        <div className="flex flex-wrap gap-4 sm:gap-5">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="maps_api"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -107,7 +107,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div className="w-[calc((100%-20px)/2)]">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="search_api"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -128,7 +128,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div className="w-[calc((100%-20px)/2)]">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="passengers_allowed"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -149,7 +149,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div className="w-[calc((100%-20px)/2)]">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="dispatchers_allowed"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -170,7 +170,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div className="w-[calc((100%-20px)/2)]">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="drivers_allowed"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -222,7 +222,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
           </div>
         </div>
         <div className="flex flex-col gap-5 py-5 border-y-[0.7px] border-[#6C6C6C]">
-          <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
             <label
               htmlFor="log_map_search_result"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -231,7 +231,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             </label>
             <Switch name="log_map_search_result" />
           </div>
-          <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
             <label
               htmlFor="voip"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -240,7 +240,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             </label>
             <Switch name="voip" />
           </div>
-          <div className="w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
             <label
               htmlFor="sub_company"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -283,7 +283,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               />
             </div>
           </div>
-          <div className="w-[calc((100%-20px)/2)] flex justify-between items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between items-center">
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="fleet_management"
@@ -302,7 +302,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               />
             </div>
           </div>
-          <div className="w-[calc((100%-20px)/2)] flex justify-between items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between items-center">
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="sos_features"
