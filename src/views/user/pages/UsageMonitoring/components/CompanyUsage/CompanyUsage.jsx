@@ -199,6 +199,11 @@ const CompanyUsage = ({ data }) => {
                   }}
                   placeholder="All Status"
                   className="min-w-0"
+                  mobileBgColor="#F3F6FF"
+                  mobileBorder="#D6DBF5"
+                  forceMobile
+                  menuPlacement="top"
+                  menuPosition="fixed"
                 />
                 <CustomSelect
                   variant={2}
@@ -209,6 +214,11 @@ const CompanyUsage = ({ data }) => {
                   }}
                   placeholder="All Plans"
                   className="min-w-0"
+                  mobileBgColor="#F3F6FF"
+                  mobileBorder="#D6DBF5"
+                  forceMobile
+                  menuPlacement="top"
+                  menuPosition="fixed"
                 />
                 <button
                   type="button"

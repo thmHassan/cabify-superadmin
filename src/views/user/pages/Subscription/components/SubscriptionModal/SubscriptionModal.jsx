@@ -48,8 +48,8 @@ const SubscriptionModal = ({
         >
           {({ values, setFieldValue }) => (
             <Form>
-              <div className="flex flex-wrap gap-5 mb-[60px]">
-                <div className="w-[calc((100%-20px)/2)]">
+              <div className="flex flex-wrap gap-5 mb-6">
+                <div className="w-full md:w-[calc((100%-20px)/2)]">
                   <label
                     htmlFor="company name"
                     className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -70,7 +70,7 @@ const SubscriptionModal = ({
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-                <div className="w-[calc((100%-20px)/2)]">
+                <div className="w-full md:w-[calc((100%-20px)/2)]">
                   <label
                     htmlFor="company name"
                     className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -93,7 +93,7 @@ const SubscriptionModal = ({
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-                <div className="w-[calc((100%-20px)/2)]">
+                <div className="w-full md:w-[calc((100%-20px)/2)]">
                   <label
                     htmlFor="company name"
                     className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -115,14 +115,14 @@ const SubscriptionModal = ({
                   />
                 </div>
                 <div className="w-full">
-                  <div className="w-[calc((100%-20px)/2)]">
+                  <div className="w-full md:w-[calc((100%-20px)/2)]">
                     <label
                       htmlFor="company name"
                       className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
                     >
                       Features
                     </label>
-                    <div className="h-16">
+                    <div>
                       <FormSelection
                         isMulti={true}
                         label="Select Bid Backup Vehicle type"
@@ -152,11 +152,11 @@ const SubscriptionModal = ({
                   </div>
                 </div>
               </div>
-              <div className="flex gap-5 justify-end">
+              <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-5 sm:justify-end">
                 <Button
                   btnSize="md"
                   type="filledGray"
-                  className="!px-10 !pt-4 pb-[15px] leading-[25px]"
+                  className="w-full sm:w-auto !px-10 !pt-4 pb-[15px] leading-[25px]"
                   onClick={() => {
                     unlockBodyScroll();
                     setIsOpen({ type: "new", isOpen: false });
@@ -168,7 +168,7 @@ const SubscriptionModal = ({
                   btnType="submit"
                   btnSize="md"
                   type="filled"
-                  className="!px-10 !pt-4 pb-[15px] leading-[25px]"
+                  className="w-full sm:w-auto !px-10 !pt-4 pb-[15px] leading-[25px]"
                 >
                   <span>Submit</span>
                 </Button>

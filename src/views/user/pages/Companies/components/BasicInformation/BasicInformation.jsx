@@ -179,7 +179,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="phone"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -200,7 +200,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="address"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -221,7 +221,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="city"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -242,7 +242,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="currency"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "

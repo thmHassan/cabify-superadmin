@@ -6,13 +6,111 @@ import Button from "../../../../../../components/ui/Button/Button";
 import classNames from "classnames";
 
 const MileageRateSettingsForm = ({ formEl }) => {
-  const { values, setFieldValue } = formEl;
+  const { values, setFieldValue, setTouched, validateField } = formEl;
+  
+  const handleAddRange = async () => {
+    if (values.mileage_system !== "dynamic") return;
+    
+    const currentFromArray = values.from_array || [];
+    const currentToArray = values.to_array || [];
+    const currentPriceArray = values.price_array || [];
+    
+    // If arrays are empty, validate the input fields
+    if (currentFromArray.length === 0) {
+      // Mark fields as touched to show validation errors
+      setTouched({
+        from: true,
+        to: true,
+        price: true,
+      });
+      
+      // Validate the fields and wait for results
+      const fromError = await validateField("from");
+      const toError = await validateField("to");
+      const priceError = await validateField("price");
+      
+      // Check if there are any errors or empty values
+      if (fromError || toError || priceError || !values.from || !values.to || !values.price) {
+        return; // Don't add if validation fails
+      }
+    } else {
+      // If arrays already have entries, only validate if fields have values
+      if (values.from || values.to || values.price) {
+        // Mark fields as touched to show validation errors
+        setTouched({
+          from: true,
+          to: true,
+          price: true,
+        });
+        
+        // Validate the fields and wait for results
+        const fromError = await validateField("from");
+        const toError = await validateField("to");
+        const priceError = await validateField("price");
+        
+        // Check if there are any errors
+        if (fromError || toError || priceError) {
+          return; // Don't add if validation fails
+        }
+        
+        // If fields are empty, don't add (but don't show error)
+        if (!values.from || !values.to || !values.price) {
+          return;
+        }
+      } else {
+        // If arrays have entries and fields are empty, just return (no validation needed)
+        return;
+      }
+    }
+    
+    // Add to arrays
+    setFieldValue("from_array", [...currentFromArray, Number(values.from)]);
+    setFieldValue("to_array", [...currentToArray, Number(values.to)]);
+    setFieldValue("price_array", [...currentPriceArray, Number(values.price)]);
+    
+    // Clear input fields
+    setFieldValue("from", "");
+    setFieldValue("to", "");
+    setFieldValue("price", "");
+    
+    // Clear touched state
+    setTouched({
+      from: false,
+      to: false,
+      price: false,
+    });
+  };
+  
+  const handleRemoveRange = (index) => {
+    const currentFromArray = values.from_array || [];
+    const currentToArray = values.to_array || [];
+    const currentPriceArray = values.price_array || [];
+    
+    setFieldValue(
+      "from_array",
+      currentFromArray.filter((_, i) => i !== index)
+    );
+    setFieldValue(
+      "to_array",
+      currentToArray.filter((_, i) => i !== index)
+    );
+    setFieldValue(
+      "price_array",
+      currentPriceArray.filter((_, i) => i !== index)
+    );
+  };
   return (
-    <CardContainer type={1} className="py-8 px-7">
+    <CardContainer
+      type={1}
+      className="2xl:py-8 2xl:px-7 lg:py-5 lg:px-4 sm:px-4 px-3 sm:py-5 py-3"
+    >
       <div>
-        <CardContainer type={1} className="px-6 py-7 mb-[25px]">
-          <div className="flex">
-            <div className="w-16 pr-[30px]">
+        <CardContainer
+          type={1}
+          className="2xl:px-6 2xl:py-7 lg:px-4 lg:py-5 sm:px-4 px-3 sm:py-5 py-3 mb-[25px]"
+        >
+          <div className="flex flex-col sm:flex-row">
+            <div className="w-full sm:w-16 sm:pr-[30px] mb-4 sm:mb-0">
               <div className="h-[94px] flex items-center">
                 <div
                   className={classNames(
@@ -20,6 +118,13 @@ const MileageRateSettingsForm = ({ formEl }) => {
                   )}
                   onClick={() => {
                     setFieldValue("mileage_system", "fixed");
+                    // Clear dynamic fields when switching to fixed
+                    setFieldValue("from", "");
+                    setFieldValue("to", "");
+                    setFieldValue("price", "");
+                    setFieldValue("from_array", []);
+                    setFieldValue("to_array", []);
+                    setFieldValue("price_array", []);
                   }}
                 >
                   <div
@@ -30,9 +135,9 @@ const MileageRateSettingsForm = ({ formEl }) => {
                 </div>
               </div>
             </div>
-            <div className="w-[calc(100%-64px)]">
-              <div className="flex flex-wrap gap-5">
-                <div className="w-[calc((100%-20px)/2)]">
+            <div className="w-full sm:w-[calc(100%-64px)]">
+              <div className="flex flex-wrap gap-4 sm:gap-5">
+                <div className="w-full sm:w-[calc((100%-20px)/2)]">
                   <label
                     htmlFor="Map API Provider"
                     className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -53,7 +158,7 @@ const MileageRateSettingsForm = ({ formEl }) => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-                <div className="w-[calc((100%-20px)/2)]">
+                <div className="w-full sm:w-[calc((100%-20px)/2)]">
                   <label
                     htmlFor="Map API Provider"
                     className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -78,8 +183,11 @@ const MileageRateSettingsForm = ({ formEl }) => {
             </div>
           </div>
         </CardContainer>
-        <CardContainer type={1} className="px-6 py-7 mb-[25px] flex">
-          <div className="w-16 pr-[30px]">
+        <CardContainer
+          type={1}
+          className="2xl:px-6 2xl:py-7 lg:px-4 lg:py-5 sm:px-4 px-3 sm:py-5 py-3 mb-[25px] flex flex-col sm:flex-row"
+        >
+          <div className="w-full sm:w-16 sm:pr-[30px] mb-4 sm:mb-0">
             <div className="h-[94px] flex items-center">
               <div
                 className={classNames(
@@ -87,6 +195,9 @@ const MileageRateSettingsForm = ({ formEl }) => {
                 )}
                 onClick={() => {
                   setFieldValue("mileage_system", "dynamic");
+                  // Clear fixed fields when switching to dynamic
+                  setFieldValue("first_mile_km", "");
+                  setFieldValue("second_mile_km", "");
                 }}
               >
                 <div
@@ -97,151 +208,184 @@ const MileageRateSettingsForm = ({ formEl }) => {
               </div>
             </div>
           </div>
-          <div className="w-[calc(100%-64px)] flex flex-col gap-[30px]">
-            <div className="flex">
-              <div className="w-[calc(100%-157px)] flex gap-5">
-                <div className="w-[calc((100%-40px)/3)]">
+          <div className="w-full sm:w-[calc(100%-64px)] flex flex-col gap-[30px]">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-0">
+              <div className="w-full sm:w-[calc(100%-157px)] flex flex-col sm:flex-row gap-4 sm:gap-5">
+                <div className="w-full sm:w-[calc((100%-40px)/3)]">
                   <label
-                    htmlFor="Map API Provider"
+                    htmlFor="from"
                     className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
                   >
-                    From
+                    From{values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) ? "*" : ""}
                   </label>
                   <div className="h-16">
                     <Field
                       type="text"
-                      name="email"
+                      name="from"
                       className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                      placeholder="Enter First Mile / Km*"
+                      placeholder="Enter From Mile / Km*"
                     />
                   </div>
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
+                  {values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) && (
+                    <ErrorMessage
+                      name="from"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  )}
                 </div>
-                <div className="w-[calc((100%-40px)/3)]">
+                <div className="w-full sm:w-[calc((100%-40px)/3)]">
                   <label
-                    htmlFor="Map API Provider"
+                    htmlFor="to"
                     className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
                   >
-                    To
+                    To{values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) ? "*" : ""}
                   </label>
                   <div className="h-16">
                     <Field
                       type="text"
-                      name="email"
+                      name="to"
                       className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                      placeholder="Enter Second Mile / Km*"
+                      placeholder="Enter To Mile / Km*"
                     />
                   </div>
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
+                  {values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) && (
+                    <ErrorMessage
+                      name="to"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  )}
                 </div>
-                <div className="w-[calc((100%-40px)/3)]">
+                <div className="w-full sm:w-[calc((100%-40px)/3)]">
                   <label
-                    htmlFor="Map API Provider"
+                    htmlFor="price"
                     className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
                   >
-                    Fare
+                    Fare{values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) ? "*" : ""}
                   </label>
                   <div className="h-16">
                     <Field
                       type="text"
-                      name="email"
+                      name="price"
                       className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                      placeholder="Enter Fare"
+                      placeholder="Enter Fare*"
                     />
                   </div>
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
+                  {values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) && (
+                    <ErrorMessage
+                      name="price"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  )}
                 </div>
               </div>
-              <div className="w-[157px] pl-5 pt-[30px]">
-                <Button className=" text-[#1F41BB] border border-[#1F41BB] h-16 w-full rounded-lg">
+              <div className="w-full sm:w-[157px] sm:pl-5 pt-4 sm:pt-[30px]">
+                <Button
+                  type="button"
+                  onClick={handleAddRange}
+                  className="text-[#1F41BB] border border-[#1F41BB] h-16 w-full rounded-lg"
+                >
                   <PageSubTitle title="Add Range" className="!text-[#1F41BB]" />
                 </Button>
               </div>
             </div>
-            <div className="flex">
-              <div className="w-[calc(100%-157px)] flex gap-5">
-                <div className="w-[calc((100%-40px)/3)]">
-                  <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                  >
-                    From
-                  </label>
-                  <div className="h-16">
-                    <Field
-                      type="text"
-                      name="email"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                      placeholder="Enter First Mile / Km*"
-                    />
+            {(values.from_array || []).length > 0 &&
+              values.from_array.map((__, index) => (
+                <div key={index} className="flex flex-col sm:flex-row gap-4 sm:gap-0">
+                  <div className="w-full sm:w-[calc(100%-157px)] flex flex-col sm:flex-row gap-4 sm:gap-5">
+                    <div className="w-full sm:w-[calc((100%-40px)/3)]">
+                      <label
+                        htmlFor={`from_array_${index}`}
+                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                      >
+                        From*
+                      </label>
+                      <div className="h-16">
+                        <Field
+                          type="text"
+                          name={`from_array.${index}`}
+                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          placeholder="Enter From Mile / Km*"
+                        />
+                      </div>
+                      {values.mileage_system === "dynamic" && (
+                        <ErrorMessage
+                          name={`from_array.${index}`}
+                          component="div"
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      )}
+                    </div>
+                    <div className="w-full sm:w-[calc((100%-40px)/3)]">
+                      <label
+                        htmlFor={`to_array_${index}`}
+                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                      >
+                        To*
+                      </label>
+                      <div className="h-16">
+                        <Field
+                          type="text"
+                          name={`to_array.${index}`}
+                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          placeholder="Enter To Mile / Km*"
+                        />
+                      </div>
+                      {values.mileage_system === "dynamic" && (
+                        <ErrorMessage
+                          name={`to_array.${index}`}
+                          component="div"
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      )}
+                    </div>
+                    <div className="w-full sm:w-[calc((100%-40px)/3)]">
+                      <label
+                        htmlFor={`price_array_${index}`}
+                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                      >
+                        Fare*
+                      </label>
+                      <div className="h-16">
+                        <Field
+                          type="text"
+                          name={`price_array.${index}`}
+                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          placeholder="Enter Fare*"
+                        />
+                      </div>
+                      {values.mileage_system === "dynamic" && (
+                        <ErrorMessage
+                          name={`price_array.${index}`}
+                          component="div"
+                          className="text-red-500 text-sm mt-1"
+                        />
+                      )}
+                    </div>
                   </div>
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <div className="w-[calc((100%-40px)/3)]">
-                  <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                  >
-                    To
-                  </label>
-                  <div className="h-16">
-                    <Field
-                      type="text"
-                      name="email"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                      placeholder="Enter Second Mile / Km*"
-                    />
+                  <div className="w-full sm:w-[157px] sm:pl-5 pt-4 sm:pt-[30px]">
+                    <Button
+                      type="button"
+                      onClick={() => handleRemoveRange(index)}
+                      className="text-[#FF4747] border border-[#FF4747] h-16 w-full rounded-lg"
+                    >
+                      <PageSubTitle
+                        title="Remove"
+                        className="!text-[#FF4747]"
+                      />
+                    </Button>
                   </div>
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
                 </div>
-                <div className="w-[calc((100%-40px)/3)]">
-                  <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                  >
-                    Fare
-                  </label>
-                  <div className="h-16">
-                    <Field
-                      type="text"
-                      name="email"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                      placeholder="Enter Fare"
-                    />
-                  </div>
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-              </div>
-              <div className="w-[157px] pl-5 pt-[30px]">
-                <Button className=" text-[#FF4747] border border-[#FF4747] h-16 w-full rounded-lg">
-                  <PageSubTitle title="Remove" className="!text-[#FF4747]" />
-                </Button>
-              </div>
-            </div>
+              ))}
+            {values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) && (
+              <ErrorMessage
+                name="from_array"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            )}
           </div>
         </CardContainer>
       </div>

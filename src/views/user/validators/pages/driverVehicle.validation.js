@@ -55,4 +55,91 @@ export const DRIVER_VEHICLE_VALIDATION_SCHEMA = Yup.object().shape({
       then: (schema) => schema.required("Second mile/km is required"),
       otherwise: (schema) => schema.optional(),
     }),
+
+  from: Yup.number()
+    .typeError("From must be a number")
+    .min(0, "From must be >= 0")
+    .when(["mileage_system", "from_array"], {
+      is: (mileage_system, from_array) => 
+        mileage_system === "dynamic" && (!from_array || from_array.length === 0),
+      then: (schema) => schema.required("From is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+  to: Yup.number()
+    .typeError("To must be a number")
+    .min(0, "To must be >= 0")
+    .when(["mileage_system", "from_array"], {
+      is: (mileage_system, from_array) => 
+        mileage_system === "dynamic" && (!from_array || from_array.length === 0),
+      then: (schema) => schema.required("To is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+  price: Yup.number()
+    .typeError("Fare must be a number")
+    .min(0, "Fare must be >= 0")
+    .when(["mileage_system", "from_array"], {
+      is: (mileage_system, from_array) => 
+        mileage_system === "dynamic" && (!from_array || from_array.length === 0),
+      then: (schema) => schema.required("Fare is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+  from_array: Yup.array()
+    .of(
+      Yup.number()
+        .typeError("From must be a number")
+        .min(0, "From must be >= 0")
+        .required("From is required")
+    )
+    .when("mileage_system", {
+      is: "dynamic",
+      then: (schema) =>
+        schema
+          .min(1, "At least one range entry is required")
+          .required("At least one range entry is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+  to_array: Yup.array()
+    .of(
+      Yup.number()
+        .typeError("To must be a number")
+        .min(0, "To must be >= 0")
+        .required("To is required")
+    )
+    .when("mileage_system", {
+      is: "dynamic",
+      then: (schema) =>
+        schema
+          .min(1, "At least one range entry is required")
+          .required("At least one range entry is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+  price_array: Yup.array()
+    .of(
+      Yup.number()
+        .typeError("Fare must be a number")
+        .min(0, "Fare must be >= 0")
+        .required("Fare is required")
+    )
+    .when("mileage_system", {
+      is: "dynamic",
+      then: (schema) =>
+        schema
+          .min(1, "At least one range entry is required")
+          .required("At least one range entry is required"),
+      otherwise: (schema) => schema.optional(),
+    }),
+
+  attribute_array: Yup.object()
+    .test(
+      "at-least-one",
+      "At least one attribute is required",
+      function (value) {
+        if (!value || typeof value !== "object") {
+          return false;
+        }
+        const keys = Object.keys(value);
+        return keys.length > 0;
+      }
+    )
+    .required("At least one attribute is required"),
 });

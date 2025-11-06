@@ -41,7 +41,12 @@ const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
 
   return (
     <div>
-      <div className={classNames("flex w-full gap-3 sm:gap-5 mb-5 sm:mb-[52px] px-2 overflow-x-auto whitespace-nowrap", ALIGN_CONFIG[align])}>
+      <div
+        className={classNames(
+          "flex w-full sm:gap-3 gap-2 lg:gap-5 mb-5 sm:mb-[52px] sm:px-2 overflow-x-auto whitespace-nowrap",
+          ALIGN_CONFIG[align]
+        )}
+      >
         {tabs.map(({ title }, index) => (
           <Button
             key={index}
@@ -49,8 +54,13 @@ const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
               if (onTabChange) onTabChange(index);
               handleTabChange(index, title);
             }}
-            className="min-w-max"          >
-            <Tag variant={currentTab === index ? "blue" : "gray"} size="lg">
+            className="min-w-max"
+          >
+            <Tag
+              variant={currentTab === index ? "blue" : "gray"}
+              size="lg"
+              className="text-sm leading-[19px] !px-5 !pt-1.5 pb-[5px] rounded-[25px] sm:text-[18px] sm:leading-[25px] sm:!px-[35px] sm:!pt-[11px] sm:!pb-2.5 sm:rounded-[35px]"
+            >
               {title}
             </Tag>
           </Button>

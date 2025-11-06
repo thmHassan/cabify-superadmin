@@ -22,7 +22,10 @@ import {
 import Pagination from "../../../../components/ui/Pagination";
 import CompanyInformationModal from "./components/CompanyInformationModal";
 import DataDetailsTable from "../../../../components/shared/DataDetailsTable";
-import { lockBodyScroll, unlockBodyScroll } from "../../../../utils/functions/common.function";
+import {
+  lockBodyScroll,
+  unlockBodyScroll,
+} from "../../../../utils/functions/common.function";
 import Base from "../../../../components/animations/Base";
 import ApiService from "../../../../services/ApiService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
@@ -291,7 +294,7 @@ const Companies = () => {
         />
       </div>
       <div className="flex flex-col sm:gap-5 gap-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 1.5xl:grid-cols-3 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard
               key={index}
@@ -299,7 +302,7 @@ const Companies = () => {
               data={card}
               className={
                 DASHBOARD_CARDS.length - 1 === index
-                  ? "sm:col-span-2 xl:col-span-1"
+                  ? "sm:col-span-2 1.5xl:col-span-1"
                   : "col-span-1"
               }
             />
@@ -315,7 +318,10 @@ const Companies = () => {
               {Array.isArray(companyListRaw) && companyListRaw.length > 0 ? (
                 <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
                   <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
-                    <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+                    <SearchBar
+                      onSearchChange={handleSearchChange}
+                      className="w-full md:max-w-[400px] max-w-full"
+                    />
                   </div>
                   {/* Mobile filter trigger */}
                   <div className="flex justify-end md:hidden">
@@ -325,8 +331,20 @@ const Companies = () => {
                       onClick={openFilter}
                     >
                       {/* simple filter funnel icon */}
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 5H21L14 13V20L10 18V13L3 5Z" stroke="#333333" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M3 5H21L14 13V20L10 18V13L3 5Z"
+                          stroke="#333333"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     </button>
                   </div>
@@ -401,16 +419,34 @@ const Companies = () => {
                     className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-base font-semibold text-[#333]">Filter</span>
+                      <span className="text-base font-semibold text-[#333]">
+                        Filter
+                      </span>
                       <button
                         type="button"
                         aria-label="Close filter"
                         className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
                         onClick={closeFilter}
                       >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M6 6L18 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
-                          <path d="M18 6L6 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6 6L18 18"
+                            stroke="#111111"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                          <path
+                            d="M18 6L6 18"
+                            stroke="#111111"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
                         </svg>
                       </button>
                     </div>
@@ -424,6 +460,11 @@ const Companies = () => {
                         }}
                         placeholder="All Status"
                         className="min-w-0"
+                        mobileBgColor="#F3F6FF"
+                        mobileBorder="#D6DBF5"
+                        forceMobile
+                        menuPlacement="top"
+                        menuPosition="fixed"
                       />
                       <CustomSelect
                         variant={2}
@@ -434,6 +475,11 @@ const Companies = () => {
                         }}
                         placeholder="All Plans"
                         className="min-w-0"
+                        mobileBgColor="#F3F6FF"
+                        mobileBorder="#D6DBF5"
+                        forceMobile
+                        menuPlacement="top"
+                        menuPosition="fixed"
                       />
                       <button
                         type="button"
@@ -447,15 +493,20 @@ const Companies = () => {
                 </div>
               )}
             </AnimatePresence>
-            <CompanyInformationModal
+            <Modal
               isOpen={isCompanyInformationModalOpen}
-              setIsOpen={setIsCompanyInformationModalOpen}
-              companyId={selectedCompanyId}
-              onEdit={() => {
-                lockBodyScroll();
-                setIsCompanyModalOpen({ type: "edit", isOpen: true });
-              }}
-            />
+              size="2xl"
+              className="p-10"
+            >
+              <CompanyInformationModal
+                setIsOpen={setIsCompanyInformationModalOpen}
+                companyId={selectedCompanyId}
+                onEdit={() => {
+                  lockBodyScroll();
+                  setIsCompanyModalOpen({ type: "edit", isOpen: true });
+                }}
+              />
+            </Modal>
           </div>
         </div>
       </div>

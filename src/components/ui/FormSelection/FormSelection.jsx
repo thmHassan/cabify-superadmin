@@ -24,7 +24,8 @@ const FormSelection = ({
       ...base,
       // placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold
       borderRadius: "8px",
-      height: "64px",
+      height: isMulti ? "auto" : "64px",
+      minHeight: "64px",
       width: "100%",
       borderColor: state.isFocused ? "#1f41bb" : "#8D8D8D",
       boxShadow: state.isFocused
@@ -34,8 +35,15 @@ const FormSelection = ({
       fontSize: "16px",
       lineHeight: "22px",
       fontWeight: "600",
+      alignItems: isMulti ? "flex-start" : base.alignItems,
       "&:hover": { borderColor: "#1f41bb" },
       "&placeholder": { color: "#6C6C6C" },
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      padding: "0 12px",
+      gap: "8px",
+      alignItems: "center",
     }),
     menu: (base) => ({
       ...base,
@@ -56,8 +64,7 @@ const FormSelection = ({
     placeholder: (base) => ({
       ...base,
       color: "#6b7280",
-      padding: "19px 0 19px 12px",
-      margin: "0",
+      margin: 0,
     }),
     singleValue: (base) => ({
       ...base,

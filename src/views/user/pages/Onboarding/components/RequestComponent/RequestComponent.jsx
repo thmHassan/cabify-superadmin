@@ -18,7 +18,7 @@ const TYPE_CONFIG = {
 const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
   console.log(data, "data====");
   return (
-    <CardContainer className="p-5 2xl:p-[30px]">
+    <CardContainer className="lg:p-5 sm:px-4 px-3 sm:py-5 py-3 2xl:p-[30px] flex flex-col gap-4 sm:gap-5">
       <div className="flex flex-col lg:flex-row lg:justify-between gap-4 sm:gap-5">
         <div className="flex-1">
           <Button onClick={() => onEdit(data)}>
@@ -28,7 +28,7 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
               className="capitalize"
             />
           </Button>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-[15px] mt-2.5 sm:mt-2.5 mb-4 sm:mb-[22px]">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-[15px] mt-2.5 sm:mt-2.5 sm:mb-[22px]">
             <div className="flex flex-col gap-2.5 sm:gap-[15px] pr-0 sm:pr-[32px]">
               <PageSubTitle title={data?.company_admin_name}></PageSubTitle>
               <PageSubTitle title={data?.email} />
@@ -70,17 +70,17 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
                 </div>
                 <PageSubTitle
                   title="Website Form"
-                  className="!text-[#6C6C6C]"
+                  className="!text-[#6C6C6C] whitespace-nowrap"
                 />
               </div>
             </Tag>
           </div>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-4 sm:mb-5">
-        <div className="w-full sm:w-[calc((100%-40px)/3)]">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+        <div className="w-full sm:w-[calc((100%-40px)/3)] rounded">
           <InfoTableCard
-            innerCardContainerClassNames="min-h-[calc(100%-45px)]"
+            innerCardContainerClassNames="min-h-[calc(100%-45px)] sm:rounded-[20px] !rounded-xl"
             title="Services Configuration"
             details={[
               { label: "Maps", value: "Google Maps API" },
@@ -91,7 +91,7 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
         </div>
         <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <InfoTableCard
-            innerCardContainerClassNames="min-h-[calc(100%-45px)]"
+            innerCardContainerClassNames="min-h-[calc(100%-45px)] sm:rounded-[20px] !rounded-xl"
             title="Fleet Information"
             details={[
               { label: "Dispatchers", value: "05" },
@@ -102,7 +102,7 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
         </div>
         <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <InfoTableCard
-            innerCardContainerClassNames="min-h-[calc(100%-45px)]"
+            innerCardContainerClassNames="min-h-[calc(100%-45px)] sm:rounded-[20px] !rounded-xl"
             title="Pricing & Commission"
             details={[
               { label: "Route Rates", value: "Standard" },

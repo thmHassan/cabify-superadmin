@@ -68,15 +68,15 @@ const UserPageContainer = ({ children }) => {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
-        <div className="px-6 lg:px-8 mb-6 lg:mb-10 flex items-center justify-between relative">
-          <AppLogoIcon />
+        <div className="px-6 lg:px-8 mb-6 lg:mb-10 flex items-center justify-center relative">
+          <AppLogoIcon height={95} width={95} />
           <button
             type="button"
             className="lg:hidden w-10 h-10 grid place-items-center rounded-md hover:bg-[#f3f3f3] absolute right-3 -top-1.5"
             aria-label="Close menu"
             onClick={() => setIsSidebarOpen(false)}
           >
-           <CloseIcon width={18} height={18} fill="#3D3D3D"/>
+            <CloseIcon width={18} height={18} fill="#3D3D3D" />
           </button>
         </div>
         <div className="flex flex-col gap-[30px]">
@@ -154,9 +154,7 @@ const UserPageContainer = ({ children }) => {
                 },
                 {
                   label: isLoggingOut ? "Logging out..." : "Logout",
-                  icon: isLoggingOut
-                    ? () => <AppLogoLoader />
-                    : FaSignOutAlt,
+                  icon: isLoggingOut ? () => <AppLogoLoader /> : FaSignOutAlt,
                   onClick: handleLogout,
                   disabled: isLoggingOut,
                 },
