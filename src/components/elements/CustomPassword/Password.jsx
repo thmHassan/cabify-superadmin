@@ -20,7 +20,8 @@ const Password = ({ disabled = false, ...rest }) => {
           if (!disabled) setShowPassword(!showPassword);
         }}
       >
-        {showPassword ? <EyeIcon /> : <EyeIcon />}
+        <span className="hidden sm:block">{showPassword ? <EyeIcon width={20} height={20} /> : <EyeIcon width={20} height={20} />}</span>
+        <span className="block sm:hidden">{showPassword ? <EyeIcon width={16} height={16} /> : <EyeIcon width={16} height={16} />}</span>
       </button>
     </div>
   );

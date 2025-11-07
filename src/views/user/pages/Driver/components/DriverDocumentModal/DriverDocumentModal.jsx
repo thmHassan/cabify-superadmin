@@ -28,7 +28,7 @@ const DriverDocumentModal = ({
         subtitle="Add Document Type"
         className="!text-[#252525] !text-center"
       />
-      <div className="pt-[35px]">
+      <div className="pt-6 sm:pt-8 lg:pt-[35px]">
         <FieldTitle label="Document Name" />
         <Formik
           initialValues={
@@ -56,14 +56,16 @@ const DriverDocumentModal = ({
         >
           {() => (
             <Form>
-              <div className="pt-2 flex flex-col gap-5">
+              <div className="pt-2 flex flex-col gap-3 sm:gap-5">
                 <div>
-                  <Field
-                    type="text"
-                    name="document_name"
-                    className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
-                    placeholder="Enter Document"
-                  />
+                  <div className="sm:h-16 h-14">
+                    <Field
+                      type="text"
+                      name="document_name"
+                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
+                      placeholder="Enter Document"
+                    />
+                  </div>
                   <ErrorMessage
                     name="document_name"
                     component="div"
@@ -71,26 +73,26 @@ const DriverDocumentModal = ({
                   />
                 </div>
                 <div>
-                  <div className="flex flex-col gap-5">
-                    <div className="flex justify-between items-center px-5 py-4 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold h-16">
+                  <div className="flex flex-col gap-3 sm:gap-5">
+                    <div className="flex justify-between items-center sm:px-5 px-4 sm:py-4 py-3 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold sm:h-16 h-14">
                       <FormikCheckbox name="front_photo" label="Front Photo" />
                     </div>
-                    <div className="flex justify-between items-center px-5 py-4 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold h-16">
+                    <div className="flex justify-between items-center sm:px-5 px-4 sm:py-4 py-3 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold sm:h-16 h-14">
                       <FormikCheckbox name="back_photo" label="Back Photo" />
                     </div>
-                    <div className="flex justify-between items-center px-5 py-4 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold h-16">
+                    <div className="flex justify-between items-center sm:px-5 px-4 sm:py-4 py-3 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold sm:h-16 h-14">
                       <FormikCheckbox
                         name="profile_photo"
                         label="Profile Photo"
                       />
                     </div>
-                    <div className="flex justify-between items-center px-5 py-4 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold h-16">
+                    <div className="flex justify-between items-center sm:px-5 px-4 sm:py-4 py-3 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold sm:h-16 h-14">
                       <FormikCheckbox
                         name="has_issue_date"
                         label="Issue Date"
                       />
                     </div>
-                    <div className="flex justify-between items-center px-5 py-4 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold h-16">
+                    <div className="flex justify-between items-center sm:px-5 px-4 sm:py-4 py-3 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold sm:h-16 h-14">
                       <FormikCheckbox
                         name="has_expiry_date"
                         label="Expiry Date"
@@ -111,11 +113,11 @@ const DriverDocumentModal = ({
                 </div> */}
                 </div>
               </div>
-              <div className="flex gap-5 justify-end mt-10">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-end mt-6 sm:mt-8 lg:mt-10">
                 <Button
                   btnSize="md"
                   type="filledGray"
-                  className="!px-8 pt-4 pb-[15px] leading-[25px]"
+                  className="!px-8 pt-4 pb-[15px] leading-[25px] w-full sm:w-auto"
                   onClick={() => {
                     unlockBodyScroll();
                     setIsOpen({ isOpen: false, type: "new" });
@@ -127,7 +129,7 @@ const DriverDocumentModal = ({
                   btnType="submit"
                   btnSize="md"
                   type="filled"
-                  className="!px-8 pt-4 pb-[15px] leading-[25px]"
+                  className="!px-8 pt-4 pb-[15px] leading-[25px] w-full sm:w-auto"
                 >
                   <span>{type === "new" ? "Create" : "Update"}</span>
                 </Button>

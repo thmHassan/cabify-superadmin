@@ -40,6 +40,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.COMPANIES_KEY,
@@ -53,6 +54,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.ONBOARDING_KEY,
@@ -66,6 +68,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.SUBSCRIPTION_KEY,
@@ -79,6 +82,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.USAGE_MONITORING_KEY,
@@ -92,6 +96,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.SYSTEM_ANALYTICS_KEY,
@@ -105,6 +110,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: true,
       },
       {
         key: KEY.DRIVER_VEHICLE_KEY,
@@ -118,6 +124,7 @@ const userNavRoutes = [
         active: [PATH.DRIVER_VEHICLE_NEW_PATH],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.DRIVER_KEY,
@@ -131,6 +138,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.ZONES_LOCATION_KEY,
@@ -144,6 +152,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.ACCOUNT_KEY,
@@ -157,6 +166,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.SUB_ADMIN_MANAGEMENT_KEY,
@@ -169,6 +179,7 @@ const userNavRoutes = [
         route: PATH.SUB_ADMIN_MANAGEMENT_PATH,
         active: [],
         subMenu: [],
+        isStatic: false,
       },
     ],
   },
@@ -187,6 +198,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: false,
       },
       {
         key: KEY.MAPS_CONFIGURATION_KEY,
@@ -200,6 +212,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: true,
       },
       {
         key: KEY.VOIP_SETTINGS_KEY,
@@ -213,6 +226,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: true,
       },
       {
         key: KEY.PAYMENTS_KEY,
@@ -226,6 +240,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: true,
       },
       {
         key: KEY.SYSTEM_SETTINGS_KEY,
@@ -239,6 +254,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
+        isStatic: true,
       },
     ],
   },

@@ -1,15 +1,12 @@
 import _ from "lodash";
 import React, { useState } from "react";
-import * as Yup from "yup";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import CommonImageUploader from "../../../../../../components/shared/CommonImageUploader";
 import ImageUploadIcon from "../../../../../../components/svg/ImageUploadIcon";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Password from "../../../../../../components/elements/CustomPassword";
-import CardContainer from "../../../../../../components/shared/CardContainer";
-import PageSubTitle from "../../../../../../components/ui/PageSubTitle";
-import FormikCheckbox from "../../../../../../components/ui/FormikCheckbox";
 import Button from "../../../../../../components/ui/Button/Button";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 import ViewPermissions from "../ViewPermissions";
 import {
   SUB_ADMIN_EDIT_VALIDATION_SCHEMA,
@@ -79,19 +76,16 @@ const SubAdminModal = ({
           {({ values, setFieldValue }) => {
             return (
               <Form>
-                <div className="flex flex-wrap gap-4 sm:gap-5 mb-8 sm:mb-12 lg:mb-[60px]">
+                <div className="flex flex-wrap gap-3 sm:gap-5 mb-8 sm:mb-12 lg:mb-[60px]">
                   <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                    <label
-                      htmlFor="name"
-                      className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                    >
+                    <FormLabel htmlFor="name">
                       Name
-                    </label>
-                    <div className="h-16">
+                    </FormLabel>
+                    <div className="sm:h-16 h-14">
                       <Field
                         type="text"
                         name="name"
-                        className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                        className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                         placeholder="Enter Name"
                       />
                     </div>
@@ -102,17 +96,14 @@ const SubAdminModal = ({
                     />
                   </div>
                   <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                    <label
-                      htmlFor="email"
-                      className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                    >
+                    <FormLabel htmlFor="email">
                       Email
-                    </label>
-                    <div className="h-16">
+                    </FormLabel>
+                    <div className="sm:h-16 h-14">
                       <Field
                         type="text"
                         name="email"
-                        className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                        className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                         placeholder="Enter Email Address"
                       />
                     </div>
@@ -125,16 +116,13 @@ const SubAdminModal = ({
                   {type === "new" && (
                     <>
                       <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                        <label
-                          htmlFor="password"
-                          className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                        >
+                        <FormLabel htmlFor="password">
                           Password
-                        </label>
-                        <div className="h-16">
+                        </FormLabel>
+                        <div className="sm:h-16 h-14">
                           <Password
                             name="password"
-                            className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                            className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-14 sm:h-16 shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                             placeholder="Enter password"
                             autoComplete="off"
                           />
@@ -146,16 +134,13 @@ const SubAdminModal = ({
                         />
                       </div>
                       <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                        <label
-                          htmlFor="cPassword"
-                          className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                        >
+                        <FormLabel htmlFor="cPassword">
                           Confirm Password
-                        </label>
-                        <div className="h-16">
+                        </FormLabel>
+                        <div className="sm:h-16 h-14">
                           <Password
                             name="cPassword"
-                            className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                            className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-14 sm:h-16 shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                             placeholder="Re-enter Password"
                             autoComplete="off"
                           />
@@ -169,12 +154,9 @@ const SubAdminModal = ({
                     </>
                   )}
                   <div className="w-full border-t mt-4 sm:mt-5 pt-4 sm:pt-5 border-[#6C6C6C]">
-                    <label
-                      htmlFor="permissions"
-                      className="mb-4 sm:mb-5 block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                    >
+                    <FormLabel htmlFor="permissions" className="mb-4 sm:mb-5">
                       Permissions
-                    </label>
+                    </FormLabel>
                     <ViewPermissions
                       values={values}
                       setFieldValue={setFieldValue}

@@ -3,6 +3,7 @@ import CardContainer from "../../../../../../components/shared/CardContainer";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import PageSubTitle from "../../../../../../components/ui/PageSubTitle";
 import Button from "../../../../../../components/ui/Button/Button";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 import classNames from "classnames";
 
 const MileageRateSettingsForm = ({ formEl }) => {
@@ -136,19 +137,16 @@ const MileageRateSettingsForm = ({ formEl }) => {
               </div>
             </div>
             <div className="w-full sm:w-[calc(100%-64px)]">
-              <div className="flex flex-wrap gap-4 sm:gap-5">
+              <div className="flex flex-wrap gap-3 sm:gap-5">
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                  >
-                    First Mile / Km*
-                  </label>
-                  <div className="h-16">
+                  <FormLabel htmlFor="first_mile_km" required>
+                    First Mile / Km
+                  </FormLabel>
+                  <div className="sm:h-16 h-14">
                     <Field
                       type="text"
                       name="first_mile_km"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                       placeholder="0"
                     />
                   </div>
@@ -159,17 +157,14 @@ const MileageRateSettingsForm = ({ formEl }) => {
                   />
                 </div>
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                  >
-                    Second Mile / Km*
-                  </label>
-                  <div className="h-16">
+                  <FormLabel htmlFor="second_mile_km" required>
+                    Second Mile / Km
+                  </FormLabel>
+                  <div className="sm:h-16 h-14">
                     <Field
                       type="text"
                       name="second_mile_km"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                       placeholder="0"
                     />
                   </div>
@@ -212,17 +207,17 @@ const MileageRateSettingsForm = ({ formEl }) => {
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-0">
               <div className="w-full sm:w-[calc(100%-157px)] flex flex-col sm:flex-row gap-4 sm:gap-5">
                 <div className="w-full sm:w-[calc((100%-40px)/3)]">
-                  <label
-                    htmlFor="from"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                  <FormLabel 
+                    htmlFor="from" 
+                    required={values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0)}
                   >
-                    From{values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) ? "*" : ""}
-                  </label>
-                  <div className="h-16">
+                    From
+                  </FormLabel>
+                  <div className="sm:h-16 h-14">
                     <Field
                       type="text"
                       name="from"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                       placeholder="Enter From Mile / Km*"
                     />
                   </div>
@@ -235,17 +230,17 @@ const MileageRateSettingsForm = ({ formEl }) => {
                   )}
                 </div>
                 <div className="w-full sm:w-[calc((100%-40px)/3)]">
-                  <label
-                    htmlFor="to"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                  <FormLabel 
+                    htmlFor="to" 
+                    required={values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0)}
                   >
-                    To{values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) ? "*" : ""}
-                  </label>
-                  <div className="h-16">
+                    To
+                  </FormLabel>
+                  <div className="sm:h-16 h-14">
                     <Field
                       type="text"
                       name="to"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                       placeholder="Enter To Mile / Km*"
                     />
                   </div>
@@ -258,17 +253,17 @@ const MileageRateSettingsForm = ({ formEl }) => {
                   )}
                 </div>
                 <div className="w-full sm:w-[calc((100%-40px)/3)]">
-                  <label
-                    htmlFor="price"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                  <FormLabel 
+                    htmlFor="price" 
+                    required={values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0)}
                   >
-                    Fare{values.mileage_system === "dynamic" && (!values.from_array || values.from_array.length === 0) ? "*" : ""}
-                  </label>
-                  <div className="h-16">
+                    Fare
+                  </FormLabel>
+                  <div className="sm:h-16 h-14">
                     <Field
                       type="text"
                       name="price"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                       placeholder="Enter Fare*"
                     />
                   </div>
@@ -296,17 +291,14 @@ const MileageRateSettingsForm = ({ formEl }) => {
                 <div key={index} className="flex flex-col sm:flex-row gap-4 sm:gap-0">
                   <div className="w-full sm:w-[calc(100%-157px)] flex flex-col sm:flex-row gap-4 sm:gap-5">
                     <div className="w-full sm:w-[calc((100%-40px)/3)]">
-                      <label
-                        htmlFor={`from_array_${index}`}
-                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                      >
-                        From*
-                      </label>
-                      <div className="h-16">
+                      <FormLabel htmlFor={`from_array_${index}`} required>
+                        From
+                      </FormLabel>
+                      <div className="sm:h-16 h-14">
                         <Field
                           type="text"
                           name={`from_array.${index}`}
-                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                           placeholder="Enter From Mile / Km*"
                         />
                       </div>
@@ -319,17 +311,14 @@ const MileageRateSettingsForm = ({ formEl }) => {
                       )}
                     </div>
                     <div className="w-full sm:w-[calc((100%-40px)/3)]">
-                      <label
-                        htmlFor={`to_array_${index}`}
-                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                      >
-                        To*
-                      </label>
-                      <div className="h-16">
+                      <FormLabel htmlFor={`to_array_${index}`} required>
+                        To
+                      </FormLabel>
+                      <div className="sm:h-16 h-14">
                         <Field
                           type="text"
                           name={`to_array.${index}`}
-                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                           placeholder="Enter To Mile / Km*"
                         />
                       </div>
@@ -342,17 +331,14 @@ const MileageRateSettingsForm = ({ formEl }) => {
                       )}
                     </div>
                     <div className="w-full sm:w-[calc((100%-40px)/3)]">
-                      <label
-                        htmlFor={`price_array_${index}`}
-                        className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                      >
-                        Fare*
-                      </label>
-                      <div className="h-16">
+                      <FormLabel htmlFor={`price_array_${index}`} required>
+                        Fare
+                      </FormLabel>
+                      <div className="sm:h-16 h-14">
                         <Field
                           type="text"
                           name={`price_array.${index}`}
-                          className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                          className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                           placeholder="Enter Fare*"
                         />
                       </div>

@@ -1,6 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
 import Button from "../../../../../../components/ui/Button/Button";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 
 const ForgotPasswordForm = () => {
   return (
@@ -19,12 +20,9 @@ const ForgotPasswordForm = () => {
         <Form>
           <div className="flex flex-col gap-[15px]">
             <div>
-              <label
-                htmlFor="Email"
-                className="block text-[18px] font-semibold leading-[25px] mb-[5px] text-[#363636]"
-              >
+              <FormLabel htmlFor="Email" className="text-[#363636]">
                 Email
-              </label>
+              </FormLabel>
               <div>
                 <div>
                   <Field

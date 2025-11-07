@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Button from "../../../../../../components/ui/Button/Button";
 import Switch from "../../../../../../components/ui/Switch";
 import RadioButton from "../../../../../../components/ui/RadioButton";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import ApiService from "../../../../../../services/ApiService";
@@ -85,19 +86,16 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
   return (
     <>
       <div className="mb-6 sm:mb-[60px] flex flex-col gap-5">
-        <div className="flex flex-wrap gap-4 sm:gap-5">
+        <div className="flex flex-wrap gap-3 sm:gap-5">
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
-            <label
-              htmlFor="maps_api"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="maps_api">
               Maps API
-            </label>
-            <div className="h-16">
+            </FormLabel>
+            <div className="sm:h-16 h-14">
               <Field
                 type="text"
                 name="maps_api"
-                className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                 placeholder="Enter Maps API"
               />
             </div>
@@ -108,17 +106,14 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             />
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
-            <label
-              htmlFor="search_api"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="search_api">
               Search API
-            </label>
-            <div className="h-16">
+            </FormLabel>
+            <div className="sm:h-16 h-14">
               <Field
                 type="text"
                 name="search_api"
-                className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                 placeholder="Enable Search API (Google/ Barikoi)"
               />
             </div>
@@ -129,17 +124,14 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             />
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
-            <label
-              htmlFor="passengers_allowed"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="passengers_allowed">
               Passengers Allowed
-            </label>
-            <div className="h-16">
+            </FormLabel>
+            <div className="sm:h-16 h-14">
               <Field
                 type="number"
                 name="passengers_allowed"
-                className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                 placeholder="Enter number"
               />
             </div>
@@ -150,17 +142,14 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             />
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
-            <label
-              htmlFor="dispatchers_allowed"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="dispatchers_allowed">
               Dispatchers Allowed
-            </label>
-            <div className="h-16">
+            </FormLabel>
+            <div className="sm:h-16 h-14">
               <Field
                 type="number"
                 name="dispatchers_allowed"
-                className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                 placeholder="Enter number"
               />
             </div>
@@ -171,17 +160,14 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             />
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
-            <label
-              htmlFor="drivers_allowed"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="drivers_allowed">
               Drivers Allowed
-            </label>
-            <div className="h-16">
+            </FormLabel>
+            <div className="sm:h-16 h-14">
               <Field
                 type="number"
                 name="drivers_allowed"
-                className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                 placeholder="Enter number"
               />
             </div>
@@ -192,13 +178,10 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             />
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
-            <label
-              htmlFor="subscription_type"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="subscription_type">
               Subscription Type
-            </label>
-            <div className="h-16">
+            </FormLabel>
+            <div className="sm:h-16 h-14">
               <FormSelection
                 label="Select Subscription Type"
                 name="subscription_type"
@@ -223,42 +206,30 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
         </div>
         <div className="flex flex-col gap-5 py-5 border-y-[0.7px] border-[#6C6C6C]">
           <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-            <label
-              htmlFor="log_map_search_result"
-              className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="log_map_search_result" className="w-[calc(100%-63px)]">
               Log Google Map Search Results
-            </label>
+            </FormLabel>
             <Switch name="log_map_search_result" />
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-            <label
-              htmlFor="voip"
-              className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="voip" className="w-[calc(100%-63px)]">
               VoIP
-            </label>
+            </FormLabel>
             <Switch name="voip" />
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-            <label
-              htmlFor="sub_company"
-              className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="sub_company" className="w-[calc(100%-63px)]">
               Sub Company
-            </label>
+            </FormLabel>
             <Switch name="sub_company" />
           </div>
         </div>
         <div className="flex flex-col gap-5 pb-5 border-b-[0.7px] border-[#6C6C6C]">
           <div className="w-full flex justify-between items-center">
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="uber_plot_hybrid"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
+              <FormLabel htmlFor="uber_plot_hybrid">
                 System Type
-              </label>
+              </FormLabel>
               <div className="flex sm:flex-row flex-col sm:gap-5 gap-3">
                 <RadioButton
                   name="uber_plot_hybrid"
@@ -285,12 +256,9 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between items-center">
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="fleet_management"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
+              <FormLabel htmlFor="fleet_management">
                 Fleet Management
-              </label>
+              </FormLabel>
               <div className="flex gap-5">
                 <RadioButton name="fleet_management" value="yes" label="Yes" />
                 <RadioButton name="fleet_management" value="no" label="No" />
@@ -304,12 +272,9 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between items-center">
             <div className="flex flex-col gap-2">
-              <label
-                htmlFor="sos_features"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
+              <FormLabel htmlFor="sos_features">
                 SOS Feature
-              </label>
+              </FormLabel>
               <div className="flex gap-5">
                 <RadioButton name="sos_features" value="yes" label="Yes" />
                 <RadioButton name="sos_features" value="no" label="No" />
@@ -324,18 +289,15 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
         </div>
         <div>
           <div className="w-full">
-            <label
-              htmlFor="notes"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-            >
+            <FormLabel htmlFor="notes">
               Notes
-            </label>
+            </FormLabel>
             <div className="h-[130px]">
               <Field
                 as="textarea"
                 name="notes"
                 rows={5}
-                className="h-full px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                className="h-full sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                 placeholder="Write Notes"
               />
             </div>
@@ -347,11 +309,11 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
           </div>
         </div>
       </div>
-      <div className="flex gap-5 justify-end">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-end">
         <Button
           btnSize="md"
           type="filledGray"
-          className="!px-10 pt-4 pb-[15px] leading-[25px]"
+          className="!px-10 pt-4 pb-[15px] leading-[25px] w-full sm:w-auto"
           onClick={() => {
             unlockBodyScroll();
             setIsOpen({ type: "new", isOpen: false });
@@ -362,7 +324,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
         <Button
           btnSize="md"
           type="filled"
-          className="!px-10 pt-4 pb-[15px] leading-[25px]"
+          className="!px-10 pt-4 pb-[15px] leading-[25px] w-full sm:w-auto"
           onClick={onNext}
         >
           <span>Next</span>

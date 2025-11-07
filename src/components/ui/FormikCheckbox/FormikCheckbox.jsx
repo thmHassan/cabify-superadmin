@@ -58,7 +58,7 @@ const FormikCheckbox = ({
   return (
     <CheckboxComponent
       label={label}
-      checked={rest.hasOwnProperty("checked") ? rest.checked : field.value}
+      checked={Object.prototype.hasOwnProperty.call(rest, "checked") ? rest.checked : field.value}
       onChange={onChange ?? ((val) => helpers.setValue(val))}
       className={className}
       labelClassNames={labelClassNames}

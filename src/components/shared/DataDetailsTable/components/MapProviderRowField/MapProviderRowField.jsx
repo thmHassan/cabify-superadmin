@@ -29,7 +29,7 @@ const MapProviderRowField = (props) => {
             <Tag
               variant="mediumGray"
               size="md"
-              className="!py-2.5 !leading-[19px] !px-5 text-center"
+              className="!py-2.5 !leading-[19px] !px-5 text-center whitespace-nowrap"
             >
               <span>
                 Stripe public key: <br /> {publicKey}
@@ -40,7 +40,7 @@ const MapProviderRowField = (props) => {
             <Tag
               variant="mediumGray"
               size="md"
-              className="!py-2.5 !leading-[19px] !px-5 text-center"
+              className="!py-2.5 !leading-[19px] !px-5 text-center whitespace-nowrap"
             >
               <span>
                 Stripe Secret key: <br /> {secretKey}
@@ -73,7 +73,7 @@ const MapProviderRowField = (props) => {
             <Tag
               variant="mediumGray"
               size="md"
-              className="!py-2.5 !leading-[19px] !px-5"
+              className="!py-2.5 !leading-[19px] !px-5 whitespace-nowrap"
             >
               <span>Monthly minutes: {monthlyMinutes}</span>
             </Tag>
@@ -82,7 +82,7 @@ const MapProviderRowField = (props) => {
             <Tag
               variant="mediumGray"
               size="md"
-              className="!py-2.5 !leading-[19px] !px-5"
+              className="!py-2.5 !leading-[19px] !px-5 whitespace-nowrap"
             >
               <span>Monthly requests: {monthlyRequests}</span>
             </Tag>
@@ -91,7 +91,7 @@ const MapProviderRowField = (props) => {
             <Tag
               variant="mediumGray"
               size="md"
-              className="!py-2.5 !leading-[19px] !px-5"
+              className="!py-2.5 !leading-[19px] !px-5 whitespace-nowrap"
             >
               <span>Monthly cost: {monthlyCost}</span>
             </Tag>
@@ -101,7 +101,7 @@ const MapProviderRowField = (props) => {
               <Tag
                 variant={status === "Active" ? "green" : "red"}
                 size="md"
-                className="!py-2.5 !leading-[19px] !px-5"
+                className="!py-2.5 !leading-[19px] !px-5 whitespace-nowrap"
               >
                 <span>{status}</span>
               </Tag>

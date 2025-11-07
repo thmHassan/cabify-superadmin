@@ -3,6 +3,7 @@ import AuthLayout from "../../../../components/AuthLayout";
 import SigninForm from "../SigninForm";
 import SigninFormFields from "../SigninFormFields";
 import { ErrorMessage, Field } from "formik";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 
 const ClientSignIn = () => {
   const initialValues = {
@@ -13,12 +14,9 @@ const ClientSignIn = () => {
     <AuthLayout title="Client Admin Panel Login">
       <SigninForm initialValues={initialValues}>
         <div>
-          <label
-            htmlFor="Email"
-            className="block text-[18px] font-semibold leading-[25px] mb-[5px] text-[#363636]"
-          >
+          <FormLabel htmlFor="Email" className="text-[#363636]">
             Company ID
-          </label>
+          </FormLabel>
           <div>
             <div>
               <Field

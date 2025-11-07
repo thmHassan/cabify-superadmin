@@ -3,6 +3,7 @@ import Button from "../../../../../../components/ui/Button/Button";
 import Password from "../../../../../../components/elements/CustomPassword/Password";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 import { BASIC_INFORMATION_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
 
 const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
@@ -30,19 +31,16 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
 
   return (
     <>
-      <div className="flex flex-wrap gap-4 sm:gap-5 mb-6 sm:mb-[60px]">
+      <div className="flex flex-wrap gap-3 sm:gap-5 mb-6 sm:mb-[60px]">
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="company name"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="company name">
             Company Name
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="text"
               name="company_name"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter company name"
             />
           </div>
@@ -53,17 +51,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="company admin"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="company admin">
             Company Admin
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="text"
               name="company_admin_name"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter Company admin name"
             />
           </div>
@@ -74,17 +69,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="username"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="username">
             Username
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="text"
               name="user_name"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter username"
             />
           </div>
@@ -95,16 +87,13 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="password"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="password">
             Password
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Password
               name="password"
-              className="px-5 py-[21px] !select-none border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 !select-none border border-[#8D8D8D] rounded-lg w-full h-14 sm:h-16 shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter password"
               autoComplete="off"
               disabled={type === "edit"}
@@ -117,17 +106,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="company_id"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="company_id">
             Company ID
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="text"
               name="company_id"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter company ID"
             />
           </div>
@@ -138,17 +124,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="contact_person"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="contact_person">
             Contact Person
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="text"
               name="contact_person"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter contact person"
             />
           </div>
@@ -159,17 +142,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="email"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="email">
             Email
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="email"
               name="email"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter email address"
             />
           </div>
@@ -180,17 +160,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="phone"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="phone">
             Phone
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="tel"
               name="phone"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter phone number"
             />
           </div>
@@ -201,17 +178,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="address"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="address">
             Address
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="text"
               name="address"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter company address"
             />
           </div>
@@ -222,17 +196,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="city"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="city">
             City
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <Field
               type="text"
               name="city"
-              className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+              className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
               placeholder="Enter city"
             />
           </div>
@@ -243,13 +214,10 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <label
-            htmlFor="currency"
-            className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="currency">
             Currency
-          </label>
-          <div className="h-16">
+          </FormLabel>
+          <div className="sm:h-16 h-14">
             <FormSelection
               label="Select Currency"
               name="currency"

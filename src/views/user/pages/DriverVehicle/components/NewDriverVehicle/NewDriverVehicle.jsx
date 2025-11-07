@@ -110,8 +110,8 @@ const NewDriverVehicle = () => {
     }
   };
   return (
-    <div className="2xl:p-10 lg:p-5 sm:px-4 px-3 sm:py-5 py-3">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
+    <div className="2xl:p-10 lg:p-5 sm:px-4 px-4 sm:py-5 py-5">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
         <div className="flex justify-between">
           <PageTitle title="Add Vehicle Type" />
         </div>
