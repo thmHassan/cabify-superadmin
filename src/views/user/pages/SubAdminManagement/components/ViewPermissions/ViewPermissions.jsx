@@ -27,15 +27,15 @@ const PERMISSIONS = [
 const ViewPermissions = ({ values, setFieldValue, readonly = false }) => {
   console.log(values, "inner-value");
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-3 sm:gap-4 lg:gap-5">
       {PERMISSION_CONFIG.map(({ label, value }, index) => (
         <div key={index}>
           <CardContainer
             type={1}
-            className="p-5 !rounded-[15px] flex justify-between"
+            className="p-3 sm:p-4 lg:p-5 !rounded-[15px] flex flex-col sm:flex-row sm:justify-between gap-3 sm:gap-0"
           >
-            <PageSubTitle textColor={2} title={label} />
-            <div className="flex gap-5">
+            <PageSubTitle textColor={2} title={label} className="text-sm sm:text-base" />
+            <div className="flex flex-wrap gap-3 sm:gap-4 lg:gap-5">
               {PERMISSIONS.map(
                 ({ label: permissionName, value: permissionValue }, iIndex) => {
                   return (
@@ -43,7 +43,7 @@ const ViewPermissions = ({ values, setFieldValue, readonly = false }) => {
                       <FormikCheckbox
                         name={`${index}_${value}_${permissionValue}`}
                         label={permissionName}
-                        labelClassNames="!text-[#6C6C6C]"
+                        labelClassNames="!text-[#6C6C6C] text-xs sm:text-sm"
                         checked={values?.permissions[value]?.includes(
                           permissionValue
                         )}

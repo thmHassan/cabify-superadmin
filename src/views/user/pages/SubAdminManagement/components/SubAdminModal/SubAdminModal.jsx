@@ -25,17 +25,24 @@ const SubAdminModal = ({
   type,
 }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
-  const handleImageChange = (file) => {
+  const handleImageChange = (file, previewUrl) => {
     console.log("in");
     if (!file) return;
     console.log(file, "file=====");
     // Optionally, validate file type/size here
     setFormData((prev) => ({ ...prev, profile_picture: file }));
-    const objectUrl = URL.createObjectURL(file);
-    setImagePreviewUrl((prevUrl) => {
-      if (prevUrl) URL.revokeObjectURL(prevUrl);
-      return objectUrl;
-    });
+    if (previewUrl) {
+      setImagePreviewUrl((prevUrl) => {
+        if (prevUrl && prevUrl.startsWith('blob:')) URL.revokeObjectURL(prevUrl);
+        return previewUrl;
+      });
+    } else {
+      const objectUrl = URL.createObjectURL(file);
+      setImagePreviewUrl((prevUrl) => {
+        if (prevUrl && prevUrl.startsWith('blob:')) URL.revokeObjectURL(prevUrl);
+        return objectUrl;
+      });
+    }
   };
 
   return (
@@ -50,8 +57,9 @@ const SubAdminModal = ({
         defaultImage={imagePreviewUrl}
         label="Add Sub Admin"
         icon={<ImageUploadIcon />}
+        className="w-20 h-20 sm:w-[100px] sm:h-[100px] lg:w-[120px] lg:h-[120px]"
       />
-      <div className="pt-[35px]">
+      <div className="pt-6 sm:pt-8 lg:pt-[35px]">
         {/** Validation schema **/}
         {/** name/email always required; password fields only when creating new **/}
         {/** Keep schema in render to read `type` prop without extra hooks **/}
@@ -71,11 +79,11 @@ const SubAdminModal = ({
           {({ values, setFieldValue }) => {
             return (
               <Form>
-                <div className="flex flex-wrap gap-5 mb-[60px]">
-                  <div className="w-[calc((100%-20px)/2)]">
+                <div className="flex flex-wrap gap-4 sm:gap-5 mb-8 sm:mb-12 lg:mb-[60px]">
+                  <div className="w-full sm:w-[calc((100%-20px)/2)]">
                     <label
-                      htmlFor="company name"
-                      className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                      htmlFor="name"
+                      className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                     >
                       Name
                     </label>
@@ -93,10 +101,10 @@ const SubAdminModal = ({
                       className="text-red-500 text-sm mt-1"
                     />
                   </div>
-                  <div className="w-[calc((100%-20px)/2)]">
+                  <div className="w-full sm:w-[calc((100%-20px)/2)]">
                     <label
-                      htmlFor="Email"
-                      className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                      htmlFor="email"
+                      className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                     >
                       Email
                     </label>
@@ -116,10 +124,10 @@ const SubAdminModal = ({
                   </div>
                   {type === "new" && (
                     <>
-                      <div className="w-[calc((100%-20px)/2)]">
+                      <div className="w-full sm:w-[calc((100%-20px)/2)]">
                         <label
-                          htmlFor=""
-                          className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                          htmlFor="password"
+                          className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                         >
                           Password
                         </label>
@@ -137,10 +145,10 @@ const SubAdminModal = ({
                           className="text-red-500 text-sm mt-1"
                         />
                       </div>
-                      <div className="w-[calc((100%-20px)/2)]">
+                      <div className="w-full sm:w-[calc((100%-20px)/2)]">
                         <label
-                          htmlFor=""
-                          className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                          htmlFor="cPassword"
+                          className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                         >
                           Confirm Password
                         </label>
@@ -160,10 +168,10 @@ const SubAdminModal = ({
                       </div>
                     </>
                   )}
-                  <div className="w-full border-t mt-5 pt-5 border-[#6C6C6C]">
+                  <div className="w-full border-t mt-4 sm:mt-5 pt-4 sm:pt-5 border-[#6C6C6C]">
                     <label
-                      htmlFor=""
-                      className="mb-5 block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                      htmlFor="permissions"
+                      className="mb-4 sm:mb-5 block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                     >
                       Permissions
                     </label>
@@ -178,11 +186,11 @@ const SubAdminModal = ({
                     />
                   </div>
                 </div>
-                <div className="flex gap-5 justify-end mt-10">
+                <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-5 sm:justify-end mt-6 sm:mt-10">
                   <Button
                     btnSize="md"
                     type="filledGray"
-                    className="!px-8 pt-4 pb-[15px] leading-[25px]"
+                    className="w-full sm:w-auto !px-6 sm:!px-8 pt-3 sm:pt-4 pb-3 sm:pb-[15px] leading-5 sm:leading-[25px]"
                     onClick={() => {
                       unlockBodyScroll();
                       setIsDocumentModalOpen({
@@ -197,7 +205,7 @@ const SubAdminModal = ({
                     btnType="submit"
                     btnSize="md"
                     type="filled"
-                    className="!px-8 pt-4 pb-[15px] leading-[25px]"
+                    className="w-full sm:w-auto !px-6 sm:!px-8 pt-3 sm:pt-4 pb-3 sm:pb-[15px] leading-5 sm:leading-[25px]"
                   >
                     <span>{type === "new" ? "Create" : "Update"}</span>
                   </Button>

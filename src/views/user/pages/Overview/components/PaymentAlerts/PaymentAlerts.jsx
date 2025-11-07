@@ -9,7 +9,7 @@ import WatchIcon from "../../../../../../components/svg/WatchIcon";
 const PaymentAlerts = () => {
   return (
     <div className="flex flex-col gap-5">
-      <CardContainer className="sm:p-5 flex sm:flex-row sm:gap-0 gap-1 flex-col justify-between sm:items-center p-4">
+      <CardContainer className="lg:p-5 sm:px-4 px-3 sm:py-5 py-3 flex sm:flex-row sm:gap-0 gap-1 flex-col justify-between sm:items-center p-4">
         <CardSubtitle type={1} subtitle="$ Payment Alerts" />
         <CardSubtitle
           variant={1}
@@ -17,7 +17,7 @@ const PaymentAlerts = () => {
           subtitle="Companies requiring immediate attention"
         />
       </CardContainer>
-      <CardContainer className="sm:p-5 flex lg:flex-row flex-col md:gap-5 sm:gap-3 gap-2 justify-between lg:items-center p-4">
+      <CardContainer className="lg:p-5 sm:px-4 px-3 sm:py-5 py-3 flex lg:flex-row flex-col md:gap-5 sm:gap-3 gap-2 justify-between lg:items-center p-4">
         <div className="flex gap-5 items-center lg:w-[calc(100%-326.75px)] w-full">
           <div className="w-[60px] h-[60px] bg-[#EF4444] rounded-full flex justify-center items-center">
             <PaymentAlertIcon />
@@ -47,7 +47,7 @@ const PaymentAlerts = () => {
           </Button>
         </div>
       </CardContainer>
-      <CardContainer className="sm:p-5 flex lg:flex-row flex-col md:gap-5 sm:gap-3 gap-2 justify-between lg:items-center p-4">
+      <CardContainer className="lg:p-5 sm:px-4 px-3 sm:py-5 py-3 flex lg:flex-row flex-col md:gap-5 sm:gap-3 gap-2 justify-between lg:items-center p-4">
         <div className="flex gap-5 items-center lg:w-[calc(100%-326.75px)] w-full">
           <div className="w-[60px] h-[60px] bg-[#F59E0B] rounded-full flex justify-center items-center">
             <WatchIcon />

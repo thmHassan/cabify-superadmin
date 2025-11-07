@@ -25,8 +25,25 @@ const CustomSelect = ({
   placeholder = "Select...",
   isSearchable = false,
   className = "",
+  mobileBgColor,
+  mobileBorder, // accepts full CSS border or just a color; color will be converted
+  forceMobile = false,
   ...props
 }) => {
+  const isSmallScreen =
+    typeof window !== "undefined" && window.matchMedia
+      ? window.matchMedia("(max-width: 767px)").matches
+      : false;
+
+  const resolveMobileBorder = () => {
+    if (!mobileBorder) return VARIANT_CONFIG[variant]?.border;
+    const value = String(mobileBorder);
+    if (value.includes(" ")) return value; // already a full border declaration
+    return `1px solid ${value}`; // treat as a color
+  };
+
+  const useMobileStyles = (forceMobile || isSmallScreen) && (mobileBgColor || mobileBorder);
+
   const customSelectStyles = {
     control: (provided) => ({
       ...provided,
@@ -35,10 +52,19 @@ const CustomSelect = ({
       borderRadius: "10px",
       boxShadow: "none",
       cursor: "pointer",
-      "&:hover": {
-        border: "none",
-      },
-      ...VARIANT_CONFIG[variant],
+      "&:hover": useMobileStyles
+        ? {
+            border: resolveMobileBorder(),
+          }
+        : {
+            border: "none",
+          },
+      ...(useMobileStyles
+        ? {
+            backgroundColor: mobileBgColor || VARIANT_CONFIG[variant]?.backgroundColor,
+            border: resolveMobileBorder(),
+          }
+        : VARIANT_CONFIG[variant]),
     }),
     valueContainer: (provided) => ({
       ...provided,

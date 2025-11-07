@@ -88,10 +88,10 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
           </div>
         </div>
         <div className="flex flex-col gap-5">
-          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
             <label
               htmlFor="stripe_enable"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+              className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
             >
               Stripe/ Paypal
             </label>
@@ -101,10 +101,10 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
               name="stripe_enable"
             />
           </div>
-          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
             <label
               htmlFor="enable_smtp"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+              className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
             >
               Enable SMTP
             </label>

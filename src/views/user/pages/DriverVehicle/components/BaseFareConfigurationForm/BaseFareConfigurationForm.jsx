@@ -8,10 +8,10 @@ import RightIcon from "../../../../../../components/svg/RightIcon";
 const BaseFareConfigurationForm = ({ formEl }) => {
   const { values, setFieldValue } = formEl;
   return (
-    <CardContainer type={1} className="py-8 px-7">
-      <CardContainer type={1} className="px-6 py-7 mb-[25px]">
-        <div className="flex">
-          <div className="w-16 pr-[30px]">
+    <CardContainer type={1} className="2xl:py-8 2xl:px-7 lg:py-5 lg:px-4 sm:px-4 px-3 sm:py-5 py-3">
+      <CardContainer type={1} className="2xl:px-6 2xl:py-7 lg:px-4 lg:py-5 sm:px-4 px-3 sm:py-5 py-3">
+        <div className="flex flex-col sm:flex-row">
+          <div className="w-full sm:w-16 sm:pr-[30px] mb-4 sm:mb-0">
             <div
               className={classNames(
                 "w-[34px] h-[34px] rounded flex justify-center items-center",
@@ -31,8 +31,8 @@ const BaseFareConfigurationForm = ({ formEl }) => {
               )}
             </div>
           </div>
-          <div className="flex flex-wrap gap-5">
-            <div className="w-[calc((100%-20px)/2)]">
+          <div className="flex flex-wrap gap-4 sm:gap-5">
+            <div className="w-full sm:w-[calc((100%-20px)/2)]">
               <label
                 htmlFor="Map API Provider"
                 className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -53,7 +53,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 className="text-red-500 text-sm mt-1"
               />
             </div>
-            <div className="w-[calc((100%-20px)/2)]">
+            <div className="w-full sm:w-[calc((100%-20px)/2)]">
               <label
                 htmlFor="Map API Provider"
                 className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -74,15 +74,15 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 className="text-red-500 text-sm mt-1"
               />
             </div>
-            <div className="w-[calc((100%-20px)/2)]">
+            <div className="w-full sm:w-[calc((100%-20px)/2)]">
               <label
                 htmlFor="Map API Provider"
                 className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
               >
                 Base Fare From (x) Miles to (x) Miles*
               </label>
-              <div className="h-16 flex gap-5">
-                <div className="w-[calc((100%-20px)/2)]">
+              <div className="h-16 flex gap-3 sm:gap-5">
+                <div className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-20px)/2)]">
                   <Field
                     type="text"
                     name="base_fare_from_x_miles"
@@ -95,7 +95,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-                <div className="w-[calc((100%-20px)/2)]">
+                <div className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-20px)/2)]">
                   <Field
                     type="text"
                     name="base_fare_to_x_miles"
@@ -110,7 +110,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 </div>
               </div>
             </div>
-            <div className="w-[calc((100%-20px)/2)]">
+            <div className="w-full sm:w-[calc((100%-20px)/2)]">
               <label
                 htmlFor="Map API Provider"
                 className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -131,7 +131,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 className="text-red-500 text-sm mt-1"
               />
             </div>
-            <div className="w-[calc((100%-20px)/2)]">
+            <div className="w-full sm:w-[calc((100%-20px)/2)]">
               <label
                 htmlFor="Map API Provider"
                 className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -152,7 +152,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                 className="text-red-500 text-sm mt-1"
               />
             </div>
-            <div className="w-[calc((100%-20px)/2)]">
+            <div className="w-full sm:w-[calc((100%-20px)/2)]">
               <label
                 htmlFor="Map API Provider"
                 className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "

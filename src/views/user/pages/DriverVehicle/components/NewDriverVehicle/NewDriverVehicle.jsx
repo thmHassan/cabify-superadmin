@@ -32,6 +32,17 @@ const defaultValue = {
   base_fare_system_status: false,
   mileage_system: "fixed",
   vehicle_image: "",
+  attribute_array: {
+    "No Smoking*": "yes",
+    ac:"yes",
+    "child seat": "no",
+    pets: "yes",
+    "wheel chair": "no",
+    "lady driver": "yes",
+  },
+  from:"",
+  to:"",
+  price:"",
 };
 
 const NewDriverVehicle = () => {
@@ -61,6 +72,7 @@ const NewDriverVehicle = () => {
         base_fare_system_status,
         mileage_system,
         vehicle_image,
+        attribute_array,
       } = values;
       const formDataToSend = convertToFormData({
         vehicle_type_name,
@@ -84,6 +96,7 @@ const NewDriverVehicle = () => {
         base_fare_system_status: toYesNo(base_fare_system_status),
         mileage_system,
         vehicle_image,
+        attribute_array,
       });
       const result = await apiCreateVehicleType(formDataToSend);
       if (result?.status === 200) {
@@ -97,7 +110,7 @@ const NewDriverVehicle = () => {
     }
   };
   return (
-    <div className="p-10">
+    <div className="2xl:p-10 lg:p-5 sm:px-4 px-3 sm:py-5 py-3">
       <div className="flex flex-col gap-2.5 mb-[30px]">
         <div className="flex justify-between">
           <PageTitle title="Add Vehicle Type" />
@@ -130,10 +143,11 @@ const NewDriverVehicle = () => {
                 base_fare_system_status: false,
                 mileage_system: "fixed",
                 vehicle_image: "",
+                attribute_array: {},
+                atrText: "",
               }
         }
       />
-      <Attributes />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ChildText from "../../../../../../components/ui/ChildText.jsx/ChildText";
 import Tag from "../../../../../../components/ui/Tag";
 import PaymentTable from "../../../../../../components/shared/PaymentTable";
@@ -17,7 +17,7 @@ const CompanyPaymentHistory = ({ companyId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchCompanyDetails = async () => {
+  const fetchCompanyDetails = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -29,25 +29,31 @@ const CompanyPaymentHistory = ({ companyId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [companyId]);
 
   useEffect(() => {
     if (companyId) {
       fetchCompanyDetails();
     }
-  }, [companyId]);
+  }, [companyId, fetchCompanyDetails]);
 
   if (loading) {
-    return <AppLogoLoader />;
+    return (
+      <div className="flex justify-center items-center py-8 sm:py-12">
+        <AppLogoLoader />
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="text-center py-8">
-        <p className="text-red-500">Error: {error}</p>
+      <div className="text-center py-6 sm:py-8 px-4">
+        <p className="text-red-500 text-sm sm:text-base mb-3 sm:mb-4">
+          Error: {error}
+        </p>
         <button
           onClick={fetchCompanyDetails}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 sm:px-6 py-2 sm:py-2.5 bg-[#1F41BB] text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-[#1a3599] transition-colors"
         >
           Retry
         </button>
@@ -57,8 +63,10 @@ const CompanyPaymentHistory = ({ companyId }) => {
 
   if (!companyDetails) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-500">No payment history found</p>
+      <div className="text-center py-8 sm:py-12 px-4">
+        <p className="text-gray-500 text-sm sm:text-base">
+          No payment history found
+        </p>
       </div>
     );
   }
@@ -88,7 +96,11 @@ const CompanyPaymentHistory = ({ companyId }) => {
     method: payment.method || "N/A",
   }));
 
-  return <PaymentTable columns={columns} data={data} />;
+  return (
+    <div className="w-full overflow-x-auto">
+      <PaymentTable columns={columns} data={data} />
+    </div>
+  );
 };
 
 export default CompanyPaymentHistory;

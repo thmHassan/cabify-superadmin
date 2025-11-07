@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import * as Yup from "yup";
 import CardSubtitle from "../../../../../../components/ui/CardSubtitle";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -12,7 +12,7 @@ const CompanySetting = ({ companyId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchCompanyDetails = async () => {
+  const fetchCompanyDetails = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -24,28 +24,33 @@ const CompanySetting = ({ companyId }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [companyId]);
 
   useEffect(() => {
     if (companyId) {
       fetchCompanyDetails();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companyId]);
+  }, [companyId, fetchCompanyDetails]);
 
   const handleSubmit = () => {};
 
   if (loading) {
-    return <AppLogoLoader />;
+    return (
+      <div className="flex justify-center items-center py-8 sm:py-12">
+        <AppLogoLoader />
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <div className="text-center py-8">
-        <p className="text-red-500">Error: {error}</p>
+      <div className="text-center py-6 sm:py-8 px-4">
+        <p className="text-red-500 text-sm sm:text-base mb-3 sm:mb-4">
+          Error: {error}
+        </p>
         <button
           onClick={fetchCompanyDetails}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 sm:px-6 py-2 sm:py-2.5 bg-[#1F41BB] text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-[#1a3599] transition-colors"
         >
           Retry
         </button>
@@ -55,8 +60,10 @@ const CompanySetting = ({ companyId }) => {
 
   if (!companyDetails) {
     return (
-      <div className="text-center py-8">
-        <p className="text-gray-500">No settings found</p>
+      <div className="text-center py-8 sm:py-12 px-4">
+        <p className="text-gray-500 text-sm sm:text-base">
+          No settings found
+        </p>
       </div>
     );
   }
@@ -104,7 +111,7 @@ const CompanySetting = ({ companyId }) => {
 
   return (
     <div>
-      <div className="mb-5">
+      <div className="mb-4 sm:mb-5">
         <CardSubtitle type={1} subtitle="API Configuration :" />
       </div>
       <div>
@@ -122,11 +129,11 @@ const CompanySetting = ({ companyId }) => {
         >
           {({ values, setFieldValue }) => (
             <Form>
-              <div className="flex flex-wrap gap-5 mb-[60px]">
-                <div className="w-[calc((100%-20px)/2)]">
+              <div className="flex flex-wrap gap-4 sm:gap-5 mb-8 sm:mb-12 lg:mb-[60px]">
+                <div className="w-full sm:w-[calc((100%-20px)/2)]">
                   <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                    htmlFor="mapApiProvider"
+                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                   >
                     Map API Provider
                   </label>
@@ -146,10 +153,10 @@ const CompanySetting = ({ companyId }) => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-                <div className="w-[calc((100%-20px)/2)]">
+                <div className="w-full sm:w-[calc((100%-20px)/2)]">
                   <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                    htmlFor="callApiProvider"
+                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                   >
                     Call API Provider
                   </label>
@@ -169,10 +176,10 @@ const CompanySetting = ({ companyId }) => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-                <div className="w-[calc((100%-20px)/2)]">
+                <div className="w-full sm:w-[calc((100%-20px)/2)]">
                   <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                    htmlFor="paymentMethod"
+                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                   >
                     Payment Method
                   </label>
@@ -192,10 +199,10 @@ const CompanySetting = ({ companyId }) => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-                <div className="w-[calc((100%-20px)/2)]">
+                <div className="w-full sm:w-[calc((100%-20px)/2)]">
                   <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                    htmlFor="planType"
+                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                   >
                     Plan Type
                   </label>
@@ -215,10 +222,10 @@ const CompanySetting = ({ companyId }) => {
                     className="text-red-500 text-sm mt-1"
                   />
                 </div>
-                <div className="w-[calc((100%-20px)/2)]">
+                <div className="w-full sm:w-[calc((100%-20px)/2)]">
                   <label
-                    htmlFor="Map API Provider"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+                    htmlFor="mapSearchApiProvider"
+                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
                   >
                     Map Search API Provider
                   </label>

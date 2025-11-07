@@ -113,13 +113,13 @@ const Overview = () => {
         </div>
       </div>
       <div className="flex flex-col sm:gap-5 gap-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 1.5xl:grid-cols-3 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard
               key={index}
               data={{ ...card, value: dashboardDetails[card.value] || 0 }}
               className={
-                DASHBOARD_CARDS.length - 1 === index ? "sm:col-span-2 xl:col-span-1" : "col-span-1"
+                DASHBOARD_CARDS.length - 1 === index ? "sm:col-span-2 1.5xl:col-span-1" : "col-span-1"
               }
             />
           ))}

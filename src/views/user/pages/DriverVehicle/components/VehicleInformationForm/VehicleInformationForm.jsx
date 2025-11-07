@@ -9,9 +9,9 @@ const options = [{ value: "local", label: "Local" }];
 const VehicleInformationForm = ({ formEl }) => {
   const { values, setFieldValue } = formEl;
   return (
-    <CardContainer type={1} className="py-8 px-7">
-      <div className="flex flex-wrap gap-5 mb-[25px]">
-        <div className="w-[calc((100%-40px)/3)]">
+    <CardContainer type={1} className="2xl:py-8 2xl:px-7 lg:py-5 lg:px-4 sm:px-4 px-3 sm:py-5 py-3">
+      <div className="flex flex-wrap gap-4 sm:gap-5 mb-[25px]">
+        <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -32,7 +32,7 @@ const VehicleInformationForm = ({ formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-40px)/3)]">
+        <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -55,7 +55,7 @@ const VehicleInformationForm = ({ formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-40px)/3)]">
+        <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -78,7 +78,7 @@ const VehicleInformationForm = ({ formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -99,7 +99,7 @@ const VehicleInformationForm = ({ formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-20px)/2)]">
+        <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -120,7 +120,7 @@ const VehicleInformationForm = ({ formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((((100%-40px)/3)*2)+20px)]">
+        <div className="w-full sm:w-[calc((((100%-40px)/3)*2)+20px)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -131,14 +131,14 @@ const VehicleInformationForm = ({ formEl }) => {
             <Field name="file">
               {({ form }) => (
                 <div className="relative px-5 flex items-center bg-[#ffffff] py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold">
-                  <div className="flex items-center gap-2">
-                    <Button className="text-[#1F41BB] !font-normal text-xl leading-[25px] px-4 py-2 rounded-[5px] border border-[#1F41BB]">
-                      <span>Choose File</span>
-                    </Button>
-                    <div className="text-[18px] leading-[22px] text-[#000000] font-normal">
-                      <span>No File Choosen</span>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                      <Button className="text-[#1F41BB] !font-normal text-xl leading-[25px] px-4 py-2 rounded-[5px] border border-[#1F41BB]">
+                        <span>Choose File</span>
+                      </Button>
+                      <div className="text-[18px] leading-[22px] text-[#000000] font-normal">
+                        <span>No File Choosen</span>
+                      </div>
                     </div>
-                  </div>
                   <input
                     type="file"
                     onChange={(event) => {
@@ -159,7 +159,7 @@ const VehicleInformationForm = ({ formEl }) => {
             className="text-red-500 text-sm mt-1"
           />
         </div>
-        <div className="w-[calc((100%-40px)/3)]">
+        <div className="w-full sm:w-[calc((100%-40px)/3)]">
           <label
             htmlFor="Map API Provider"
             className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "

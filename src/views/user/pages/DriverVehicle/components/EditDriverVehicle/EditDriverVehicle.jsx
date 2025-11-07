@@ -39,6 +39,8 @@ const EditDriverVehicle = () => {
     base_fare_system_status: false,
     mileage_system: "fixed",
     vehicle_image: "",
+    attribute_array: {},
+    atrText: "",
   });
 
   const { id } = useParams();
@@ -163,7 +165,6 @@ const EditDriverVehicle = () => {
         </div>
       </div>
       <DriverVehicleForm onSubmit={onSubmit} initialValues={initialValues} />
-      <Attributes />
     </div>
   );
 };

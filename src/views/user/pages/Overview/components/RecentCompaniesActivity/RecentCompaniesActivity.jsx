@@ -12,7 +12,7 @@ const RecentCompaniesActivity = ({ companies }) => {
   const navigate = useNavigate();
   return (
     // <CardContainer className="px-5 pb-5 pt-[30px] flex flex-col gap-5 w-[calc((100%-20px)/2)]">
-    <CardContainer className="px-5 pb-5 pt-[30px] flex flex-col gap-5 w-full">
+    <CardContainer className="lg:px-5 sm:px-4 px-3 sm:pb-5 pb-3 sm:pt-[30px] pt-5 flex flex-col gap-5 w-full">
       <div className="mb-2.5 flex flex-col 2xl:gap-0 sm:gap-[1px]">
         <CardTitle title="Recent Companies Activity" />
         <CardSubtitle subtitle="Latest company registrations and subscription changes" />

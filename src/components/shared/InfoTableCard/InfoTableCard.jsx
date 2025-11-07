@@ -15,9 +15,9 @@ const InfoTableCard = ({
   innerCardContainerClassNames = "",
 }) => {
   return (
-    <CardContainer type={1} border={1} className={`p-5 h-full ${className}`}>
+    <CardContainer type={1} border={1} className={`lg:p-5 sm:px-4 px-3 sm:py-5 pt-4 pb-0.5 h-full ${className}`}>
       {title && (
-        <div className="mb-5">
+        <div className="sm:mb-5 mb-3">
           <PageSubTitle title={title} className="!text-[#000000] text-center" />
         </div>
       )}
@@ -25,7 +25,7 @@ const InfoTableCard = ({
       {/* Inner card */}
       <CardContainer
         className={classNames(
-          "py-10 px-5 mb-2.5",
+          "lg:py-10 sm:px-5 px-4 py-5 mb-2.5",
           innerCardContainerClassNames
         )}
       >

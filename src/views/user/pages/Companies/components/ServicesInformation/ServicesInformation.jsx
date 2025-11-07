@@ -191,7 +191,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div className="w-[calc((100%-20px)/2)]">
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <label
               htmlFor="subscription_type"
               className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
@@ -222,28 +222,28 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
           </div>
         </div>
         <div className="flex flex-col gap-5 py-5 border-y-[0.7px] border-[#6C6C6C]">
-          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
             <label
               htmlFor="log_map_search_result"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+              className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
             >
               Log Google Map Search Results
             </label>
             <Switch name="log_map_search_result" />
           </div>
-          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
             <label
               htmlFor="voip"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+              className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
             >
               VoIP
             </label>
             <Switch name="voip" />
           </div>
-          <div className="w-full sm:w-[calc((100%-20px)/2)] flex justify-between h-[31px] items-center">
+          <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
             <label
               htmlFor="sub_company"
-              className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
+              className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
             >
               Sub Company
             </label>
@@ -259,7 +259,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               >
                 System Type
               </label>
-              <div className="flex gap-5">
+              <div className="flex sm:flex-row flex-col sm:gap-5 gap-3">
                 <RadioButton
                   name="uber_plot_hybrid"
                   value="uber"

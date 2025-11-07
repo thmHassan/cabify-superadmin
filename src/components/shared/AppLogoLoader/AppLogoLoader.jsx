@@ -14,8 +14,8 @@ const AppLogoLoader = () => {
             justifyContent: "center",
           }}
         >
-          <div className="w-full h-auto">
-            <AppLogoIcon className="w-full h-auto" />
+          <div className="w-[100px] h-[100px]">
+            <AppLogoIcon height={100} width={100} />
           </div>
         </div>
         <style jsx>{`

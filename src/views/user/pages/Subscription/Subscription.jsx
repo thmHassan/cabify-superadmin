@@ -258,7 +258,7 @@ const Subscription = () => {
         </div>
       </div>
       <div className="flex flex-col sm:gap-5 gap-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 1.5xl:grid-cols-3 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
             <SnapshotCard
               key={index}
@@ -268,6 +268,11 @@ const Subscription = () => {
                   subscriptionCardDetails[card?.value] ?? 0
                 }`,
               }}
+              className={
+                DASHBOARD_CARDS.length - 1 === index
+                  ? "sm:col-span-2 1.5xl:col-span-1"
+                  : "col-span-1"
+              }
             />
           ))}
         </div>
@@ -403,6 +408,11 @@ const Subscription = () => {
                         }}
                         placeholder="All Status"
                         className="min-w-0"
+                        mobileBgColor="#F3F6FF"
+                        mobileBorder="#D6DBF5"
+                        forceMobile
+                        menuPlacement="top"
+                        menuPosition="fixed"
                       />
                       <CustomSelect
                         variant={2}
@@ -413,6 +423,11 @@ const Subscription = () => {
                         }}
                         placeholder="All Plans"
                         className="min-w-0"
+                        mobileBgColor="#F3F6FF"
+                        mobileBorder="#D6DBF5"
+                        forceMobile
+                        menuPlacement="top"
+                        menuPosition="fixed"
                       />
                       <button
                         type="button"
