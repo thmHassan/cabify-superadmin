@@ -78,34 +78,48 @@ const SystemAnalytics = () => {
     },
   ];
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex justify-between sm:flex-row flex-col items-start sm:items-center gap-3 sm:gap-0">
+        <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-1 sm:w-[calc(100%-240px)] w-full">
           <PageTitle title="System Analytics" />
+          <PageSubTitle
+            title="Comprehensive system performance analytics and monitoring insights"
+          />
+        </div>
+        <div className="sm:w-auto xs:w-auto w-full sm:mb-[50px] mb-8">
           <Button
             type="filled"
             btnSize="2xl"
             // onClick={() => setIsAddSubscriptionModalOpen(true)}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3 !py-3.5 sm:!py-3 lg:!py-3"
           >
-            <div className="flex gap-[15px] items-center">
-              <PlusIcon />
-              <span>Download Report</span>
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
+              <span className="hidden sm:inline-block">
+                <PlusIcon />
+              </span>
+              <span className="sm:hidden">
+                <PlusIcon height={16} width={16} />
+              </span>
+              <span>
+                <span className="hidden sm:inline-block">Download</span>&nbsp;
+                <span>Report</span>
+              </span>
             </div>
           </Button>
         </div>
-        <div>
-          <PageSubTitle title="Comprehensive system performance analytics and monitoring insights" />
-        </div>
       </div>
-      <div className="flex flex-col gap-5">
-        <div className="flex gap-5">
+      <div className="flex flex-col sm:gap-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 1.5xl:grid-cols-4 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
-            <SnapshotCard key={index} data={card} />
+            <SnapshotCard
+              key={index}
+              data={card}
+              className="col-span-1"
+            />
           ))}
         </div>
         <div>
-          <div className="flex flex-col gap-[5px] mb-5">
+          <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
             <ChildText text="Service Performance Metrics" size="2xl" />
             <PageSubTitle title="Real-time performance data for all system services and components" />
           </div>

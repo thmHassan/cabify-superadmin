@@ -5,6 +5,7 @@ import addSubscriptionIcon from "../../../../../../assets/Images/3d-hand-with-sa
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import Button from "../../../../../../components/ui/Button/Button";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 import { SUBSCRIPTION_VALIDATION_SCHEMA } from "../../../../validators/pages/subscription.validation";
 
 const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
@@ -22,11 +23,11 @@ const SubscriptionModal = ({
           {submitError}
         </div>
       )}
-      <div className="flex flex-col gap-5 items-center">
+      <div className="flex flex-col gap-3 sm:gap-5 items-center">
         <div className="w-[120px] h-[120px] rounded-full bg-[#EEEEEE] flex items-center justify-center">
           <img src={addSubscriptionIcon} />
         </div>
-        <div className="text-[26px] leading-9 font-semibold text-[#252525] mb-7 text-center">
+        <div className="lg:text-[26px] text-xl leading-9 font-semibold text-[#252525] mb-3 sm:mb-7 text-center">
           <span>Add New Subscription</span>
         </div>
       </div>
@@ -48,19 +49,16 @@ const SubscriptionModal = ({
         >
           {({ values, setFieldValue }) => (
             <Form>
-              <div className="flex flex-wrap gap-5 mb-6">
+              <div className="flex flex-wrap gap-3 sm:gap-5 mb-6">
                 <div className="w-full md:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="company name"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                  >
+                  <FormLabel htmlFor="plan_name">
                     Plan
-                  </label>
-                  <div className="h-16">
+                  </FormLabel>
+                  <div className="sm:h-16 h-14">
                     <Field
                       type="text"
                       name="plan_name"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                       placeholder="Enable / Disable"
                     />
                   </div>
@@ -71,13 +69,10 @@ const SubscriptionModal = ({
                   />
                 </div>
                 <div className="w-full md:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="company name"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                  >
+                  <FormLabel htmlFor="billing_cycle">
                     Billing Cycle
-                  </label>
-                  <div className="h-16">
+                  </FormLabel>
+                  <div className="sm:h-16 h-14">
                     <FormSelection
                       label="Select Bid Backup Vehicle type"
                       name="billing_cycle"
@@ -94,17 +89,14 @@ const SubscriptionModal = ({
                   />
                 </div>
                 <div className="w-full md:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="company name"
-                    className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                  >
+                  <FormLabel htmlFor="amount">
                     Amount
-                  </label>
-                  <div className="h-16">
+                  </FormLabel>
+                  <div className="sm:h-16 h-14">
                     <Field
                       type="text"
                       name="amount"
-                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                       placeholder="Subscription Cost for Client"
                     />
                   </div>
@@ -116,12 +108,9 @@ const SubscriptionModal = ({
                 </div>
                 <div className="w-full">
                   <div className="w-full md:w-[calc((100%-20px)/2)]">
-                    <label
-                      htmlFor="company name"
-                      className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-                    >
+                    <FormLabel htmlFor="features">
                       Features
-                    </label>
+                    </FormLabel>
                     <div>
                       <FormSelection
                         isMulti={true}

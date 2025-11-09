@@ -2,6 +2,7 @@ import classNames from "classnames";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import DownArrowIcon from "../../../../svg/DownArrowIcon";
+import StaticTag from "../../../../ui/StaticTag";
 
 const NavElement = ({ navItem }) => {
   const {
@@ -11,6 +12,7 @@ const NavElement = ({ navItem }) => {
     active,
     isSubMenu,
     icon: { component, active: activeIcon },
+    isStatic,
   } = navItem;
 
   const { pathname } = useLocation();
@@ -43,12 +45,17 @@ const NavElement = ({ navItem }) => {
           </div>
           <div
             className={classNames(
-              "font-semibold text-base leading-[18px] capitalize text-left",
+              "font-semibold text-base leading-[18px] capitalize text-left flex items-center gap-1.5",
               isActiveNav ? "text-[#1F41BB]" : "text-[#333333]",
               isSubMenu ? "w-[calc(100%-70px)]" : "w-[calc(100%-38px)]"
             )}
           >
             {title}
+            {isStatic && (
+              <div className="pt-0.5">
+                <StaticTag />
+              </div>
+            )}
           </div>
           {isSubMenu && (
             <div className="w-4 h-4 flex justify-center items-center">

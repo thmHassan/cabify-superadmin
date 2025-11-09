@@ -1,5 +1,6 @@
 import Button from "../../../../../../components/ui/Button/Button";
 import Switch from "../../../../../../components/ui/Switch";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 // import { enablementInformationSchema } from "../../validators/companyValidation";
 import ApiService from "../../../../../../services/ApiService";
@@ -70,93 +71,63 @@ const EnablementInformation = ({
     <>
       <div className="flex flex-wrap gap-4 sm:gap-5 mb-6 sm:mb-[60px]">
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="dispatcher"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="dispatcher" className="w-[calc(100%-63px)]">
             Dispatcher
-          </label>
+          </FormLabel>
           <Switch name="dispatcher" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="map"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="map" className="w-[calc(100%-63px)]">
             Map
-          </label>
+          </FormLabel>
           <Switch name="map" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="push_notification"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="push_notification" className="w-[calc(100%-63px)]">
             Push Notification
-          </label>
+          </FormLabel>
           <Switch name="push_notification" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="usage_monitoring"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="usage_monitoring" className="w-[calc(100%-63px)]">
             Usage Monitoring
-          </label>
+          </FormLabel>
           <Switch name="usage_monitoring" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="revenue_statements"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="revenue_statements" className="w-[calc(100%-63px)]">
             Revenue & Statements
-          </label>
+          </FormLabel>
           <Switch name="revenue_statements" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="zone"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="zone" className="w-[calc(100%-63px)]">
             Zone
-          </label>
+          </FormLabel>
           <Switch name="zone" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="manage_zones"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="manage_zones" className="w-[calc(100%-63px)]">
             Manage Zones
-          </label>
+          </FormLabel>
           <Switch name="manage_zones" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="cms"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="cms" className="w-[calc(100%-63px)]">
             CMS
-          </label>
+          </FormLabel>
           <Switch name="cms" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="lost_found"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="lost_found" className="w-[calc(100%-63px)]">
             Lost & Found
-          </label>
+          </FormLabel>
           <Switch name="lost_found" />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <label
-            htmlFor="accounts"
-            className="mb-[5px] block text-[18px] w-[calc(100%-63px)] leading-[25px] text-[#252525] font-semibold "
-          >
+          <FormLabel htmlFor="accounts" className="w-[calc(100%-63px)]">
             Accounts
-          </label>
+          </FormLabel>
           <Switch name="accounts" />
         </div>
       </div>

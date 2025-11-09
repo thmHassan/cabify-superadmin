@@ -34,31 +34,41 @@ const data = [
 
 const VoIPSettings = () => {
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between items-start">
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex justify-between sm:flex-row flex-col items-start sm:items-center gap-3 sm:gap-0">
+        <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-1 sm:w-[calc(100%-240px)] w-full">
           <PageTitle title="VoIP Settings" />
+          <PageSubTitle title="Configure voice communication providers and call settings" />
+        </div>
+        <div className="sm:w-auto xs:w-auto w-full sm:mb-[50px] mb-8">
           <Button
             type="filled"
             btnSize="2xl"
             // onClick={() => setIsAddSubscriptionModalOpen(true)}
-            className="-mb-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3 !py-3.5 sm:!py-3 lg:!py-3"
           >
-            <div className="flex gap-[15px] items-center">
-              <PhoneOutlineIcon width={24} height={24} fill="#ffffff" />
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
+              <span className="hidden sm:inline-block">
+                <PhoneOutlineIcon width={24} height={24} fill="#ffffff" />
+              </span>
+              <span className="sm:hidden">
+                <PhoneOutlineIcon width={16} height={16} fill="#ffffff" />
+              </span>
               <span>Add VoIP</span>
             </div>
           </Button>
         </div>
-        <div>
-          <PageSubTitle title="Configure voice communication providers and call settings" />
-        </div>
       </div>
-      <div className="flex flex-col gap-[30px]">
-        <CardContainer className="p-5">
-          <div className="bg-[#006FFF1A] mb-5 border border-[#00000033] py-6 px-10 rounded-[15px] flex justify-between items-center">
-            <div className="flex gap-4 items-center">
-              <PhoneOutlineIcon height={24} width={24} fill="#000000" />
+      <div className="flex flex-col gap-4 sm:gap-5 lg:gap-[30px]">
+        <CardContainer className="p-3 sm:p-4 lg:p-5">
+          <div className="bg-[#006FFF1A] mb-4 sm:mb-5 border border-[#00000033] py-4 sm:py-5 lg:py-6 px-4 sm:px-6 lg:px-10 rounded-[15px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+            <div className="flex gap-3 sm:gap-4 items-center">
+              <span className="hidden sm:inline-block">
+                <PhoneOutlineIcon height={24} width={24} fill="#000000" />
+              </span>
+              <span className="sm:hidden">
+                <PhoneOutlineIcon height={20} width={20} fill="#000000" />
+              </span>
               <CardSubtitle type={1} subtitle="VoIP Provider Settings" />
             </div>
             {/* <div className="text-[#000000]">
@@ -72,21 +82,26 @@ const VoIPSettings = () => {
               isOnActionClick={() => console.log("object")}
             />
           </div>
-          <div className="mt-10 pt-10 border-t border-[#00000033]">
-            <div className="bg-[#006FFF1A] mb-10 border border-[#00000033] py-6 px-10 rounded-[15px] flex justify-between items-center">
-              <div className="flex gap-4 items-center">
-                <SettingIcon width={30} height={30} fill="#000000" />
+          <div className="mt-6 sm:mt-8 lg:mt-10 pt-6 sm:pt-8 lg:pt-10 border-t border-[#00000033]">
+            <div className="bg-[#006FFF1A] mb-6 sm:mb-8 lg:mb-10 border border-[#00000033] py-4 sm:py-5 lg:py-6 px-4 sm:px-6 lg:px-10 rounded-[15px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+              <div className="flex gap-3 sm:gap-4 items-center">
+                <span className="hidden sm:inline-block">
+                  <SettingIcon width={30} height={30} fill="#000000" />
+                </span>
+                <span className="sm:hidden">
+                  <SettingIcon width={24} height={24} fill="#000000" />
+                </span>
                 <CardSubtitle type={1} subtitle="Call Settings" />
               </div>
               {/* <div className="text-[#000000]">
                 Manage map service provider and their configurations
               </div> */}
             </div>
-            <div className="flex gap-2.5 flex-wrap">
-              <div className="w-[calc((100%-10px)/2)]">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-2.5 flex-wrap">
+              <div className="w-full sm:w-[calc((100%-10px)/2)]">
                 <CardContainer
                   type={1}
-                  className="px-5 py-[18px] flex justify-between items-center h-[104px]"
+                  className="px-4 sm:px-5 py-3 sm:py-4 lg:py-[18px] flex flex-row justify-between items-center gap-3 sm:gap-0 min-h-20 h-20 sm:h-[104px]"
                 >
                   <CardSubtitle
                     type={1}
@@ -100,10 +115,10 @@ const VoIPSettings = () => {
                   />
                 </CardContainer>
               </div>
-              <div className="w-[calc((100%-10px)/2)]">
+              <div className="w-full sm:w-[calc((100%-10px)/2)]">
                 <CardContainer
                   type={1}
-                  className="px-5 py-[18px] flex justify-between items-center h-[104px]"
+                  className="px-4 sm:px-5 py-3 sm:py-4 lg:py-[18px] flex flex-row justify-between items-center gap-3 sm:gap-0 min-h-20 h-20 sm:h-[104px]"
                 >
                   <CardSubtitle
                     type={1}
@@ -117,10 +132,10 @@ const VoIPSettings = () => {
                   />
                 </CardContainer>
               </div>
-              <div className="w-[calc((100%-10px)/2)]">
+              <div className="w-full sm:w-[calc((100%-10px)/2)]">
                 <CardContainer
                   type={1}
-                  className="px-5 py-[18px] flex justify-between items-center h-[104px]"
+                  className="px-4 sm:px-5 py-3 sm:py-4 lg:py-[18px] flex flex-row justify-between items-center gap-3 sm:gap-0 min-h-20 h-20 sm:h-[104px]"
                 >
                   <CardSubtitle
                     type={1}
@@ -134,10 +149,10 @@ const VoIPSettings = () => {
                   />
                 </CardContainer>
               </div>
-              <div className="w-[calc((100%-10px)/2)]">
+              <div className="w-full sm:w-[calc((100%-10px)/2)]">
                 <CardContainer
                   type={1}
-                  className="px-5 py-[18px] flex justify-between items-center h-[104px]"
+                  className="px-4 sm:px-5 py-3 sm:py-4 lg:py-[18px] flex flex-row justify-between items-center gap-3 sm:gap-0 min-h-20 h-20 sm:h-[104px]"
                 >
                   <CardSubtitle
                     type={1}

@@ -2,6 +2,7 @@ import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
 import PageSubTitle from "../../../../components/ui/PageSubTitle";
 import CardContainer from "../../../../components/shared/CardContainer";
+import FormLabel from "../../../../components/ui/FormLabel";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import ImageUploadIcon from "../../../../components/svg/ImageUploadIcon";
 import Password from "../../../../components/elements/CustomPassword/Password";
@@ -97,16 +98,13 @@ const Account = () => {
         >
           {() => (
             <Form>
-              <div className="flex flex-col lg:flex-row gap-4 sm:gap-5 mb-6 sm:mb-[25px]">
+              <div className="flex flex-col lg:flex-row gap-3 sm:gap-5 mb-6 sm:mb-[25px]">
                 <div className="w-full lg:w-[calc(100%-398px)]">
-                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
                     <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                      <label
-                        htmlFor="company name"
-                        className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
-                      >
+                      <FormLabel htmlFor="name">
                         Name
-                      </label>
+                      </FormLabel>
                       <div className="h-14 sm:h-16">
                         <Field
                           type="text"
@@ -122,12 +120,9 @@ const Account = () => {
                       />
                     </div>
                     <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                      <label
-                        htmlFor="company name"
-                        className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
-                      >
+                      <FormLabel htmlFor="email">
                         Email
-                      </label>
+                      </FormLabel>
                       <div className="h-14 sm:h-16">
                         <Field
                           type="text"
@@ -144,7 +139,7 @@ const Account = () => {
                     </div>
                   </div>
                 </div>
-                <div className="w-full lg:w-[378px] h-auto lg:h-[152px] shadow-[-4px_4px_6px_0px_#0000001F] bg-[#ffffff] rounded-lg flex flex-col sm:flex-row items-center px-4 sm:px-5 gap-4 sm:gap-5 py-4 sm:py-0">
+                <div className="w-full lg:w-[378px] h-auto lg:h-[152px] shadow-[-4px_4px_6px_0px_#0000001F] bg-[#ffffff] rounded-lg flex flex-col sm:flex-row items-center px-4 sm:px-5 gap-3 sm:gap-5 py-4 sm:py-0">
                   <div
                     className="w-[80px] h-[80px] sm:w-[102px] sm:h-[102px] bg-[#f2f2f2] rounded-[15px] overflow-hidden flex justify-center items-center cursor-pointer flex-shrink-0"
                     onClick={handlePickImage}
@@ -216,16 +211,13 @@ const Account = () => {
         >
           {() => (
             <Form>
-              <div className="flex gap-4 sm:gap-5 mb-6 sm:mb-[25px]">
+              <div className="flex gap-3 sm:gap-5 mb-6 sm:mb-[25px]">
                 <div className="w-full">
-                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-5">
                     <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                      <label
-                        htmlFor="company name"
-                        className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
-                      >
+                      <FormLabel htmlFor="old_password">
                         Old Password
-                      </label>
+                      </FormLabel>
                       <div className="h-14 sm:h-16">
                         <Password
                           name="old_password"
@@ -241,12 +233,9 @@ const Account = () => {
                       />
                     </div>
                     <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                      <label
-                        htmlFor="company name"
-                        className="mb-[5px] block text-base sm:text-[18px] leading-6 sm:leading-[25px] text-[#252525] font-semibold "
-                      >
+                      <FormLabel htmlFor="new_password">
                         New Password
-                      </label>
+                      </FormLabel>
                       <div className="h-14 sm:h-16">
                         <Password
                           name="new_password"

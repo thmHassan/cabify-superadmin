@@ -65,33 +65,24 @@ const Payments = () => {
     { date: "2024-12-01", amount: "$199", status: "Paid", method: "$199" },
   ];
   return (
-    <div className="p-10 min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 mb-[30px]">
-        <div className="flex justify-between">
-          <PageTitle title="Payments" />
-          {/* <Button
-            type="filled"
-            btnSize="2xl"
-            // onClick={() => setIsAddSubscriptionModalOpen(true)}
-          >
-            <div className="flex gap-[15px] items-center">
-              <MonthlyRevenueIcon width={24} height={24} fill="#ffffff" />
-              <span>Test Connection</span>
-            </div>
-          </Button> */}
-        </div>
-        <div>
-          <PageSubTitle title="Manage payment providers, transactions, and billing settings" />
-        </div>
+    <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
+      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-4">
+        <PageTitle title="Payments" />
+        <PageSubTitle title="Manage payment providers, transactions, and billing settings" />
       </div>
-      <CardContainer className="p-5">
+      <CardContainer className="p-3 sm:p-4 lg:p-5">
         <div>
-          <div className="bg-[#006FFF1A] mb-5 border border-[#00000033] py-6 px-10 rounded-[15px] flex justify-between items-center">
-            <div className="flex gap-4 items-center">
-              <PaymentProviderIcon height={24} width={24} fill="#000000" />
+          <div className="bg-[#006FFF1A] mb-4 sm:mb-5 border border-[#00000033] py-4 sm:py-5 lg:py-6 px-4 sm:px-6 lg:px-10 rounded-[15px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+            <div className="flex gap-3 sm:gap-4 items-center">
+              <span className="hidden sm:inline-block">
+                <PaymentProviderIcon height={24} width={24} fill="#000000" />
+              </span>
+              <span className="sm:hidden">
+                <PaymentProviderIcon height={20} width={20} fill="#000000" />
+              </span>
               <CardSubtitle type={1} subtitle="Payment Providers" />
             </div>
-            <div className="text-[#000000]">
+            <div className="text-sm sm:text-base text-[#000000]">
               Configure payment processing services
             </div>
           </div>
@@ -103,17 +94,22 @@ const Payments = () => {
             />
           </div>
         </div>
-        <div className="pt-10 mt-10 border-t border-[#00000033]">
-          <div className="bg-[#006FFF1A] mb-10 border border-[#00000033] py-[15px] pl-10 pr-5 rounded-[15px] flex justify-between items-center">
-            <div className="flex gap-4 items-center">
-              <PaymentsIcon height={24} width={24} fill="#000000" />
+        <div className="pt-6 sm:pt-8 lg:pt-10 mt-6 sm:mt-8 lg:mt-10 border-t border-[#00000033]">
+          <div className="bg-[#006FFF1A] mb-6 sm:mb-8 lg:mb-10 border border-[#00000033] py-3 sm:py-4 lg:py-[15px] px-4 sm:px-6 lg:pl-10 lg:pr-5 rounded-[15px] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <div className="flex gap-3 sm:gap-4 items-center">
+              <span className="hidden sm:inline-block">
+                <PaymentsIcon height={24} width={24} fill="#000000" />
+              </span>
+              <span className="sm:hidden">
+                <PaymentsIcon height={20} width={20} fill="#000000" />
+              </span>
               <CardSubtitle type={1} subtitle="Recent Transactions" />
             </div>
-            <div className="max-w-[400px] w-full">
-              <SearchBar />
+            <div className="w-full sm:max-w-[400px] sm:w-auto">
+              <SearchBar className="w-full" />
             </div>
           </div>
-          <div className="bg-[#ffffff] rounded-[10px]">
+          <div className="bg-[#ffffff] rounded-[10px] overflow-x-auto">
             <PaymentTable columns={columns} data={data} />
           </div>
         </div>

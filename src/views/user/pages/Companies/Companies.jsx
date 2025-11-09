@@ -265,33 +265,32 @@ const Companies = () => {
 
   return (
     <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
-      <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-6">
-        <div className="flex justify-between items-center sm:items-center gap-3 sm:gap-0">
+      <div className="flex justify-between sm:flex-row flex-col items-start sm:items-center gap-3 sm:gap-0">
+        <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-1 sm:w-[calc(100%-240px)] w-full">
           <PageTitle title="Companies" />
-          <div className="">
-            <Button
-              type="filled"
-              btnSize="2xl"
-              onClick={() => {
-                lockBodyScroll();
-                setIsCompanyModalOpen({ type: "new", isOpen: true });
-              }}
-              className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3"
-            >
-              <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
-                <PlusIcon />
-                <span>
-                  <span className="hidden sm:inline-block">Add</span>&nbsp;
-                  <span>Company</span>
-                </span>
-              </div>
-            </Button>
-          </div>
+          <PageSubTitle title="Manage taxi companies, their services, and subscriptions" />
         </div>
-        <PageSubTitle
-          title="Manage taxi companies, their services, and subscriptions"
-          className="sm:w-[calc(100%-240px)]"
-        />
+        <div className="sm:w-auto xs:w-auto w-full sm:mb-[50px] mb-8">
+          <Button
+            type="filled"
+            btnSize="2xl"
+            onClick={() => {
+              lockBodyScroll();
+              setIsCompanyModalOpen({ type: "new", isOpen: true });
+            }}
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3 !py-3.5 sm:!py-3 lg:!py-3"
+          >
+            <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
+              <span className="hidden sm:inline-block">
+                <PlusIcon />
+              </span>
+              <span className="sm:hidden">
+                <PlusIcon height={16} width={16} />
+              </span>
+              <span>Add Company</span>
+            </div>
+          </Button>
+        </div>
       </div>
       <div className="flex flex-col sm:gap-5 gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 1.5xl:grid-cols-3 gap-4 sm:gap-5">

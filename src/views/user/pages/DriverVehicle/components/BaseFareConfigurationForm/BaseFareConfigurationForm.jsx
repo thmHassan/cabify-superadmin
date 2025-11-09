@@ -2,6 +2,7 @@ import React from "react";
 import CardContainer from "../../../../../../components/shared/CardContainer";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Button from "../../../../../../components/ui/Button/Button";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 import classNames from "classnames";
 import RightIcon from "../../../../../../components/svg/RightIcon";
 
@@ -31,19 +32,16 @@ const BaseFareConfigurationForm = ({ formEl }) => {
               )}
             </div>
           </div>
-          <div className="flex flex-wrap gap-4 sm:gap-5">
+          <div className="flex flex-wrap gap-3 sm:gap-5">
             <div className="w-full sm:w-[calc((100%-20px)/2)]">
-              <label
-                htmlFor="Map API Provider"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
-                Base Fare Less Than (x) Miles*
-              </label>
-              <div className="h-16">
+              <FormLabel htmlFor="base_fare_less_than_x_miles" required>
+                Base Fare Less Than (x) Miles
+              </FormLabel>
+              <div className="sm:h-16 h-14">
                 <Field
                   type="text"
                   name="base_fare_less_than_x_miles"
-                  className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                  className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                   placeholder="$0"
                 />
               </div>
@@ -54,17 +52,14 @@ const BaseFareConfigurationForm = ({ formEl }) => {
               />
             </div>
             <div className="w-full sm:w-[calc((100%-20px)/2)]">
-              <label
-                htmlFor="Map API Provider"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
-                Base Fare Less Than (x) Miles Price*
-              </label>
-              <div className="h-16">
+              <FormLabel htmlFor="base_fare_less_than_x_price" required>
+                Base Fare Less Than (x) Miles Price
+              </FormLabel>
+              <div className="sm:h-16 h-14">
                 <Field
                   type="text"
                   name="base_fare_less_than_x_price"
-                  className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                  className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                   placeholder="$0"
                 />
               </div>
@@ -75,18 +70,15 @@ const BaseFareConfigurationForm = ({ formEl }) => {
               />
             </div>
             <div className="w-full sm:w-[calc((100%-20px)/2)]">
-              <label
-                htmlFor="Map API Provider"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
-                Base Fare From (x) Miles to (x) Miles*
-              </label>
-              <div className="h-16 flex gap-3 sm:gap-5">
+              <FormLabel htmlFor="base_fare_from_x_miles" required>
+                Base Fare From (x) Miles to (x) Miles
+              </FormLabel>
+              <div className="sm:h-16 h-14 flex gap-3 sm:gap-5">
                 <div className="w-[calc((100%-12px)/2)] sm:w-[calc((100%-20px)/2)]">
                   <Field
                     type="text"
                     name="base_fare_from_x_miles"
-                    className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                    className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                     placeholder="$0"
                   />
                   <ErrorMessage
@@ -99,7 +91,7 @@ const BaseFareConfigurationForm = ({ formEl }) => {
                   <Field
                     type="text"
                     name="base_fare_to_x_miles"
-                    className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                    className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                     placeholder="$0"
                   />
                   <ErrorMessage
@@ -111,17 +103,14 @@ const BaseFareConfigurationForm = ({ formEl }) => {
               </div>
             </div>
             <div className="w-full sm:w-[calc((100%-20px)/2)]">
-              <label
-                htmlFor="Map API Provider"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
-                Base Fare From (x) Miles to (x) Miles Price*
-              </label>
-              <div className="h-16">
+              <FormLabel htmlFor="base_fare_from_to_price" required>
+                Base Fare From (x) Miles to (x) Miles Price
+              </FormLabel>
+              <div className="sm:h-16 h-14">
                 <Field
                   type="text"
                   name="base_fare_from_to_price"
-                  className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                  className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                   placeholder="$0"
                 />
               </div>
@@ -132,17 +121,14 @@ const BaseFareConfigurationForm = ({ formEl }) => {
               />
             </div>
             <div className="w-full sm:w-[calc((100%-20px)/2)]">
-              <label
-                htmlFor="Map API Provider"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
-                Base Fare Greater Than (x) Miles*
-              </label>
-              <div className="h-16">
+              <FormLabel htmlFor="base_fare_greater_than_x_miles" required>
+                Base Fare Greater Than (x) Miles
+              </FormLabel>
+              <div className="sm:h-16 h-14">
                 <Field
                   type="text"
                   name="base_fare_greater_than_x_miles"
-                  className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                  className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                   placeholder="$0"
                 />
               </div>
@@ -153,17 +139,14 @@ const BaseFareConfigurationForm = ({ formEl }) => {
               />
             </div>
             <div className="w-full sm:w-[calc((100%-20px)/2)]">
-              <label
-                htmlFor="Map API Provider"
-                className="mb-[5px] block text-[18px] leading-[25px] text-[#252525] font-semibold "
-              >
-                Base Fare Greater Than (x) Miles Price*
-              </label>
-              <div className="h-16">
+              <FormLabel htmlFor="base_fare_greater_than_x_price" required>
+                Base Fare Greater Than (x) Miles Price
+              </FormLabel>
+              <div className="sm:h-16 h-14">
                 <Field
                   type="text"
                   name="base_fare_greater_than_x_price"
-                  className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                  className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
                   placeholder="$0"
                 />
               </div>

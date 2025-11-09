@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import CardSubtitle from "../../../../../../components/ui/CardSubtitle";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
+import FormLabel from "../../../../../../components/ui/FormLabel";
 import ApiService from "../../../../../../services/ApiService";
 import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
 import { COMPANY_SETTING_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
@@ -131,12 +132,9 @@ const CompanySetting = ({ companyId }) => {
             <Form>
               <div className="flex flex-wrap gap-4 sm:gap-5 mb-8 sm:mb-12 lg:mb-[60px]">
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="mapApiProvider"
-                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                  >
+                  <FormLabel htmlFor="mapApiProvider">
                     Map API Provider
-                  </label>
+                  </FormLabel>
                   <div className="h-16">
                     <FormSelection
                       label="Select Map API Provider"
@@ -154,12 +152,9 @@ const CompanySetting = ({ companyId }) => {
                   />
                 </div>
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="callApiProvider"
-                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                  >
+                  <FormLabel htmlFor="callApiProvider">
                     Call API Provider
-                  </label>
+                  </FormLabel>
                   <div className="h-16">
                     <FormSelection
                       label="Select Call API Provider"
@@ -177,12 +172,9 @@ const CompanySetting = ({ companyId }) => {
                   />
                 </div>
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="paymentMethod"
-                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                  >
+                  <FormLabel htmlFor="paymentMethod">
                     Payment Method
-                  </label>
+                  </FormLabel>
                   <div className="h-16">
                     <FormSelection
                       label="Select Payment Method"
@@ -200,12 +192,9 @@ const CompanySetting = ({ companyId }) => {
                   />
                 </div>
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="planType"
-                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                  >
+                  <FormLabel htmlFor="planType">
                     Plan Type
-                  </label>
+                  </FormLabel>
                   <div className="h-16">
                     <FormSelection
                       label="Select Plan Type"
@@ -223,12 +212,9 @@ const CompanySetting = ({ companyId }) => {
                   />
                 </div>
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <label
-                    htmlFor="mapSearchApiProvider"
-                    className="mb-[5px] block text-base sm:text-[18px] leading-[22px] sm:leading-[25px] text-[#252525] font-semibold"
-                  >
+                  <FormLabel htmlFor="mapSearchApiProvider">
                     Map Search API Provider
-                  </label>
+                  </FormLabel>
                   <div className="h-16">
                     <FormSelection
                       label="Select Map Search API Provider"
