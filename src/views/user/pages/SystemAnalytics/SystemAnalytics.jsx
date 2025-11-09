@@ -82,9 +82,7 @@ const SystemAnalytics = () => {
       <div className="flex justify-between sm:flex-row flex-col items-start sm:items-center gap-3 sm:gap-0">
         <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-1 sm:w-[calc(100%-240px)] w-full">
           <PageTitle title="System Analytics" />
-          <PageSubTitle
-            title="Comprehensive system performance analytics and monitoring insights"
-          />
+          <PageSubTitle title="Comprehensive system performance analytics and monitoring insights" />
         </div>
         <div className="sm:w-auto xs:w-auto w-full sm:mb-[50px] mb-8">
           <Button
@@ -100,10 +98,7 @@ const SystemAnalytics = () => {
               <span className="sm:hidden">
                 <PlusIcon height={16} width={16} />
               </span>
-              <span>
-                <span className="hidden sm:inline-block">Download</span>&nbsp;
-                <span>Report</span>
-              </span>
+              <span className="whitespace-nowrap">Download Report</span>
             </div>
           </Button>
         </div>
@@ -111,11 +106,7 @@ const SystemAnalytics = () => {
       <div className="flex flex-col sm:gap-5 gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 1.5xl:grid-cols-4 gap-4 sm:gap-5">
           {DASHBOARD_CARDS.map((card, index) => (
-            <SnapshotCard
-              key={index}
-              data={card}
-              className="col-span-1"
-            />
+            <SnapshotCard key={index} data={card} className="col-span-1" />
           ))}
         </div>
         <div>

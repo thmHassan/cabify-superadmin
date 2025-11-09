@@ -254,10 +254,7 @@ const Subscription = () => {
               <span className="sm:hidden">
                 <PlusIcon height={16} width={16} />
               </span>
-              <span>
-                <span className="hidden sm:inline-block">GC</span>&nbsp;
-                <span>Subscription</span>
-              </span>
+              <span className="whitespace-nowrap">GC Subscription</span>
             </div>
           </Button>
         </div>

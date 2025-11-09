@@ -116,7 +116,7 @@ const UsageMonitoring = () => {
               <span className="sm:hidden">
                 <PlusIcon height={16} width={16} />
               </span>
-              <span>Download Report</span>
+              <span className="whitespace-nowrap">Download Report</span>
             </div>
           </Button>
         </div>

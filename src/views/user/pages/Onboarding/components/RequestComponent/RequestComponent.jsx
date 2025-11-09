@@ -77,10 +77,10 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
-        <div className="w-full sm:w-[calc((100%-40px)/3)] rounded">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-5">
+        <div className="w-full md:w-[calc((100%-40px)/3)] rounded">
           <InfoTableCard
-            innerCardContainerClassNames="min-h-[calc(100%-45px)] sm:rounded-[20px] !rounded-xl"
+            innerCardContainerClassNames="min-h-[calc(100%-45px)] md:rounded-[20px] !rounded-xl"
             title="Services Configuration"
             details={[
               { label: "Maps", value: "Google Maps API" },
@@ -89,9 +89,9 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
             ]}
           />
         </div>
-        <div className="w-full sm:w-[calc((100%-40px)/3)]">
+        <div className="w-full md:w-[calc((100%-40px)/3)]">
           <InfoTableCard
-            innerCardContainerClassNames="min-h-[calc(100%-45px)] sm:rounded-[20px] !rounded-xl"
+            innerCardContainerClassNames="min-h-[calc(100%-45px)] md:rounded-[20px] !rounded-xl"
             title="Fleet Information"
             details={[
               { label: "Dispatchers", value: "05" },
@@ -100,9 +100,9 @@ const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
             ]}
           />
         </div>
-        <div className="w-full sm:w-[calc((100%-40px)/3)]">
+        <div className="w-full md:w-[calc((100%-40px)/3)]">
           <InfoTableCard
-            innerCardContainerClassNames="min-h-[calc(100%-45px)] sm:rounded-[20px] !rounded-xl"
+            innerCardContainerClassNames="min-h-[calc(100%-45px)] md:rounded-[20px] !rounded-xl"
             title="Pricing & Commission"
             details={[
               { label: "Route Rates", value: "Standard" },

@@ -269,7 +269,7 @@ const ZonesLocation = () => {
               <span className="sm:hidden">
                 <PlusIcon height={16} width={16} />
               </span>
-              <span>Add New Plots</span>
+              <span className="whitespace-nowrap">Add New Plots</span>
             </div>
           </Button>
         </div>
@@ -326,7 +326,10 @@ const ZonesLocation = () => {
         </div>
         {/* Search bar - appears second on mobile, first on desktop */}
         <div className="order-2 lg:order-1">
-          <SearchBar onSearchChange={setSearchQuery} className="w-full md:max-w-[400px] max-w-full" />
+          <SearchBar
+            onSearchChange={setSearchQuery}
+            className="w-full md:max-w-[400px] max-w-full"
+          />
         </div>
         {/* Plots list and Map - appears third on mobile, second on desktop */}
         <div className="order-3 lg:order-2 flex flex-col lg:flex-row gap-4 sm:gap-5">

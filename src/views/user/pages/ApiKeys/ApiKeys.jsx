@@ -120,10 +120,7 @@ const ApiKeys = () => {
               <span className="sm:hidden">
                 <PlusIcon height={16} width={16} />
               </span>
-              <span>
-                <span className="hidden sm:inline-block">Add New</span>
-                <span>Document</span>
-              </span>
+              <span className="whitespace-nowrap">Add New Document</span>
             </div>
           </Button>
         </div>

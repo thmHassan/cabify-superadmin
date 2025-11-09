@@ -159,7 +159,7 @@ const Driver = () => {
               <span className="sm:hidden">
                 <PlusIcon height={16} width={16} />
               </span>
-              <span>Add New Document</span>
+              <span className="whitespace-nowrap">Add New Document</span>
             </div>
           </Button>
         </div>
@@ -169,7 +169,10 @@ const Driver = () => {
         driverDocumentsListRaw.length > 0 ? (
           <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
             <div className="w-full sm:flex-1">
-              <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+              <SearchBar
+                onSearchChange={handleSearchChange}
+                className="w-full md:max-w-[400px] max-w-full"
+              />
             </div>
           </div>
         ) : null}
@@ -214,7 +217,11 @@ const Driver = () => {
           </div>
         ) : null}
       </CardContainer>
-      <Modal size="sm" isOpen={isDocumentModalOpen.isOpen} className="p-4 sm:p-6 lg:p-10">
+      <Modal
+        size="sm"
+        isOpen={isDocumentModalOpen.isOpen}
+        className="p-4 sm:p-6 lg:p-10"
+      >
         {isDocumentModalOpen.type === "new" ? (
           <AddDriverDocumentModal
             setIsOpen={setIsDocumentModalOpen}

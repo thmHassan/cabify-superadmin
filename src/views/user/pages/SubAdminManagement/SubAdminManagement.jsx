@@ -51,8 +51,8 @@ const SubAdminManagement = () => {
     type: "new",
   });
   const [allSubAdmins, setAllSubAdmins] = useState({ data: [], last_page: 1 });
-    const [subAdminListRaw, setSubAdminListRaw] = useState([]);
-    const [subAdminListDisplay, setSubAdminListDisplay] = useState([]);
+  const [subAdminListRaw, setSubAdminListRaw] = useState([]);
+  const [subAdminListDisplay, setSubAdminListDisplay] = useState([]);
   const [isSubAdminsLoading, setIsSubAdminsLoading] = useState([]);
   const [_searchQuery, setSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -88,7 +88,10 @@ const SubAdminManagement = () => {
   const getSubAdmins = async () => {
     try {
       setIsSubAdminsLoading(true);
-      const result = await apiGetSubAdmins({ page: currentPage, perPage: itemsPerPage });
+      const result = await apiGetSubAdmins({
+        page: currentPage,
+        perPage: itemsPerPage,
+      });
       if (result?.status === 200) {
         const list = result?.data?.list;
         const rows = Array.isArray(list?.data) ? list?.data : [];
@@ -176,7 +179,7 @@ const SubAdminManagement = () => {
               <span className="sm:hidden">
                 <PlusIcon height={16} width={16} />
               </span>
-              <span>Add Sub Admin</span>
+              <span className="whitespace-nowrap">Add Sub Admin</span>
             </div>
           </Button>
         </div>
@@ -185,7 +188,10 @@ const SubAdminManagement = () => {
         {Array.isArray(subAdminListRaw) && subAdminListRaw.length > 0 ? (
           <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
             <div className="w-full sm:flex-1">
-              <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
+              <SearchBar
+                onSearchChange={handleSearchChange}
+                className="w-full md:max-w-[400px] max-w-full"
+              />
             </div>
           </div>
         ) : null}

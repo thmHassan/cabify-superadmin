@@ -61,7 +61,10 @@ const DriverVehicle = () => {
   const getVehicles = async () => {
     try {
       setIsVehiclesLoading(true);
-      const result = await apiGetVehicleTypes({ page: currentPage, perPage: itemsPerPage });
+      const result = await apiGetVehicleTypes({
+        page: currentPage,
+        perPage: itemsPerPage,
+      });
       if (result?.status === 200) {
         console.log(result, "all-data");
         setAllVehicleTypes(result?.data?.list);
@@ -113,11 +116,7 @@ const DriverVehicle = () => {
               <span className="sm:hidden">
                 <PlusIcon height={16} width={16} />
               </span>
-              <span>
-                <span className="hidden sm:inline-block">Add New</span>
-                <span className="sm:hidden">Add</span>
-                <span>&nbsp;Vehicle</span>
-              </span>
+              <span className="whitespace-nowrap">Add New Vehicle</span>
             </div>
           </Button>
         </div>

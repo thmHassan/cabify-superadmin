@@ -278,7 +278,7 @@ const Companies = () => {
               lockBodyScroll();
               setIsCompanyModalOpen({ type: "new", isOpen: true });
             }}
-            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3 !py-3.5 sm:!py-3 lg:!py-3"
+            className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3 !py-3.5 sm:!py-3 lg:!py-3 2xl:!text-xl 2xl:!leading-6 2xl:!px-6"
           >
             <div className="flex gap-2 sm:gap-[15px] items-center justify-center">
               <span className="hidden sm:inline-block">

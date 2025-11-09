@@ -39,7 +39,7 @@ const CommonTableRowFields = ({
                   <CardSubtitle type={1} subtitle={name} className="truncate" />
                 </div>
                 {status && (
-                  <div className="flex gap-[15px]">
+                  <div className="flex gap-[15px] min-w-[200px] ">
                     {status?.map((s, i) => (
                       <Tag
                         key={i}
