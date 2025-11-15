@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { debounce } from "lodash";
 import { AnimatePresence } from "framer-motion";
 import WalletIcon from "../../../../components/svg/WalletIcon";
 import WatchIcon from "../../../../components/svg/WatchIcon";
@@ -20,7 +21,10 @@ import {
 import Pagination from "../../../../components/ui/Pagination";
 import SearchBar from "../../../../components/shared/SearchBar";
 import CustomSelect from "../../../../components/ui/CustomSelect";
-import { lockBodyScroll, unlockBodyScroll } from "../../../../utils/functions/common.function";
+import {
+  lockBodyScroll,
+  unlockBodyScroll,
+} from "../../../../utils/functions/common.function";
 import Modal from "../../../../components/shared/Modal";
 import {
   apiGetSubscriptionCardDetails,
@@ -28,8 +32,11 @@ import {
 } from "../../../../services/SubscriptionService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import EditSubscriptionModal from "./components/EditSubscriptionModal";
+import Loading from "../../../../components/shared/Loading/Loading";
 import { useAppSelector } from "../../../../store";
 import Base from "../../../../components/animations/Base";
+import Tag from "../../../../components/ui/Tag";
+import CardSubtitle from "../../../../components/ui/CardSubtitle";
 
 const DASHBOARD_CARDS = [
   {
@@ -72,15 +79,157 @@ const DASHBOARD_CARDS = [
 
 const companiesData = [
   {
+    id: 1,
+    plan_name: "Subscription 1 : 100$",
+    status: ["Active", "Premium"],
+    account: "AC001",
+    next_billing: "Dec 15, 2024",
+    features_count: "3 features included",
+    amount: "4500",
+    billing_cycle: "monthly",
+  },
+];
+
+// Static data for Subscription Management
+const subscriptionManagementData = [
+  {
+    id: 1,
     plan_name: "Metro Taxi Co.",
     status: ["Active", "Premium"],
-    features: "New York,45 Drivers,+1-555-0101",
+    account: "AC001",
+    next_billing: "Dec 15, 2024",
+    due_date: "Dec 15, 2024",
+    payment_type: "Cash",
     amount: "4500",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 2,
+    plan_name: "Metro Taxi Co.",
+    status: ["Suspended", "Basic"],
+    account: "AC001",
+    next_billing: "Dec 15, 2024",
+    due_date: null,
+    payment_type: "Card",
+    amount: "4500",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 3,
+    plan_name: "Metro Taxi Co.",
+    status: ["Pending", "Premium"],
+    account: "AC001",
+    next_billing: "Dec 15, 2024",
+    due_date: null,
+    payment_type: "Cash",
+    amount: "4500",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 4,
+    plan_name: "Metro Taxi Co.",
+    status: ["Active", "Premium"],
+    account: "AC001",
+    next_billing: "Dec 15, 2024",
+    due_date: null,
+    payment_type: "Cash",
+    amount: "4500",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 5,
+    plan_name: "Metro Taxi Co.",
+    status: ["Active", "Basic"],
+    account: "AC002",
+    next_billing: "Dec 20, 2024",
+    due_date: null,
+    payment_type: "Card",
+    amount: "3500",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 6,
+    plan_name: "Metro Taxi Co.",
+    status: ["Suspended", "Premium"],
+    account: "AC003",
+    next_billing: "Dec 25, 2024",
+    due_date: null,
+    payment_type: "Cash",
+    amount: "5000",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 7,
+    plan_name: "Metro Taxi Co.",
+    status: ["Pending", "Basic"],
+    account: "AC004",
+    next_billing: "Jan 1, 2025",
+    due_date: null,
+    payment_type: "Card",
+    amount: "3000",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 8,
+    plan_name: "Metro Taxi Co.",
+    status: ["Active", "Premium"],
+    account: "AC005",
+    next_billing: "Jan 5, 2025",
+    due_date: null,
+    payment_type: "Cash",
+    amount: "4800",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 9,
+    plan_name: "Metro Taxi Co.",
+    status: ["Suspended", "Basic"],
+    account: "AC006",
+    next_billing: "Jan 10, 2025",
+    due_date: null,
+    payment_type: "Card",
+    amount: "3200",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 10,
+    plan_name: "Metro Taxi Co.",
+    status: ["Pending", "Premium"],
+    account: "AC007",
+    next_billing: "Jan 15, 2025",
+    due_date: null,
+    payment_type: "Cash",
+    amount: "4600",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 11,
+    plan_name: "Metro Taxi Co.",
+    status: ["Active", "Basic"],
+    account: "AC008",
+    next_billing: "Jan 20, 2025",
+    due_date: null,
+    payment_type: "Card",
+    amount: "3400",
+    billing_cycle: "monthly",
+  },
+  {
+    id: 12,
+    plan_name: "Metro Taxi Co.",
+    status: ["Active", "Premium"],
+    account: "AC009",
+    next_billing: "Jan 25, 2025",
+    due_date: null,
+    payment_type: "Cash",
+    amount: "4900",
+    billing_cycle: "monthly",
   },
 ];
 
 const Subscription = () => {
+  // Existing Subscription Types - static
   const [_searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [_selectedStatus, setSelectedStatus] = useState(STATUS_OPTIONS[0]);
   const [_selectedPlan, setSelectedPlan] = useState(PLAN_OPTIONS[0]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -103,6 +252,8 @@ const Subscription = () => {
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
+  // Pending Subscription - Static data (same as Subscription Management)
+
   const savedPagination = useAppSelector(
     (state) => state?.app?.app?.pagination?.subscription
   );
@@ -113,9 +264,23 @@ const Subscription = () => {
     Number(savedPagination?.itemsPerPage) || 10
   );
 
-  const handleSearchChange = (value) => {
+  const debouncedSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedSearchQuery(searchValue);
+    }, 500)
+  );
+
+  const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
-  };
+    debouncedSearchRef.current(value);
+  }, []);
+
+  useEffect(() => {
+    const debouncedFn = debouncedSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
 
   const handleStatusChange = (option) => {
     setSelectedStatus(option);
@@ -147,22 +312,25 @@ const Subscription = () => {
     unlockBodyScroll();
   };
 
-  const getSubscriptions = async () => {
+  const getSubscriptions = async (search = "") => {
     try {
       setIsSubscriptionsLoading(true);
       const result = await apiGetSubscriptions({
         page: currentPage,
-        perPage: itemsPerPage,
+        perPage: itemsPerPage, // Use itemsPerPage for Existing Subscription Types
+        search: search || undefined,
       });
       if (result?.status === 200) {
         const list = result?.data?.list;
         const rows = Array.isArray(list?.data) ? list?.data : [];
         setAllSubscription(list);
         setSubscriptionListRaw(rows);
+        setSubscriptionListDisplay(rows);
       }
     } catch (errors) {
       console.log(errors, "err---");
       setSubscriptionListRaw([]);
+      setSubscriptionListDisplay([]);
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -187,40 +355,238 @@ const Subscription = () => {
     }
   };
 
+  // Pending Subscription - Static data with search and filters
+  const [pendingSearchQuery, setPendingSearchQuery] = useState("");
+  const [debouncedPendingSearchQuery, setDebouncedPendingSearchQuery] =
+    useState("");
+  const [pendingSelectedStatus, setPendingSelectedStatus] = useState(
+    STATUS_OPTIONS[0]
+  );
+  const [pendingSelectedPlan, setPendingSelectedPlan] = useState(
+    PLAN_OPTIONS[0]
+  );
+  const [pendingSelectedPaymentType, setPendingSelectedPaymentType] = useState({
+    value: "all",
+    label: "Cash/Card",
+  });
+  const [pendingSubscriptionDisplay, setPendingSubscriptionDisplay] = useState(
+    []
+  );
+  const [pendingSubscriptionCurrentPage, setPendingSubscriptionCurrentPage] =
+    useState(1);
+  const [pendingItemsPerPage, setPendingItemsPerPage] = useState(4);
+  const [allPendingSubscription, setAllPendingSubscription] = useState({
+    data: [],
+    last_page: 1,
+  });
+  const [isPendingFilterOpen, setIsPendingFilterOpen] = useState(false);
+
+  const debouncedPendingSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedPendingSearchQuery(searchValue);
+    }, 500)
+  );
+
+  const handlePendingSearchChange = useCallback((value) => {
+    setPendingSearchQuery(value);
+    debouncedPendingSearchRef.current(value);
+  }, []);
+
+  useEffect(() => {
+    const debouncedFn = debouncedPendingSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
+
+  useEffect(() => {
+    // Filter and search logic for pending subscriptions
+    let filteredData = [...subscriptionManagementData];
+
+    // Search filter
+    if (debouncedPendingSearchQuery && debouncedPendingSearchQuery.trim()) {
+      const searchLower = debouncedPendingSearchQuery.toLowerCase().trim();
+      filteredData = filteredData.filter(
+        (sub) =>
+          sub.plan_name?.toLowerCase().includes(searchLower) ||
+          sub.account?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Status filter
+    if (pendingSelectedStatus?.value && pendingSelectedStatus.value !== "all") {
+      filteredData = filteredData.filter((sub) =>
+        sub.status?.some(
+          (s) => s.toLowerCase() === pendingSelectedStatus.value.toLowerCase()
+        )
+      );
+    }
+
+    // Plan filter
+    if (pendingSelectedPlan?.value && pendingSelectedPlan.value !== "all") {
+      filteredData = filteredData.filter((sub) =>
+        sub.status?.some(
+          (s) => s.toLowerCase() === pendingSelectedPlan.value.toLowerCase()
+        )
+      );
+    }
+
+    // Payment type filter
+    if (
+      pendingSelectedPaymentType?.value &&
+      pendingSelectedPaymentType.value !== "all"
+    ) {
+      filteredData = filteredData.filter(
+        (sub) =>
+          sub.payment_type?.toLowerCase() ===
+          pendingSelectedPaymentType.value.toLowerCase()
+      );
+    }
+
+    // Pagination - show items per page
+    const startIndex =
+      (pendingSubscriptionCurrentPage - 1) * pendingItemsPerPage;
+    const endIndex = startIndex + pendingItemsPerPage;
+    const paginatedData = filteredData.slice(startIndex, endIndex);
+
+    // Update total pages
+    const totalPages = Math.ceil(filteredData.length / pendingItemsPerPage);
+    setAllPendingSubscription({
+      data: filteredData,
+      last_page: totalPages || 1,
+    });
+
+    setPendingSubscriptionDisplay(paginatedData);
+  }, [
+    pendingSubscriptionCurrentPage,
+    pendingItemsPerPage,
+    debouncedPendingSearchQuery,
+    pendingSelectedStatus,
+    pendingSelectedPlan,
+    pendingSelectedPaymentType,
+  ]);
+
+  const handlePendingSubscriptionPageChange = (pageNumber) => {
+    setPendingSubscriptionCurrentPage(pageNumber);
+  };
+
+  const handlePendingSubscriptionItemsPerPageChange = (newItemsPerPage) => {
+    // Fixed at 4 items per page for Pending Subscription
+    setPendingItemsPerPage(4);
+    setPendingSubscriptionCurrentPage(1);
+  };
+
+  const handlePendingStatusChange = (option) => {
+    setPendingSelectedStatus(option);
+    setPendingSubscriptionCurrentPage(1);
+  };
+
+  const handlePendingPlanChange = (option) => {
+    setPendingSelectedPlan(option);
+    setPendingSubscriptionCurrentPage(1);
+  };
+
+  const handlePendingPaymentTypeChange = (option) => {
+    setPendingSelectedPaymentType(option);
+    setPendingSubscriptionCurrentPage(1);
+  };
+
+  const openPendingFilter = () => {
+    setIsPendingFilterOpen(true);
+    lockBodyScroll();
+  };
+
+  const closePendingFilter = () => {
+    setIsPendingFilterOpen(false);
+    unlockBodyScroll();
+  };
+
   useEffect(() => {
     getSubscriptionCardDetails();
   }, []);
 
+  // Initial mount - call API once for Existing Subscription Types
+  const prevSearchRef = useRef(debouncedSearchQuery);
+  const prevItemsPerPageRef = useRef(itemsPerPage);
+  const prevCurrentPageRef = useRef(currentPage);
+  const hasCalledInitial = useRef(false);
+
   useEffect(() => {
-    getSubscriptions();
+    if (!hasCalledInitial.current) {
+      hasCalledInitial.current = true;
+      getSubscriptions(debouncedSearchQuery);
+      prevSearchRef.current = debouncedSearchQuery;
+      prevItemsPerPageRef.current = itemsPerPage;
+      prevCurrentPageRef.current = currentPage;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshTrigger, currentPage, itemsPerPage]);
+  }, []);
 
   useEffect(() => {
-    const query = _searchQuery?.toLowerCase?.() ?? "";
-    const plan = _selectedPlan?.value ?? "all";
-
-    let filtered = [...subscriptionListRaw];
-
-    if (query) {
-      filtered = filtered.filter((s) => {
-        const hay = `${s.plan_name ?? ""} ${s.billing_cycle ?? ""} ${
-          s.features ?? ""
-        } ${s.amount ?? ""}`.toLowerCase();
-        return hay.includes(query);
-      });
+    if (!hasCalledInitial.current) {
+      return;
     }
+    getSubscriptions(debouncedSearchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshTrigger]);
 
-    if (plan !== "all") {
-      filtered = filtered.filter(
-        (s) => (s.plan_name ?? "").toLowerCase() === plan.toLowerCase()
-      );
+  useEffect(() => {
+    if (!hasCalledInitial.current) {
+      return;
     }
+    const searchChanged = prevSearchRef.current !== debouncedSearchQuery;
+    const itemsPerPageChanged = prevItemsPerPageRef.current !== itemsPerPage;
+    if (searchChanged || itemsPerPageChanged) {
+      setCurrentPage(1);
+    }
+  }, [debouncedSearchQuery, itemsPerPage]);
 
-    setSubscriptionListDisplay(filtered);
-  }, [subscriptionListRaw, _searchQuery, _selectedPlan]);
+  useEffect(() => {
+    if (!hasCalledInitial.current) {
+      return;
+    }
+    const pageChanged = prevCurrentPageRef.current !== currentPage;
+    const searchChanged = prevSearchRef.current !== debouncedSearchQuery;
+    const itemsPerPageChanged = prevItemsPerPageRef.current !== itemsPerPage;
+    if (pageChanged || searchChanged || itemsPerPageChanged) {
+      getSubscriptions(debouncedSearchQuery);
+      prevCurrentPageRef.current = currentPage;
+      prevSearchRef.current = debouncedSearchQuery;
+      prevItemsPerPageRef.current = itemsPerPage;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, itemsPerPage, debouncedSearchQuery]);
 
-  if (isSubscriptionsLoading || isSubscriptionCardDetailsLoading) {
+  // Pagination for Subscription Management (static data, no filters/search)
+  const [subscriptionManagementDisplay, setSubscriptionManagementDisplay] =
+    useState([]);
+  const [
+    subscriptionManagementCurrentPage,
+    setSubscriptionManagementCurrentPage,
+  ] = useState(1);
+
+  useEffect(() => {
+    // Pagination - show 4 items per page for Subscription Management
+    const startIndex = (subscriptionManagementCurrentPage - 1) * 4;
+    const endIndex = startIndex + 4;
+    const paginatedData = subscriptionManagementData.slice(
+      startIndex,
+      endIndex
+    );
+
+    setSubscriptionManagementDisplay(paginatedData);
+  }, [subscriptionManagementCurrentPage]);
+
+  const handleSubscriptionManagementPageChange = (pageNumber) => {
+    setSubscriptionManagementCurrentPage(pageNumber);
+  };
+
+  const handleSubscriptionManagementItemsPerPageChange = (newItemsPerPage) => {
+    // Items per page is fixed at 4 for Subscription Management
+    setSubscriptionManagementCurrentPage(1);
+  };
+
+  if (isSubscriptionCardDetailsLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full">
         <AppLogoLoader />
@@ -285,55 +651,13 @@ const Subscription = () => {
           </div>
           <CardContainer className="p-3 sm:p-4 lg:p-5">
             <div className="mb-4 sm:mb-7 pb-4 sm:pb-6 border-b-2 border-[#E9E9E9]">
-              <div>
-                {Array.isArray(subscriptionListRaw) &&
-                subscriptionListRaw.length > 0 ? (
-                  <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
-                    <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
-                      <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
-                    </div>
-                    {/* Mobile filter trigger */}
-                    <div className="flex justify-end md:hidden">
-                      <button
-                        type="button"
-                        className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
-                        onClick={openFilter}
-                      >
-                        {/* simple filter funnel icon */}
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M3 5H21L14 13V20L10 18V13L3 5Z" stroke="#333333" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
-                      <CustomSelect
-                        variant={2}
-                        options={STATUS_OPTIONS}
-                        value={_selectedStatus}
-                        onChange={handleStatusChange}
-                        placeholder="All Status"
-                      />
-                      <CustomSelect
-                        variant={2}
-                        options={PLAN_OPTIONS}
-                        value={_selectedPlan}
-                        onChange={handlePlanChange}
-                        placeholder="All Plans"
-                      />
-                    </div>
-                  </div>
-                ) : null}
+              {/* Existing Subscription Types - Dynamic, show all items from API */}
+              <Loading loading={isSubscriptionsLoading} type="cover">
                 <div>
                   <DataDetailsTable
+                    rowType="subscription"
                     companies={subscriptionListDisplay}
                     actionOptions={[
-                      // {
-                      //   label: "View",
-                      //   onClick: (data) => {
-                      //     // setSelectedViewData(data);
-                      //     // setIsViewPermissionModal(true);
-                      //   },
-                      // },
                       {
                         label: "Edit",
                         onClick: (item) => {
@@ -346,30 +670,24 @@ const Subscription = () => {
                           }
                         },
                       },
-                      // {
-                      //   label: "Delete",
-                      //   onClick: () => {
-                      //     console.log("Delete clicked");
-                      //   },
-                      // },
                     ]}
                   />
                 </div>
-                {Array.isArray(subscriptionListDisplay) &&
-                subscriptionListDisplay.length > 0 ? (
-                  <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
-                    <Pagination
-                      currentPage={currentPage}
-                      totalPages={allSubscription.last_page}
-                      itemsPerPage={itemsPerPage}
-                      onPageChange={handlePageChange}
-                      onItemsPerPageChange={handleItemsPerPageChange}
-                      itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                      pageKey="subscription"
-                    />
-                  </div>
-                ) : null}
-              </div>
+              </Loading>
+              {Array.isArray(subscriptionListDisplay) &&
+              subscriptionListDisplay.length > 0 ? (
+                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={allSubscription.last_page}
+                    itemsPerPage={itemsPerPage}
+                    onPageChange={handlePageChange}
+                    onItemsPerPageChange={handleItemsPerPageChange}
+                    itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                    pageKey="subscription"
+                  />
+                </div>
+              ) : null}
             </div>
             {/* Mobile Filter Bottom Sheet */}
             <AnimatePresence>
@@ -387,16 +705,34 @@ const Subscription = () => {
                     className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-base font-semibold text-[#333]">Filter</span>
+                      <span className="text-base font-semibold text-[#333]">
+                        Filter
+                      </span>
                       <button
                         type="button"
                         aria-label="Close filter"
                         className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
                         onClick={closeFilter}
                       >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M6 6L18 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
-                          <path d="M18 6L6 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M6 6L18 18"
+                            stroke="#111111"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                          <path
+                            d="M18 6L6 18"
+                            stroke="#111111"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
                         </svg>
                       </button>
                     </div>
@@ -448,68 +784,228 @@ const Subscription = () => {
               <PageSubTitle title="Overview of all company subscriptions and billing status" />
             </div>
             <div>
-              {Array.isArray(allSubscription.data) &&
-              allSubscription.data.length > 0 ? (
-                <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
-                  <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
-                    <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
-                  </div>
-                  {/* Mobile filter trigger */}
-                  <div className="flex justify-end md:hidden">
-                    <button
-                      type="button"
-                      className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
-                      onClick={openFilter}
-                    >
-                      {/* simple filter funnel icon */}
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 5H21L14 13V20L10 18V13L3 5Z" stroke="#333333" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
-                    <CustomSelect
-                      variant={2}
-                      options={STATUS_OPTIONS}
-                      value={_selectedStatus}
-                      onChange={handleStatusChange}
-                      placeholder="All Status"
-                    />
-                    <CustomSelect
-                      variant={2}
-                      options={PLAN_OPTIONS}
-                      value={_selectedPlan}
-                      onChange={handlePlanChange}
-                      placeholder="All Plans"
-                    />
-                  </div>
-                </div>
-              ) : null}
+              {/* Subscription Management - Static data, show 4 items per page, no search/filters */}
               <div>
                 <DataDetailsTable
-                  companies={companiesData}
-                  onActionClick={() => console.log("object")}
+                  rowType="subscription"
+                  companies={subscriptionManagementDisplay}
+                  actionOptions={[
+                    {
+                      label: "Edit",
+                      onClick: (item) => {
+                        if (item) {
+                          setSelectedId(item?.id);
+                          setIsSubscriptionModalOpen({
+                            type: "edit",
+                            isOpen: true,
+                          });
+                        }
+                      },
+                    },
+                  ]}
                 />
               </div>
-              {Array.isArray(allSubscription.data) &&
-              allSubscription.data.length > 0 ? (
+              {Array.isArray(subscriptionManagementDisplay) &&
+              subscriptionManagementDisplay.length > 0 ? (
                 <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
-                    currentPage={currentPage}
-                    totalPages={1}
-                    itemsPerPage={itemsPerPage}
-                    onPageChange={handlePageChange}
-                    onItemsPerPageChange={handleItemsPerPageChange}
+                    currentPage={subscriptionManagementCurrentPage}
+                    totalPages={Math.ceil(
+                      subscriptionManagementData.length / 4
+                    )}
+                    itemsPerPage={4}
+                    onPageChange={handleSubscriptionManagementPageChange}
+                    onItemsPerPageChange={
+                      handleSubscriptionManagementItemsPerPageChange
+                    }
                     itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                    pageKey="subscription"
+                    pageKey="subscriptionManagement"
                   />
                 </div>
               ) : null}
             </div>
+            {/* Pending Subscription Section - Static data with search/filters */}
+            <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-[#1F41BB]">
+              <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
+                <ChildText text="Pending Subscription" size="2xl" />
+              </div>
+              <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+                <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
+                  <SearchBar
+                    value={pendingSearchQuery}
+                    onSearchChange={handlePendingSearchChange}
+                    className="w-full md:max-w-[400px] max-w-full"
+                  />
+                </div>
+                {/* Mobile filter trigger */}
+                <div className="flex justify-end md:hidden">
+                  <button
+                    type="button"
+                    className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
+                    onClick={openPendingFilter}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 5H21L14 13V20L10 18V13L3 5Z"
+                        stroke="#333333"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
+                  <CustomSelect
+                    variant={2}
+                    options={[
+                      { value: "all", label: "Cash/Card" },
+                      { value: "cash", label: "Cash" },
+                      { value: "card", label: "Card" },
+                    ]}
+                    value={pendingSelectedPaymentType}
+                    onChange={handlePendingPaymentTypeChange}
+                    placeholder="Cash/Card"
+                  />
+                  <CustomSelect
+                    variant={2}
+                    options={STATUS_OPTIONS}
+                    value={pendingSelectedStatus}
+                    onChange={handlePendingStatusChange}
+                    placeholder="All Status"
+                  />
+                  <CustomSelect
+                    variant={2}
+                    options={PLAN_OPTIONS}
+                    value={pendingSelectedPlan}
+                    onChange={handlePendingPlanChange}
+                    placeholder="All Subscription"
+                  />
+                </div>
+              </div>
+              <div>
+                <DataDetailsTable
+                  rowType="subscription"
+                  companies={pendingSubscriptionDisplay}
+                  actionOptions={[
+                    {
+                      label: "Edit",
+                      onClick: (item) => {
+                        if (item) {
+                          setSelectedId(item?.id);
+                          setIsSubscriptionModalOpen({
+                            type: "edit",
+                            isOpen: true,
+                          });
+                        }
+                      },
+                    },
+                  ]}
+                />
+              </div>
+              {Array.isArray(pendingSubscriptionDisplay) &&
+              pendingSubscriptionDisplay.length > 0 ? (
+                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
+                  <Pagination
+                    currentPage={pendingSubscriptionCurrentPage}
+                    totalPages={allPendingSubscription.last_page}
+                    itemsPerPage={4}
+                    onPageChange={handlePendingSubscriptionPageChange}
+                    onItemsPerPageChange={
+                      handlePendingSubscriptionItemsPerPageChange
+                    }
+                    itemsPerPageOptions={[4]}
+                    pageKey="pendingSubscription"
+                  />
+                </div>
+              ) : null}
+              {/* Mobile Filter Bottom Sheet */}
+              <AnimatePresence>
+                {isPendingFilterOpen && (
+                  <div className="fixed inset-0 z-[2000] md:hidden">
+                    <div
+                      className="absolute inset-0 bg-black/40"
+                      onClick={closePendingFilter}
+                    ></div>
+                    <Base
+                      initial={{ y: "100%" }}
+                      animate={{ y: 0 }}
+                      exit={{ y: "100%" }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-base font-semibold text-[#333]">
+                          Filter
+                        </span>
+                        <button
+                          type="button"
+                          aria-label="Close filter"
+                          className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
+                          onClick={closePendingFilter}
+                        >
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M18 6L6 18M6 6L18 18"
+                              stroke="#333"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="flex flex-col gap-4">
+                        <CustomSelect
+                          variant={2}
+                          options={[
+                            { value: "all", label: "Cash/Card" },
+                            { value: "cash", label: "Cash" },
+                            { value: "card", label: "Card" },
+                          ]}
+                          value={pendingSelectedPaymentType}
+                          onChange={handlePendingPaymentTypeChange}
+                          placeholder="Cash/Card"
+                        />
+                        <CustomSelect
+                          variant={2}
+                          options={STATUS_OPTIONS}
+                          value={pendingSelectedStatus}
+                          onChange={handlePendingStatusChange}
+                          placeholder="All Status"
+                        />
+                        <CustomSelect
+                          variant={2}
+                          options={PLAN_OPTIONS}
+                          value={pendingSelectedPlan}
+                          onChange={handlePendingPlanChange}
+                          placeholder="All Subscription"
+                        />
+                      </div>
+                    </Base>
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
           </CardContainer>
         </div>
       </div>
-      <Modal isOpen={isSubscriptionModalOpen.isOpen} className="p-4 sm:p-6 lg:p-10">
+      <Modal
+        isOpen={isSubscriptionModalOpen.isOpen}
+        className="p-4 sm:p-6 lg:p-10"
+      >
         {isSubscriptionModalOpen.type === "new" ? (
           <AddSubscriptionModal
             setIsOpen={setIsSubscriptionModalOpen}

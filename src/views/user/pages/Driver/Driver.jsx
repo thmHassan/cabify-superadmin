@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { debounce } from "lodash";
 import CardContainer from "../../../../components/shared/CardContainer";
 import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
@@ -18,6 +19,7 @@ import {
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import EditDriverDocumentModal from "./components/EditDriverDocumentModal";
 import ConfirmDialog from "../../../../components/shared/ConfirmDialog";
+import Loading from "../../../../components/shared/Loading/Loading";
 import { useAppSelector } from "../../../../store";
 
 const Driver = () => {
@@ -34,6 +36,7 @@ const Driver = () => {
     []
   );
   const [_searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isDriverDocumentsLoading, setIsDriverDocumentsLoading] =
     useState(false);
@@ -52,9 +55,23 @@ const Driver = () => {
     Number(savedPagination?.itemsPerPage) || 10
   );
 
-  const handleSearchChange = (value) => {
+  const debouncedSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedSearchQuery(searchValue);
+    }, 500)
+  );
+
+  const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
-  };
+    debouncedSearchRef.current(value);
+  }, []);
+
+  useEffect(() => {
+    const debouncedFn = debouncedSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -67,12 +84,13 @@ const Driver = () => {
 
   const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
 
-  const getDriversDocuments = async () => {
+  const getDriversDocuments = async (search = "") => {
     try {
       setIsDriverDocumentsLoading(true);
       const result = await apiGetDriversDocuments({
         page: currentPage,
         perPage: itemsPerPage,
+        search: search || undefined,
       });
       if (result?.status === 200) {
         console.log(result, "res========");
@@ -80,10 +98,12 @@ const Driver = () => {
         const rows = Array.isArray(list?.data) ? list?.data : [];
         setAllDriversDocuments(list);
         setDriverDocumentsListRaw(rows);
+        setDriverDocumentsListDisplay(rows);
       }
     } catch (errors) {
       console.log(errors, "err---");
       setDriverDocumentsListRaw([]);
+      setDriverDocumentsListDisplay([]);
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -100,40 +120,20 @@ const Driver = () => {
   };
 
   useEffect(() => {
-    getDriversDocuments();
+    getDriversDocuments(debouncedSearchQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, itemsPerPage, refreshTrigger]);
+  }, [refreshTrigger]);
 
-  // Reset to page 1 only when search query changes
   useEffect(() => {
-    if (_searchQuery) {
-      setCurrentPage(1);
-    }
-  }, [_searchQuery]);
+    setCurrentPage(1);
+    getDriversDocuments(debouncedSearchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchQuery, itemsPerPage]);
 
-  // Filter the data based on search query
   useEffect(() => {
-    const query = _searchQuery?.toLowerCase?.() ?? "";
+    getDriversDocuments(debouncedSearchQuery);
+  }, [currentPage]);
 
-    let filtered = [...driverDocumentsListRaw];
-
-    if (query) {
-      filtered = filtered.filter((d) => {
-        const hay = `${d.document_name ?? ""}`.toLowerCase();
-        return hay.includes(query);
-      });
-    }
-
-    setDriverDocumentsListDisplay(filtered);
-  }, [driverDocumentsListRaw, _searchQuery]);
-
-  if (isDriverDocumentsLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen w-full">
-        <AppLogoLoader />
-      </div>
-    );
-  }
 
   return (
     <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
@@ -170,16 +170,18 @@ const Driver = () => {
           <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
             <div className="w-full sm:flex-1">
               <SearchBar
+                value={_searchQuery}
                 onSearchChange={handleSearchChange}
                 className="w-full md:max-w-[400px] max-w-full"
               />
             </div>
           </div>
         ) : null}
-        <div>
-          <DataDetailsTable
-            rowType="driverDocuments"
-            companies={driverDocumentsListDisplay}
+        <Loading loading={isDriverDocumentsLoading} type="cover">
+          <div>
+            <DataDetailsTable
+              rowType="driverDocuments"
+              companies={driverDocumentsListDisplay}
             actionOptions={[
               {
                 label: "Edit",
@@ -200,8 +202,9 @@ const Driver = () => {
                 },
               },
             ]}
-          />
-        </div>
+            />
+          </div>
+        </Loading>
         {Array.isArray(driverDocumentsListDisplay) &&
         driverDocumentsListDisplay.length > 0 ? (
           <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">

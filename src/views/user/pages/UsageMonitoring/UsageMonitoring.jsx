@@ -1,4 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
+import { debounce } from "lodash";
 import DataDetailsTable from "../../../../components/shared/DataDetailsTable";
 import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
@@ -24,6 +31,8 @@ const UsageMonitoring = () => {
       totalAPICalls: 0,
     },
   });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
 
   const DASHBOARD_CARDS = [
     {
@@ -53,22 +62,53 @@ const UsageMonitoring = () => {
     },
   ];
 
-  const TABS_CONFIGS = [
-    {
-      title: "Company Usage",
-      component: CompanyUsage,
-      data: allUsageMonitoring.company_list,
-    },
-    {
-      title: "Service Performance",
-      component: ServicePerformance,
-    },
-  ];
+  const debouncedSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedSearchQuery(searchValue);
+    }, 500)
+  );
 
-  const getUsageMonitoringDetails = async () => {
+  const handleSearchChange = useCallback((value) => {
+    setSearchQuery(value);
+    debouncedSearchRef.current(value);
+  }, []);
+
+  const TABS_CONFIGS = useMemo(
+    () => [
+      {
+        title: "Company Usage",
+        component: CompanyUsage,
+        data: allUsageMonitoring.company_list,
+        searchQuery: searchQuery,
+        onSearchChange: handleSearchChange,
+        isLoading: isUsageMonitoringDetailsLoading,
+      },
+      {
+        title: "Service Performance",
+        component: ServicePerformance,
+      },
+    ],
+    [
+      allUsageMonitoring.company_list,
+      searchQuery,
+      handleSearchChange,
+      isUsageMonitoringDetailsLoading,
+    ]
+  );
+
+  useEffect(() => {
+    const debouncedFn = debouncedSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
+
+  const getUsageMonitoringDetails = async (search = "") => {
     try {
       setIsUsageMonitoringDetailsLoading(true);
-      const result = await apiGetUsageMonitoringDetails();
+      const result = await apiGetUsageMonitoringDetails({
+        search: search || undefined,
+      });
       if (result?.status === 200) {
         setAllUsageMonitoring(result?.data);
       }
@@ -84,10 +124,15 @@ const UsageMonitoring = () => {
   };
 
   useEffect(() => {
-    getUsageMonitoringDetails();
-  }, []);
+    getUsageMonitoringDetails(debouncedSearchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchQuery]);
 
-  if (isUsageMonitoringDetailsLoading) {
+  // Only show full-page loader on initial load (when no data exists)
+  if (
+    isUsageMonitoringDetailsLoading &&
+    allUsageMonitoring.company_list.length === 0
+  ) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full">
         <AppLogoLoader />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchIcon from "../../svg/SearchIcon";
 import classNames from "classnames";
 
@@ -7,14 +7,20 @@ const VARIANT_CONFIG = {
   1: "bg-[#f3f3f3]",
 };
 
-const SearchBar = ({ onSearchChange, variant = 0, className }) => {
-  const [searchValue, setSearchValue] = useState("");
+const SearchBar = ({ onSearchChange, value, variant = 0, className }) => {
+  const [searchValue, setSearchValue] = useState(value || "");
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setSearchValue(value);
+    }
+  }, [value]);
 
   const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchValue(value);
+    const newValue = e.target.value;
+    setSearchValue(newValue);
     if (onSearchChange) {
-      onSearchChange(value);
+      onSearchChange(newValue);
     }
   };
 

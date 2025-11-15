@@ -10,12 +10,20 @@ import {
 import CustomSelect from "../../../../../../components/ui/CustomSelect";
 import SearchBar from "../../../../../../components/shared/SearchBar";
 import Pagination from "../../../../../../components/ui/Pagination";
+import Loading from "../../../../../../components/shared/Loading/Loading";
 import { useAppSelector } from "../../../../../../store";
-import { lockBodyScroll, unlockBodyScroll } from "../../../../../../utils/functions/common.function";
+import {
+  lockBodyScroll,
+  unlockBodyScroll,
+} from "../../../../../../utils/functions/common.function";
 import Base from "../../../../../../components/animations/Base";
 
-const CompanyUsage = ({ data }) => {
-  const [_searchQuery, setSearchQuery] = useState("");
+const CompanyUsage = ({
+  data,
+  searchQuery = "",
+  onSearchChange,
+  isLoading = false,
+}) => {
   const [_selectedStatus, setSelectedStatus] = useState(STATUS_OPTIONS[0]);
   const [_selectedPlan, setSelectedPlan] = useState(PLAN_OPTIONS[0]);
   const [companyListRaw, setCompanyListRaw] = useState([]);
@@ -35,28 +43,18 @@ const CompanyUsage = ({ data }) => {
   useEffect(() => {
     const rawData = Array.isArray(data) ? data : [];
     setCompanyListRaw(rawData);
+    setCompanyListDisplay(rawData);
   }, [data]);
 
-  // Reset to page 1 only when search query or plan filter changes
+  // Reset to page 1 only when plan filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [_searchQuery, _selectedPlan]);
+  }, [_selectedPlan]);
 
-  // Filter the data based on search query and plan
+  // Client-side filtering for plan only (if needed)
   useEffect(() => {
-    const query = _searchQuery?.toLowerCase?.() ?? "";
     const plan = _selectedPlan?.value ?? "all";
-
     let filtered = [...companyListRaw];
-
-    if (query) {
-      filtered = filtered.filter((c) => {
-        const hay = `${c.company_name ?? ""} ${c.email ?? ""} ${c.city ?? ""} ${
-          c.phone ?? ""
-        }`.toLowerCase();
-        return hay.includes(query);
-      });
-    }
 
     if (plan !== "all") {
       filtered = filtered.filter(
@@ -65,7 +63,7 @@ const CompanyUsage = ({ data }) => {
     }
 
     setCompanyListDisplay(filtered);
-  }, [companyListRaw, _searchQuery, _selectedPlan]);
+  }, [companyListRaw, _selectedPlan]);
 
   // Calculate pagination
   const totalItems = companyListDisplay.length;
@@ -75,7 +73,9 @@ const CompanyUsage = ({ data }) => {
   const paginatedData = companyListDisplay.slice(startIndex, endIndex);
 
   const handleSearchChange = (value) => {
-    setSearchQuery(value);
+    if (onSearchChange) {
+      onSearchChange(value);
+    }
   };
 
   const handleStatusChange = (option) => {
@@ -109,43 +109,62 @@ const CompanyUsage = ({ data }) => {
   return (
     <>
       <CardContainer className="p-3 sm:p-4 lg:p-5">
-        {Array.isArray(companyListRaw) && companyListRaw.length > 0 ? (
-          <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
-            <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
-              <SearchBar onSearchChange={handleSearchChange} className="w-full md:max-w-[400px] max-w-full" />
-            </div>
-            {/* Mobile filter trigger */}
-            <div className="flex justify-end md:hidden">
-              <button
-                type="button"
-                className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
-                onClick={openFilter}
-              >
-                {/* simple filter funnel icon */}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3 5H21L14 13V20L10 18V13L3 5Z" stroke="#333333" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </div>
-            <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
-              <CustomSelect
-                variant={2}
-                options={STATUS_OPTIONS}
-                value={_selectedStatus}
-                onChange={handleStatusChange}
-                placeholder="All Status"
-              />
-              <CustomSelect
-                variant={2}
-                options={PLAN_OPTIONS}
-                value={_selectedPlan}
-                onChange={handlePlanChange}
-                placeholder="All Plans"
-              />
-            </div>
+        <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+          <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
+            <SearchBar
+              value={searchQuery}
+              onSearchChange={handleSearchChange}
+              className="w-full md:max-w-[400px] max-w-full"
+            />
           </div>
-        ) : null}
-        <DataDetailsTable rowType="usageMonitoring" companies={paginatedData} />
+          {/* Mobile filter trigger */}
+          <div className="flex justify-end md:hidden">
+            <button
+              type="button"
+              className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
+              onClick={openFilter}
+            >
+              {/* simple filter funnel icon */}
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 5H21L14 13V20L10 18V13L3 5Z"
+                  stroke="#333333"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+          <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
+            <CustomSelect
+              variant={2}
+              options={STATUS_OPTIONS}
+              value={_selectedStatus}
+              onChange={handleStatusChange}
+              placeholder="All Status"
+            />
+            <CustomSelect
+              variant={2}
+              options={PLAN_OPTIONS}
+              value={_selectedPlan}
+              onChange={handlePlanChange}
+              placeholder="All Plans"
+            />
+          </div>
+        </div>
+        <Loading loading={isLoading} type="cover">
+          <DataDetailsTable
+            rowType="usageMonitoring"
+            companies={paginatedData}
+          />
+        </Loading>
         {Array.isArray(companyListDisplay) && companyListDisplay.length > 0 ? (
           <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
             <Pagination
@@ -176,16 +195,34 @@ const CompanyUsage = ({ data }) => {
               className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="text-base font-semibold text-[#333]">Filter</span>
+                <span className="text-base font-semibold text-[#333]">
+                  Filter
+                </span>
                 <button
                   type="button"
                   aria-label="Close filter"
                   className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
                   onClick={closeFilter}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 6L18 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M18 6L6 18" stroke="#111111" strokeWidth="2" strokeLinecap="round"/>
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 6L18 18"
+                      stroke="#111111"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M18 6L6 18"
+                      stroke="#111111"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
                   </svg>
                 </button>
               </div>

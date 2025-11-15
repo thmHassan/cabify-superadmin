@@ -28,12 +28,16 @@ const ApiService = {
     });
   },
 
-  getPlotList({ page = 1 } = {}) {
+  getPlotList({ page = 1, search } = {}) {
     return new Promise((resolve, reject) => {
+      const params = { page };
+      if (search) {
+        params.search = search;
+      }
       BaseService({
         method: "GET",
         url: "/super-admin/plot-list",
-        params: { page },
+        params,
       })
         .then((response) => {
           resolve(response);

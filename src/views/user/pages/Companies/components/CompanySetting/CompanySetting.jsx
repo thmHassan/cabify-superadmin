@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import * as Yup from "yup";
 import CardSubtitle from "../../../../../../components/ui/CardSubtitle";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import FormLabel from "../../../../../../components/ui/FormLabel";
 import ApiService from "../../../../../../services/ApiService";
 import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
@@ -62,53 +61,13 @@ const CompanySetting = ({ companyId }) => {
   if (!companyDetails) {
     return (
       <div className="text-center py-8 sm:py-12 px-4">
-        <p className="text-gray-500 text-sm sm:text-base">
-          No settings found
-        </p>
+        <p className="text-gray-500 text-sm sm:text-base">No settings found</p>
       </div>
     );
   }
 
   // Get API configuration from response
   const apiConfig = companyDetails?.data?.api_configuration || {};
-
-  // Define options for each field
-  const mapApiOptions = [
-    { value: "Google Maps", label: "Google Maps" },
-    { value: "Mapbox", label: "Mapbox" },
-    { value: "OpenStreetMap", label: "OpenStreetMap" },
-  ];
-
-  const callApiOptions = [
-    { value: "Twilio", label: "Twilio" },
-    { value: "Vonage", label: "Vonage" },
-    { value: "AWS Connect", label: "AWS Connect" },
-  ];
-
-  const paymentMethodOptions = [
-    { value: "Online", label: "Online" },
-    { value: "Cash", label: "Cash" },
-    { value: "Bank Transfer", label: "Bank Transfer" },
-  ];
-
-  const planTypeOptions = [
-    { value: "Basic", label: "Basic" },
-    { value: "Premium", label: "Premium" },
-    { value: "Enterprise", label: "Enterprise" },
-  ];
-
-  const mapSearchApiOptions = [
-    { value: "Google Maps", label: "Google Maps" },
-    { value: "Mapbox", label: "Mapbox" },
-    { value: "OpenStreetMap", label: "OpenStreetMap" },
-  ];
-
-  // Ensure API-provided value appears in the options even if casing/value differs
-  const callApiInitial = apiConfig.call_api_provide || "";
-  const callApiOptionsSafe =
-    callApiInitial && !callApiOptions.some((o) => o.value === callApiInitial)
-      ? [{ value: callApiInitial, label: callApiInitial }, ...callApiOptions]
-      : callApiOptions;
 
   return (
     <div>
@@ -128,7 +87,7 @@ const CompanySetting = ({ companyId }) => {
           validationSchema={COMPANY_SETTING_VALIDATION_SCHEMA}
           onSubmit={handleSubmit}
         >
-          {({ values, setFieldValue }) => (
+          {() => (
             <Form>
               <div className="flex flex-wrap gap-4 sm:gap-5 mb-8 sm:mb-12 lg:mb-[60px]">
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
@@ -136,13 +95,11 @@ const CompanySetting = ({ companyId }) => {
                     Map API Provider
                   </FormLabel>
                   <div className="h-16">
-                    <FormSelection
-                      label="Select Map API Provider"
+                    <Field
+                      type="text"
                       name="mapApiProvider"
-                      value={values.mapApiProvider}
-                      onChange={(val) => setFieldValue("mapApiProvider", val)}
-                      options={mapApiOptions}
-                      placeholder="Select Map API Provider"
+                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      placeholder="Enter Map API Provider"
                     />
                   </div>
                   <ErrorMessage
@@ -156,13 +113,11 @@ const CompanySetting = ({ companyId }) => {
                     Call API Provider
                   </FormLabel>
                   <div className="h-16">
-                    <FormSelection
-                      label="Select Call API Provider"
+                    <Field
+                      type="text"
                       name="callApiProvider"
-                      value={values.callApiProvider}
-                      onChange={(val) => setFieldValue("callApiProvider", val)}
-                      options={callApiOptionsSafe}
-                      placeholder="Select Call API Provider"
+                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      placeholder="Enter Call API Provider"
                     />
                   </div>
                   <ErrorMessage
@@ -172,17 +127,13 @@ const CompanySetting = ({ companyId }) => {
                   />
                 </div>
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <FormLabel htmlFor="paymentMethod">
-                    Payment Method
-                  </FormLabel>
+                  <FormLabel htmlFor="paymentMethod">Payment Method</FormLabel>
                   <div className="h-16">
-                    <FormSelection
-                      label="Select Payment Method"
+                    <Field
+                      type="text"
                       name="paymentMethod"
-                      value={values.paymentMethod}
-                      onChange={(val) => setFieldValue("paymentMethod", val)}
-                      options={paymentMethodOptions}
-                      placeholder="Select Payment Method"
+                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      placeholder="Enter Payment Method"
                     />
                   </div>
                   <ErrorMessage
@@ -192,17 +143,13 @@ const CompanySetting = ({ companyId }) => {
                   />
                 </div>
                 <div className="w-full sm:w-[calc((100%-20px)/2)]">
-                  <FormLabel htmlFor="planType">
-                    Plan Type
-                  </FormLabel>
+                  <FormLabel htmlFor="planType">Plan Type</FormLabel>
                   <div className="h-16">
-                    <FormSelection
-                      label="Select Plan Type"
+                    <Field
+                      type="text"
                       name="planType"
-                      value={values.planType}
-                      onChange={(val) => setFieldValue("planType", val)}
-                      options={planTypeOptions}
-                      placeholder="Select Plan Type"
+                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      placeholder="Enter Plan Type"
                     />
                   </div>
                   <ErrorMessage
@@ -216,16 +163,11 @@ const CompanySetting = ({ companyId }) => {
                     Map Search API Provider
                   </FormLabel>
                   <div className="h-16">
-                    <FormSelection
-                      label="Select Map Search API Provider"
+                    <Field
+                      type="text"
                       name="mapSearchApiProvider"
-                      value={values.mapSearchApiProvider}
-                      onChange={(val) =>
-                        setFieldValue("mapSearchApiProvider", val)
-                      }
-                      options={mapSearchApiOptions}
-                      placeholder="Select Map Search API Provider"
-                      menuPlacement="top"
+                      className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
+                      placeholder="Enter Map Search API Provider"
                     />
                   </div>
                   <ErrorMessage

@@ -30,6 +30,7 @@ import Base from "../../../../components/animations/Base";
 import ApiService from "../../../../services/ApiService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import Modal from "../../../../components/shared/Modal";
+import Loading from "../../../../components/shared/Loading/Loading";
 import { useAppSelector } from "../../../../store";
 
 const Companies = () => {
@@ -253,7 +254,7 @@ const Companies = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
-  if (cardsLoading || tableLoading) {
+  if (cardsLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full">
         <AppLogoLoader />
@@ -314,79 +315,80 @@ const Companies = () => {
           </div>
           <div>
             <CardContainer className="p-3 sm:p-4 lg:p-5 bg-[#F5F5F5]">
-              {Array.isArray(companyListRaw) && companyListRaw.length > 0 ? (
-                <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
-                  <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
-                    <SearchBar
-                      onSearchChange={handleSearchChange}
-                      className="w-full md:max-w-[400px] max-w-full"
-                    />
-                  </div>
-                  {/* Mobile filter trigger */}
-                  <div className="flex justify-end md:hidden">
-                    <button
-                      type="button"
-                      className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
-                      onClick={openFilter}
-                    >
-                      {/* simple filter funnel icon */}
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M3 5H21L14 13V20L10 18V13L3 5Z"
-                          stroke="#333333"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
-                    <CustomSelect
-                      variant={2}
-                      options={STATUS_OPTIONS}
-                      value={_selectedStatus}
-                      onChange={handleStatusChange}
-                      placeholder="All Status"
-                    />
-                    <CustomSelect
-                      variant={2}
-                      options={PLAN_OPTIONS}
-                      value={_selectedPlan}
-                      onChange={handlePlanChange}
-                      placeholder="All Plans"
-                    />
-                  </div>
+              <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+                <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
+                  <SearchBar
+                    value={_searchQuery}
+                    onSearchChange={handleSearchChange}
+                    className="w-full md:max-w-[400px] max-w-full"
+                  />
                 </div>
-              ) : null}
-              <DataDetailsTable
-                rowType="company"
-                companies={companyListDisplay}
-                actionOptions={[
-                  {
-                    label: "View",
-                    onClick: (item) => {
-                      setSelectedCompanyId(item.id);
-                      setIsCompanyInformationModalOpen(true);
+                {/* Mobile filter trigger */}
+                <div className="flex justify-end md:hidden">
+                  <button
+                    type="button"
+                    className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
+                    onClick={openFilter}
+                  >
+                    {/* simple filter funnel icon */}
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 5H21L14 13V20L10 18V13L3 5Z"
+                        stroke="#333333"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
+                  <CustomSelect
+                    variant={2}
+                    options={STATUS_OPTIONS}
+                    value={_selectedStatus}
+                    onChange={handleStatusChange}
+                    placeholder="All Status"
+                  />
+                  <CustomSelect
+                    variant={2}
+                    options={PLAN_OPTIONS}
+                    value={_selectedPlan}
+                    onChange={handlePlanChange}
+                    placeholder="All Plans"
+                  />
+                </div>
+              </div>
+              <Loading loading={tableLoading} type="cover">
+                <DataDetailsTable
+                  rowType="company"
+                  companies={companyListDisplay}
+                  actionOptions={[
+                    {
+                      label: "View",
+                      onClick: (item) => {
+                        setSelectedCompanyId(item.id);
+                        setIsCompanyInformationModalOpen(true);
+                      },
                     },
-                  },
-                  {
-                    label: "Edit",
-                    onClick: (item) => {
-                      if (item) {
-                        setSelectedCompanyId(item?.id);
-                        setIsCompanyModalOpen({ type: "edit", isOpen: true });
-                      }
+                    {
+                      label: "Edit",
+                      onClick: (item) => {
+                        if (item) {
+                          setSelectedCompanyId(item?.id);
+                          setIsCompanyModalOpen({ type: "edit", isOpen: true });
+                        }
+                      },
                     },
-                  },
-                ]}
-              />
+                  ]}
+                />
+              </Loading>
               {Array.isArray(companyListDisplay) &&
               companyListDisplay.length > 0 ? (
                 <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
@@ -494,17 +496,20 @@ const Companies = () => {
             </AnimatePresence>
             <Modal
               isOpen={isCompanyInformationModalOpen}
-              size="2xl"
-              className="p-10"
+              size="xl"
+              className="max-h-[90vh] sm:max-h-[85vh] flex flex-col overflow-hidden"
             >
-              <CompanyInformationModal
-                setIsOpen={setIsCompanyInformationModalOpen}
-                companyId={selectedCompanyId}
-                onEdit={() => {
-                  lockBodyScroll();
-                  setIsCompanyModalOpen({ type: "edit", isOpen: true });
-                }}
-              />
+              <div className="overflow-y-auto flex-1">
+                <CompanyInformationModal
+                  setIsOpen={setIsCompanyInformationModalOpen}
+                  companyId={selectedCompanyId}
+                  onEdit={() => {
+                    lockBodyScroll();
+                    setIsCompanyModalOpen({ type: "edit", isOpen: true });
+                  }}
+                  onRefresh={handleRefresh}
+                />
+              </div>
             </Modal>
           </div>
         </div>

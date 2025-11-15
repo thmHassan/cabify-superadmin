@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { debounce } from "lodash";
 import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
 import PlusIcon from "../../../../components/svg/PlusIcon";
@@ -16,6 +17,7 @@ import {
 import AddSubAdminModal from "./components/AddSubAdminModal/AddSubAdminModal";
 import { apiGetSubAdmins } from "../../../../services/SubAdminService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
+import Loading from "../../../../components/shared/Loading/Loading";
 import ViewPermissions from "./components/ViewPermissions";
 import { Form, Formik } from "formik";
 import _ from "lodash";
@@ -55,6 +57,7 @@ const SubAdminManagement = () => {
   const [subAdminListDisplay, setSubAdminListDisplay] = useState([]);
   const [isSubAdminsLoading, setIsSubAdminsLoading] = useState([]);
   const [_searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [selectedViewData, setSelectedViewData] = useState(null);
   const [isViewPermissionModal, setIsViewPermissionModal] = useState(false);
@@ -70,9 +73,23 @@ const SubAdminManagement = () => {
     Number(savedPagination?.itemsPerPage) || 10
   );
 
-  const handleSearchChange = (value) => {
+  const debouncedSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedSearchQuery(searchValue);
+    }, 500)
+  );
+
+  const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
-  };
+    debouncedSearchRef.current(value);
+  }, []);
+
+  useEffect(() => {
+    const debouncedFn = debouncedSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -85,22 +102,28 @@ const SubAdminManagement = () => {
 
   const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
 
-  const getSubAdmins = async () => {
+  const getSubAdmins = useCallback(async () => {
     try {
       setIsSubAdminsLoading(true);
-      const result = await apiGetSubAdmins({
+      const params = {
         page: currentPage,
         perPage: itemsPerPage,
-      });
+      };
+      if (debouncedSearchQuery && debouncedSearchQuery.trim()) {
+        params.search = debouncedSearchQuery.trim();
+      }
+      const result = await apiGetSubAdmins(params);
       if (result?.status === 200) {
         const list = result?.data?.list;
         const rows = Array.isArray(list?.data) ? list?.data : [];
         setAllSubAdmins(list);
         setSubAdminListRaw(rows);
+        setSubAdminListDisplay(rows);
       }
     } catch (errors) {
       console.log(errors, "err---");
       setSubAdminListRaw([]);
+      setSubAdminListDisplay([]);
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -108,43 +131,68 @@ const SubAdminManagement = () => {
     } finally {
       setIsSubAdminsLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage, debouncedSearchQuery]);
 
+  const prevSearchRef = useRef(debouncedSearchQuery);
+  const prevItemsPerPageRef = useRef(itemsPerPage);
+  const prevCurrentPageRef = useRef(currentPage);
+  const isInitialMount = useRef(true);
+  const hasCalledInitial = useRef(false);
+
+  // Initial mount - call API once
   useEffect(() => {
+    if (!hasCalledInitial.current) {
+      hasCalledInitial.current = true;
+      isInitialMount.current = false;
+      getSubAdmins();
+      prevSearchRef.current = debouncedSearchQuery;
+      prevItemsPerPageRef.current = itemsPerPage;
+      prevCurrentPageRef.current = currentPage;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Manual refresh
+  useEffect(() => {
+    if (!hasCalledInitial.current) {
+      return;
+    }
     getSubAdmins();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, itemsPerPage, refreshTrigger]);
+  }, [refreshTrigger]);
 
-  // Reset to page 1 only when search query changes
+  // Reset page when search or itemsPerPage changes
   useEffect(() => {
-    if (_searchQuery) {
+    if (!hasCalledInitial.current) {
+      return;
+    }
+
+    const searchChanged = prevSearchRef.current !== debouncedSearchQuery;
+    const itemsPerPageChanged = prevItemsPerPageRef.current !== itemsPerPage;
+
+    if (searchChanged || itemsPerPageChanged) {
       setCurrentPage(1);
     }
-  }, [_searchQuery]);
+  }, [debouncedSearchQuery, itemsPerPage]);
 
-  // Filter the data based on search query
+  // Call API when page, search, or itemsPerPage changes (after initial mount)
   useEffect(() => {
-    const query = _searchQuery?.toLowerCase?.() ?? "";
-
-    let filtered = [...subAdminListRaw];
-
-    if (query) {
-      filtered = filtered.filter((s) => {
-        const hay = `${s.name ?? ""} ${s.email ?? ""}`.toLowerCase();
-        return hay.includes(query);
-      });
+    if (!hasCalledInitial.current) {
+      return;
     }
 
-    setSubAdminListDisplay(filtered);
-  }, [subAdminListRaw, _searchQuery]);
+    const pageChanged = prevCurrentPageRef.current !== currentPage;
+    const searchChanged = prevSearchRef.current !== debouncedSearchQuery;
+    const itemsPerPageChanged = prevItemsPerPageRef.current !== itemsPerPage;
 
-  if (isSubAdminsLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen w-full">
-        <AppLogoLoader />
-      </div>
-    );
-  }
+    if (pageChanged || searchChanged || itemsPerPageChanged) {
+      getSubAdmins();
+      prevCurrentPageRef.current = currentPage;
+      prevSearchRef.current = debouncedSearchQuery;
+      prevItemsPerPageRef.current = itemsPerPage;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, itemsPerPage, debouncedSearchQuery]);
 
   console.log(isDocumentModalOpen, "isDocumentModalOpen====");
   console.log(
@@ -185,50 +233,51 @@ const SubAdminManagement = () => {
         </div>
       </div>
       <CardContainer className="p-3 sm:p-4 lg:p-5">
-        {Array.isArray(subAdminListRaw) && subAdminListRaw.length > 0 ? (
-          <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
-            <div className="w-full sm:flex-1">
-              <SearchBar
-                onSearchChange={handleSearchChange}
-                className="w-full md:max-w-[400px] max-w-full"
-              />
-            </div>
+        <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+          <div className="w-full sm:flex-1">
+            <SearchBar
+              value={_searchQuery}
+              onSearchChange={handleSearchChange}
+              className="w-full md:max-w-[400px] max-w-full"
+            />
           </div>
-        ) : null}
-        <div>
-          <DataDetailsTable
-            rowType="subAdminManagement"
-            companies={subAdminListDisplay}
-            onViewClick={(data) => {
-              setSelectedViewData(data);
-              setIsViewPermissionModal(true);
-            }}
-            actionOptions={[
-              {
-                label: "View",
-                onClick: (data) => {
-                  setSelectedViewData(data);
-                  setIsViewPermissionModal(true);
-                },
-              },
-              {
-                label: "Edit",
-                onClick: (item) => {
-                  if (item) {
-                    setSelectedId(item?.id);
-                    setIsDocumentModalOpen({ type: "edit", isOpen: true });
-                  }
-                },
-              },
-              // {
-              //   label: "Delete",
-              //   onClick: () => {
-              //     console.log("Delete clicked");
-              //   },
-              // },
-            ]}
-          />
         </div>
+        <Loading loading={isSubAdminsLoading} type="cover">
+          <div>
+            <DataDetailsTable
+              rowType="subAdminManagement"
+              companies={subAdminListDisplay}
+              onViewClick={(data) => {
+                setSelectedViewData(data);
+                setIsViewPermissionModal(true);
+              }}
+              actionOptions={[
+                {
+                  label: "View",
+                  onClick: (data) => {
+                    setSelectedViewData(data);
+                    setIsViewPermissionModal(true);
+                  },
+                },
+                {
+                  label: "Edit",
+                  onClick: (item) => {
+                    if (item) {
+                      setSelectedId(item?.id);
+                      setIsDocumentModalOpen({ type: "edit", isOpen: true });
+                    }
+                  },
+                },
+                // {
+                //   label: "Delete",
+                //   onClick: () => {
+                //     console.log("Delete clicked");
+                //   },
+                // },
+              ]}
+            />
+          </div>
+        </Loading>
         {Array.isArray(subAdminListDisplay) &&
         subAdminListDisplay.length > 0 ? (
           <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">

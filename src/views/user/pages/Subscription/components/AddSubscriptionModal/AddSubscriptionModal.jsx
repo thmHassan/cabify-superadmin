@@ -11,13 +11,20 @@ const AddSubscriptionModal = ({ setIsOpen, onRefresh }) => {
       console.log("in");
       setSubmitting(true);
       setSubmitError(null);
-      const { plan_name, billing_cycle, amount, features } = values;
+      const {
+        plan_name,
+        billing_cycle,
+        amount,
+        deduct_type,
+        billing_cycle_deduct_option,
+      } = values;
 
       const result = await apiCreateSubscription({
         plan_name,
         billing_cycle,
         amount,
-        features,
+        deduct_type,
+        billing_cycle_deduct_option,
       });
       if (result?.status === 200) {
         console.log("innnnnnnnn");
@@ -47,8 +54,9 @@ const AddSubscriptionModal = ({ setIsOpen, onRefresh }) => {
       initialValues={{
         plan_name: "",
         billing_cycle: "",
-        amount: 0,
-        features: [],
+        amount: "",
+        deduct_type: "",
+        billing_cycle_deduct_option: "",
       }}
     />
   );

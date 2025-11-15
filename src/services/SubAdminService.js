@@ -9,7 +9,7 @@ import { replaceSlash } from "../utils/functions/common.function";
 import ApiService from "./ApiService";
 
 export async function apiGetSubAdmins(params) {
-  const url = params ? replaceSlash(params, GET_SUB_ADMINS) : GET_SUB_ADMINS;
+  const url = typeof params === 'string' ? replaceSlash(params, GET_SUB_ADMINS) : GET_SUB_ADMINS;
   return ApiService.fetchData({
     url,
     method: METHOD_GET,

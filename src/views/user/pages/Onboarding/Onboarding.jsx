@@ -229,7 +229,10 @@ const Onboarding = () => {
           onEdit={onEdit}
         />
       </div>
-      <Modal isOpen={isManualRequestModal.isOpen} className="p-4 sm:p-6 lg:p-10">
+      <Modal
+        isOpen={isManualRequestModal.isOpen}
+        className="p-4 sm:p-6 lg:p-10"
+      >
         <AddCompanyModal
           modalType="onboarding"
           isCompanyModalOpen={isManualRequestModal}

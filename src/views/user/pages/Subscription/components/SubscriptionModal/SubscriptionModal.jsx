@@ -39,9 +39,16 @@ const SubscriptionModal = ({
                   plan_name: "Premuim",
                   billing_cycle: "monthly",
                   amount: 700,
-                  features: ["API Access", "Real Time Tracking"],
+                  deduct_type: "cash",
+                  billing_cycle_deduct_option: "at_start",
                 }
-              : initialValues
+              : initialValues || {
+                  plan_name: "",
+                  billing_cycle: "",
+                  amount: "",
+                  deduct_type: "",
+                  billing_cycle_deduct_option: "",
+                }
           }
           validationSchema={SUBSCRIPTION_VALIDATION_SCHEMA}
           onSubmit={onSubmit}
@@ -49,92 +56,106 @@ const SubscriptionModal = ({
         >
           {({ values, setFieldValue }) => (
             <Form>
-              <div className="flex flex-wrap gap-3 sm:gap-5 mb-6">
-                <div className="w-full md:w-[calc((100%-20px)/2)]">
-                  <FormLabel htmlFor="plan_name">
-                    Plan
-                  </FormLabel>
-                  <div className="sm:h-16 h-14">
-                    <Field
-                      type="text"
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 mb-6">
+                {/* Left Column */}
+                <div className="flex flex-col gap-3 sm:gap-5">
+                  <div>
+                    <FormLabel htmlFor="plan_name">Plan</FormLabel>
+                    <div className="sm:h-16 h-14">
+                      <Field
+                        type="text"
+                        name="plan_name"
+                        className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
+                        placeholder="Name of New Subscription Plan"
+                      />
+                    </div>
+                    <ErrorMessage
                       name="plan_name"
-                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
-                      placeholder="Enable / Disable"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
                     />
                   </div>
-                  <ErrorMessage
-                    name="plan_name"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <div className="w-full md:w-[calc((100%-20px)/2)]">
-                  <FormLabel htmlFor="billing_cycle">
-                    Billing Cycle
-                  </FormLabel>
-                  <div className="sm:h-16 h-14">
-                    <FormSelection
-                      label="Select Bid Backup Vehicle type"
-                      name="billing_cycle"
-                      value={values?.billing_cycle}
-                      onChange={(val) => setFieldValue("billing_cycle", val)}
-                      placeholder="Billing Cycle"
-                      options={[{ label: "monthly", value: "monthly" }]}
-                    />
-                  </div>
-                  <ErrorMessage
-                    name="billing_cycle"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <div className="w-full md:w-[calc((100%-20px)/2)]">
-                  <FormLabel htmlFor="amount">
-                    Amount
-                  </FormLabel>
-                  <div className="sm:h-16 h-14">
-                    <Field
-                      type="text"
+                  <div>
+                    <FormLabel htmlFor="amount">Amount</FormLabel>
+                    <div className="sm:h-16 h-14">
+                      <Field
+                        type="text"
+                        name="amount"
+                        className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
+                        placeholder="Subscription Cost for Client"
+                      />
+                    </div>
+                    <ErrorMessage
                       name="amount"
-                      className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
-                      placeholder="Subscription Cost for Client"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
                     />
                   </div>
-                  <ErrorMessage
-                    name="amount"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <div className="w-full">
-                  <div className="w-full md:w-[calc((100%-20px)/2)]">
-                    <FormLabel htmlFor="features">
-                      Features
-                    </FormLabel>
-                    <div>
+                  <div>
+                    <FormLabel htmlFor="deduct_type">Deduct type</FormLabel>
+                    <div className="sm:h-16 h-14">
                       <FormSelection
-                        isMulti={true}
-                        label="Select Bid Backup Vehicle type"
-                        name="features"
-                        value={values?.features}
-                        onChange={(val) => setFieldValue("features", val)}
-                        placeholder="Select Features"
-                        menuPlacement="top"
+                        name="deduct_type"
+                        value={values?.deduct_type}
+                        onChange={(val) => setFieldValue("deduct_type", val)}
+                        placeholder="Deduct Type"
                         options={[
-                          { label: "API Access", value: "API Access" },
-                          {
-                            label: "Real Time Tracking",
-                            value: "Real Time Tracking",
-                          },
-                          {
-                            label: "text",
-                            value: "text",
-                          },
+                          { label: "Card", value: "card" },
+                          { label: "Cash", value: "cash" },
                         ]}
                       />
                     </div>
                     <ErrorMessage
-                      name="features"
+                      name="deduct_type"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="flex flex-col gap-3 sm:gap-5">
+                  <div>
+                    <FormLabel htmlFor="billing_cycle">Billing Cycle</FormLabel>
+                    <div className="sm:h-16 h-14">
+                      <FormSelection
+                        name="billing_cycle"
+                        value={values?.billing_cycle}
+                        onChange={(val) => setFieldValue("billing_cycle", val)}
+                        placeholder="Billing Cycle"
+                        options={[
+                          { label: "monthly", value: "monthly" },
+                          { label: "yearly", value: "yearly" },
+                          { label: "weekly", value: "weekly" },
+                        ]}
+                      />
+                    </div>
+                    <ErrorMessage
+                      name="billing_cycle"
+                      component="div"
+                      className="text-red-500 text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <FormLabel htmlFor="billing_cycle_deduct_option">
+                      Billing Cycle Deduct Option
+                    </FormLabel>
+                    <div className="sm:h-16 h-14">
+                      <FormSelection
+                        name="billing_cycle_deduct_option"
+                        value={values?.billing_cycle_deduct_option}
+                        onChange={(val) =>
+                          setFieldValue("billing_cycle_deduct_option", val)
+                        }
+                        placeholder="Billing Cycle Deduct Option"
+                        options={[
+                          { label: "At Start", value: "at_start" },
+                          { label: "At End", value: "at_end" },
+                        ]}
+                      />
+                    </div>
+                    <ErrorMessage
+                      name="billing_cycle_deduct_option"
                       component="div"
                       className="text-red-500 text-sm mt-1"
                     />
@@ -159,7 +180,7 @@ const SubscriptionModal = ({
                   type="filled"
                   className="w-full sm:w-auto !px-10 !pt-4 pb-[15px] leading-[25px]"
                 >
-                  <span>Submit</span>
+                  <span>Create</span>
                 </Button>
               </div>
             </Form>

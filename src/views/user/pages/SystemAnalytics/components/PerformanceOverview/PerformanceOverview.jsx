@@ -128,6 +128,7 @@ const PerformanceOverview = () => {
         <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
           <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
             <SearchBar
+              value={_searchQuery}
               onSearchChange={handleSearchChange}
               className="w-full md:max-w-[400px] max-w-full"
             />

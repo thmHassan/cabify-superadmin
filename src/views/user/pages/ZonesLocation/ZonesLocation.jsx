@@ -1,4 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
+import { debounce } from "lodash";
 import * as Yup from "yup";
 import PageTitle from "../../../../components/ui/PageTitle/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
@@ -12,6 +19,7 @@ import Pagination from "../../../../components/ui/Pagination";
 import { PAGE_SIZE_OPTIONS } from "../../../../constants/selectOptions";
 import { lockBodyScroll } from "../../../../utils/functions/common.function";
 import ConfirmDialog from "../../../../components/shared/ConfirmDialog";
+import Loading from "../../../../components/shared/Loading/Loading";
 
 import { MapContainer, TileLayer, FeatureGroup } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
@@ -32,6 +40,7 @@ const ZonesLocation = () => {
   const [totalItems, setTotalItems] = useState(25);
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [records, setRecords] = useState([]);
   const [editingRecord, setEditingRecord] = useState(null);
@@ -40,23 +49,33 @@ const ZonesLocation = () => {
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const formikRef = useRef(null);
 
+  const debouncedSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedSearchQuery(searchValue);
+    }, 500)
+  );
+
+  const handleSearchChange = useCallback((value) => {
+    setSearchQuery(value);
+    debouncedSearchRef.current(value);
+  }, []);
+
+  useEffect(() => {
+    const debouncedFn = debouncedSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
+
   const computedTotalPages = useMemo(
     () => Math.ceil(totalItems / itemsPerPage),
     [totalItems, itemsPerPage]
   );
 
-  const filteredRecords = useMemo(() => {
-    const q = (searchQuery || "").trim().toLowerCase();
-    if (!q) return records;
-    return records.filter((r) => (r?.name || "").toLowerCase().includes(q));
-  }, [records, searchQuery]);
-  const filteredPlots = useMemo(
-    () => filteredRecords.map((r) => r.name),
-    [filteredRecords]
-  );
+  const filteredPlots = useMemo(() => records.map((r) => r.name), [records]);
   const filteredPolygons = useMemo(
-    () => filteredRecords.map((r) => r.feature),
-    [filteredRecords]
+    () => records.map((r) => r.feature),
+    [records]
   );
 
   const handlePageChange = (pageNumber) => {
@@ -67,6 +86,10 @@ const ZonesLocation = () => {
     setItemsPerPage(newItemsPerPage);
     setCurrentPage(1);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery]);
 
   const normalizeFeatureToSingleArray = (feature) => {
     const coords = feature?.geometry?.coordinates;
@@ -197,10 +220,13 @@ const ZonesLocation = () => {
     }
   };
 
-  const fetchPlots = async (page) => {
+  const fetchPlots = async (page, search = "") => {
     try {
       setIsLoading(true);
-      const resp = await ApiService.getPlotList({ page });
+      const resp = await ApiService.getPlotList({
+        page,
+        search: search || undefined,
+      });
       const payload = resp?.data?.list || {};
       const data = Array.isArray(payload?.data) ? payload.data : [];
       const recs = [];
@@ -220,7 +246,12 @@ const ZonesLocation = () => {
   };
 
   useEffect(() => {
-    fetchPlots(currentPage);
+    fetchPlots(1, debouncedSearchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchQuery, itemsPerPage]);
+
+  useEffect(() => {
+    fetchPlots(currentPage, debouncedSearchQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
@@ -236,14 +267,6 @@ const ZonesLocation = () => {
       formikRef.current.setFieldValue("featureSelected", !!newFeature);
     }
   }, [newFeature]);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen w-full">
-        <AppLogoLoader />
-      </div>
-    );
-  }
 
   return (
     <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
@@ -327,91 +350,94 @@ const ZonesLocation = () => {
         {/* Search bar - appears second on mobile, first on desktop */}
         <div className="order-2 lg:order-1">
           <SearchBar
-            onSearchChange={setSearchQuery}
+            value={searchQuery}
+            onSearchChange={handleSearchChange}
             className="w-full md:max-w-[400px] max-w-full"
           />
         </div>
         {/* Plots list and Map - appears third on mobile, second on desktop */}
         <div className="order-3 lg:order-2 flex flex-col lg:flex-row gap-4 sm:gap-5">
           <div className="w-full lg:w-[calc((100%-20px)/2)]">
-            <div className="flex flex-col gap-4 sm:gap-5">
-              {filteredPlots.length === 0 ? (
-                <CardContainer
-                  type={1}
-                  className="!rounded-[15px] px-4 sm:px-6 lg:px-[30px] py-6 sm:py-8 flex justify-between items-center"
-                >
-                  <div className="w-full text-center text-sm sm:text-base text-[#6C6C6C] font-semibold">
-                    No Plots Added
-                  </div>
-                </CardContainer>
-              ) : (
-                filteredPlots.map((plot, index) => (
+            <Loading loading={isLoading} type="cover">
+              <div className="flex flex-col gap-4 sm:gap-5">
+                {filteredPlots.length === 0 ? (
                   <CardContainer
                     type={1}
-                    key={index}
-                    className="!rounded-[15px] px-4 sm:px-6 lg:px-[30px] py-6 sm:py-8 flex justify-between items-center relative"
+                    className="!rounded-[15px] px-4 sm:px-6 lg:px-[30px] py-6 sm:py-8 flex justify-between items-center"
                   >
-                    <div>
-                      <CardSubtitle type={1} subtitle={plot} />
+                    <div className="w-full text-center text-sm sm:text-base text-[#6C6C6C] font-semibold">
+                      No Plots Added
                     </div>
-                    <Button
-                      className="w-10 h-10 bg-[#EFEFEF] rounded-full flex justify-center items-center"
-                      onClick={() =>
-                        setOpenMenuIndex((prev) =>
-                          prev === index ? null : index
-                        )
-                      }
-                    >
-                      <ThreeDotsIcon />
-                    </Button>
-                    {openMenuIndex === index && (
-                      <div className="absolute top-[60px] right-2 sm:right-[20px] bg-white border border-[#E9E9E9] rounded-[10px] shadow-md z-10 w-[140px] overflow-hidden">
-                        <button
-                          className="w-full text-left px-4 py-2 hover:bg-[#F5F5F5] text-sm"
-                          onClick={() => {
-                            setOpenMenuIndex(null);
-                            const rec = filteredRecords[index];
-                            if (rec) {
-                              setEditingRecord(rec);
-                              setNewFeature(rec.feature);
-                              lockBodyScroll();
-                              setIsOpenLocationModal(true);
-                            }
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="w-full text-left px-4 py-2 hover:bg-[#F5F5F5] text-sm text-red-600"
-                          onClick={() => {
-                            setOpenMenuIndex(null);
-                            const rec = filteredRecords[index];
-                            if (!rec) return;
-                            setDeleteTarget(rec);
-                            setIsDeleteOpen(true);
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
                   </CardContainer>
-                ))
-              )}
-              {/* Pagination - appears after listing */}
-              {filteredPlots.length > 0 && (
-                <div className="border-t border-[#E9E9E9] pt-3 sm:pt-4 mt-4">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages || computedTotalPages}
-                    itemsPerPage={itemsPerPage}
-                    onPageChange={handlePageChange}
-                    onItemsPerPageChange={handleItemsPerPageChange}
-                    itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                  />
-                </div>
-              )}
-            </div>
+                ) : (
+                  filteredPlots.map((plot, index) => (
+                    <CardContainer
+                      type={1}
+                      key={index}
+                      className="!rounded-[15px] px-4 sm:px-6 lg:px-[30px] py-6 sm:py-8 flex justify-between items-center relative"
+                    >
+                      <div>
+                        <CardSubtitle type={1} subtitle={plot} />
+                      </div>
+                      <Button
+                        className="w-10 h-10 bg-[#EFEFEF] rounded-full flex justify-center items-center"
+                        onClick={() =>
+                          setOpenMenuIndex((prev) =>
+                            prev === index ? null : index
+                          )
+                        }
+                      >
+                        <ThreeDotsIcon />
+                      </Button>
+                      {openMenuIndex === index && (
+                        <div className="absolute top-[60px] right-2 sm:right-[20px] bg-white border border-[#E9E9E9] rounded-[10px] shadow-md z-10 w-[140px] overflow-hidden">
+                          <button
+                            className="w-full text-left px-4 py-2 hover:bg-[#F5F5F5] text-sm"
+                            onClick={() => {
+                              setOpenMenuIndex(null);
+                              const rec = records[index];
+                              if (rec) {
+                                setEditingRecord(rec);
+                                setNewFeature(rec.feature);
+                                lockBodyScroll();
+                                setIsOpenLocationModal(true);
+                              }
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="w-full text-left px-4 py-2 hover:bg-[#F5F5F5] text-sm text-red-600"
+                            onClick={() => {
+                              setOpenMenuIndex(null);
+                              const rec = records[index];
+                              if (!rec) return;
+                              setDeleteTarget(rec);
+                              setIsDeleteOpen(true);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </CardContainer>
+                  ))
+                )}
+                {/* Pagination - appears after listing */}
+                {filteredPlots.length > 0 && (
+                  <div className="border-t border-[#E9E9E9] pt-3 sm:pt-4 mt-4">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages || computedTotalPages}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={handlePageChange}
+                      onItemsPerPageChange={handleItemsPerPageChange}
+                      itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                    />
+                  </div>
+                )}
+              </div>
+            </Loading>
           </div>
           {/* Map container for desktop - appears on the right side */}
           <div className="hidden lg:block w-[calc((100%-20px)/2)] relative z-0">

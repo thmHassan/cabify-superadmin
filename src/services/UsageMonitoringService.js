@@ -4,10 +4,12 @@ import { replaceSlash } from "../utils/functions/common.function";
 import ApiService from "./ApiService";
 
 export async function apiGetUsageMonitoringDetails(params) {
+  const url = typeof params === 'string' 
+    ? replaceSlash(params, GET_USAGE_MONITORING)
+    : GET_USAGE_MONITORING;
   return ApiService.fetchData({
-    url: params
-      ? replaceSlash(params, GET_USAGE_MONITORING)
-      : GET_USAGE_MONITORING,
+    url,
     method: METHOD_GET,
+    params: typeof params === 'object' ? params : undefined,
   });
 }

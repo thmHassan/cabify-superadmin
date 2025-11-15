@@ -7,9 +7,9 @@ import classNames from "classnames";
 import { setTabViewScreen } from "../../../store";
 
 const ALIGN_CONFIG = {
-  left: "flex-start",
-  right: "flex-end",
-  center: "justify-start",
+  left: "justify-start",
+  right: "justify-end",
+  center: "justify-center",
 };
 
 const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {

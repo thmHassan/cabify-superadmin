@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { debounce } from "lodash";
 import CardContainer from "../../../../components/shared/CardContainer";
 import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
@@ -20,12 +21,14 @@ import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import { apiGetApiKeys } from "../../../../services/ApiKeySerevice";
 import _ from "lodash";
 import FormLabel from "../../../../components/ui/FormLabel";
+import Loading from "../../../../components/shared/Loading/Loading";
 
 const ApiKeys = () => {
   const [isAddDocumentModalOpen, setIsAddDocumentModalOpen] = useState(false);
   const [isApiKeysLoading, setIsApiKeysLoading] = useState(false);
   const [allApiKeys, setAllApiKeys] = useState([]);
   const [_searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -33,9 +36,23 @@ const ApiKeys = () => {
   const totalItems = 25;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  const handleSearchChange = (value) => {
+  const debouncedSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedSearchQuery(searchValue);
+    }, 500)
+  );
+
+  const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
-  };
+    debouncedSearchRef.current(value);
+  }, []);
+
+  useEffect(() => {
+    const debouncedFn = debouncedSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -46,10 +63,12 @@ const ApiKeys = () => {
     setCurrentPage(1);
   };
 
-  const getAPIkeys = async () => {
+  const getAPIkeys = async (search = "") => {
     try {
       setIsApiKeysLoading(true);
-      const result = await apiGetApiKeys();
+      const result = await apiGetApiKeys({
+        search: search || undefined,
+      });
       if (result?.status === 200 && result?.data?.settingKeys) {
         let allKeys = [];
         const filteredKeys = _.omit(result?.data?.settingKeys, [
@@ -85,16 +104,13 @@ const ApiKeys = () => {
   console.log(allApiKeys, "allApiKeys======");
 
   useEffect(() => {
-    getAPIkeys();
-  }, []);
+    getAPIkeys(debouncedSearchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchQuery]);
 
-  if (isApiKeysLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen w-full">
-        <AppLogoLoader />
-      </div>
-    );
-  }
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearchQuery]);
 
   return (
     <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
@@ -129,18 +145,19 @@ const ApiKeys = () => {
         <div className="flex items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
           <div className="w-full sm:flex-1">
             <SearchBar
+              value={_searchQuery}
               onSearchChange={handleSearchChange}
               className="w-full md:max-w-[400px] max-w-full"
             />
           </div>
         </div>
-        <div>
+        <Loading loading={isApiKeysLoading} type="cover">
           <DataDetailsTable
             rowType="ApiKeys"
             companies={allApiKeys}
             isOnActionClick={false}
           />
-        </div>
+        </Loading>
         <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
           <Pagination
             currentPage={currentPage}

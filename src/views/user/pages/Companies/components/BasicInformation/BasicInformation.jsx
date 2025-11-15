@@ -33,9 +33,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
     <>
       <div className="flex flex-wrap gap-3 sm:gap-5 mb-6 sm:mb-[60px]">
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="company name">
-            Company Name
-          </FormLabel>
+          <FormLabel htmlFor="company name">Company Name</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="text"
@@ -51,9 +49,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="company admin">
-            Company Admin
-          </FormLabel>
+          <FormLabel htmlFor="company admin">Company Admin</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="text"
@@ -69,9 +65,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="username">
-            Username
-          </FormLabel>
+          <FormLabel htmlFor="username">Username</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="text"
@@ -87,16 +81,14 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="password">
-            Password
-          </FormLabel>
+          <FormLabel htmlFor="password">Password</FormLabel>
           <div className="sm:h-16 h-14">
             <Password
               name="password"
-              className="sm:px-5 px-4 sm:py-[21px] py-4 !select-none border border-[#8D8D8D] rounded-lg w-full h-14 sm:h-16 shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
-              placeholder="Enter password"
-              autoComplete="off"
               disabled={type === "edit"}
+              className="sm:px-5 px-4 sm:py-[21px] py-4 !select-none border border-[#8D8D8D] rounded-lg w-full h-14 sm:h-16 shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold disabled:bg-gray-100 disabled:cursor-not-allowed"
+              placeholder={type === "edit" ? "Password cannot be changed" : "Enter password"}
+              autoComplete="off"
             />
           </div>
           <ErrorMessage
@@ -106,9 +98,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="company_id">
-            Company ID
-          </FormLabel>
+          <FormLabel htmlFor="company_id">Company ID</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="text"
@@ -124,9 +114,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="contact_person">
-            Contact Person
-          </FormLabel>
+          <FormLabel htmlFor="contact_person">Contact Person</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="text"
@@ -142,9 +130,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="email">
-            Email
-          </FormLabel>
+          <FormLabel htmlFor="email">Email</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="email"
@@ -160,9 +146,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="phone">
-            Phone
-          </FormLabel>
+          <FormLabel htmlFor="phone">Phone</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="tel"
@@ -178,9 +162,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="address">
-            Address
-          </FormLabel>
+          <FormLabel htmlFor="address">Address</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="text"
@@ -196,9 +178,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="city">
-            City
-          </FormLabel>
+          <FormLabel htmlFor="city">City</FormLabel>
           <div className="sm:h-16 h-14">
             <Field
               type="text"
@@ -214,9 +194,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           />
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
-          <FormLabel htmlFor="currency">
-            Currency
-          </FormLabel>
+          <FormLabel htmlFor="currency">Currency</FormLabel>
           <div className="sm:h-16 h-14">
             <FormSelection
               label="Select Currency"

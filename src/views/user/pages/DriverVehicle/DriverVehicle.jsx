@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import { debounce } from "lodash";
 import CardContainer from "../../../../components/shared/CardContainer";
 import PageTitle from "../../../../components/ui/PageTitle";
 import Button from "../../../../components/ui/Button/Button";
@@ -19,10 +20,12 @@ import {
 } from "../../../../services/VehicleService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import ConfirmDialog from "../../../../components/shared/ConfirmDialog";
+import Loading from "../../../../components/shared/Loading/Loading";
 import { useAppSelector } from "../../../../store";
 
 const DriverVehicle = () => {
   const [_searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const savedPagination = useAppSelector(
     (state) => state?.app?.app?.pagination?.driverVehicle
   );
@@ -44,9 +47,23 @@ const DriverVehicle = () => {
 
   const navigate = useNavigate();
 
-  const handleSearchChange = (value) => {
+  const debouncedSearchRef = useRef(
+    debounce((searchValue) => {
+      setDebouncedSearchQuery(searchValue);
+    }, 500)
+  );
+
+  const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
-  };
+    debouncedSearchRef.current(value);
+  }, []);
+
+  useEffect(() => {
+    const debouncedFn = debouncedSearchRef.current;
+    return () => {
+      debouncedFn.cancel();
+    };
+  }, []);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -58,12 +75,13 @@ const DriverVehicle = () => {
     setCurrentPage(1);
   };
 
-  const getVehicles = async () => {
+  const getVehicles = async (search = "") => {
     try {
       setIsVehiclesLoading(true);
       const result = await apiGetVehicleTypes({
         page: currentPage,
         perPage: itemsPerPage,
+        search: search || undefined,
       });
       if (result?.status === 200) {
         console.log(result, "all-data");
@@ -83,17 +101,19 @@ const DriverVehicle = () => {
   };
 
   useEffect(() => {
-    getVehicles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, refreshTrigger, itemsPerPage]);
+    getVehicles(debouncedSearchQuery);
+  }, [refreshTrigger]);
 
-  if (isVehiclesLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen w-full">
-        <AppLogoLoader />
-      </div>
-    );
-  }
+  useEffect(() => {
+    setCurrentPage(1);
+    getVehicles(debouncedSearchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearchQuery, itemsPerPage]);
+
+  useEffect(() => {
+    getVehicles(debouncedSearchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   return (
     <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
@@ -127,41 +147,44 @@ const DriverVehicle = () => {
           <div className="flex items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
             <div className="w-full sm:flex-1">
               <SearchBar
+                value={_searchQuery}
                 onSearchChange={handleSearchChange}
                 className="w-full md:max-w-[400px] max-w-full"
               />
             </div>
           </div>
         ) : null}
-        <div>
-          <DataDetailsTable
-            rowType="vehicleType"
-            companies={allVehicleTypes.data}
-            actionOptions={[
-              // {
-              //   label: "View",
-              //   onClick: (data) => {},
-              // },
-              {
-                label: "Edit",
-                onClick: (item) => {
-                  console.log(item, "item=====");
-                  if (item) {
-                    navigate(`${DRIVER_VEHICLE_EDIT}/${item?.id}`);
-                  }
+        <Loading loading={isVehiclesLoading} type="cover">
+          <div>
+            <DataDetailsTable
+              rowType="vehicleType"
+              companies={allVehicleTypes.data}
+              actionOptions={[
+                // {
+                //   label: "View",
+                //   onClick: (data) => {},
+                // },
+                {
+                  label: "Edit",
+                  onClick: (item) => {
+                    console.log(item, "item=====");
+                    if (item) {
+                      navigate(`${DRIVER_VEHICLE_EDIT}/${item?.id}`);
+                    }
+                  },
                 },
-              },
-              {
-                label: "Delete",
-                onClick: (item) => {
-                  if (item) {
-                    onDelete(item.id);
-                  }
+                {
+                  label: "Delete",
+                  onClick: (item) => {
+                    if (item) {
+                      onDelete(item.id);
+                    }
+                  },
                 },
-              },
-            ]}
-          />
-        </div>
+              ]}
+            />
+          </div>
+        </Loading>
         {Array.isArray(allVehicleTypes.data) &&
         allVehicleTypes.data.length > 0 ? (
           <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">

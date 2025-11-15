@@ -15,7 +15,14 @@ import { apiGetCompanyDetailsById } from "../../../../../../services/CompanyServ
 import _ from "lodash";
 import { MODAL_CONFIG } from "../../configs/ModalConfigs";
 import { Form, Formik } from "formik";
-import { COMPANY_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
+import {
+  COMPANY_VALIDATION_SCHEMA,
+  BASIC_INFORMATION_VALIDATION_SCHEMA,
+  SERVICE_INFORMATION_VALIDATION_SCHEMA,
+  SYSTEM_INFORMATION_VALIDATION_SCHEMA,
+  ENABLEMENT_INFORMATION_VALIDATION_SCHEMA,
+} from "../../../../validators/pages/companies.validation";
+import * as Yup from "yup";
 
 const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
 
@@ -170,9 +177,7 @@ const AddCompanyModal = ({
       const formValues = { ...formattedValues, ...formData };
       console.log(formValues, "formValues====");
       const latestFormData =
-        type === "edit"
-          ? { id, ..._.omit(formValues, ["password"]) }
-          : formValues;
+        type === "edit" ? { id, ...formValues, password: null } : formValues;
 
       console.log(latestFormData, "latestFormData=======");
 
@@ -326,11 +331,25 @@ const AddCompanyModal = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Create dynamic validation schema - make password nullable for edit mode
+  const getValidationSchema = () => {
+    if (type === "edit") {
+      return Yup.object().shape({
+        ...BASIC_INFORMATION_VALIDATION_SCHEMA,
+        password: Yup.string().nullable(), // Make password nullable for edit mode
+        ...SERVICE_INFORMATION_VALIDATION_SCHEMA,
+        ...SYSTEM_INFORMATION_VALIDATION_SCHEMA,
+        ...ENABLEMENT_INFORMATION_VALIDATION_SCHEMA,
+      });
+    }
+    return COMPANY_VALIDATION_SCHEMA;
+  };
+
   return (
     <div>
       <Formik
         initialValues={initialValues}
-        validationSchema={COMPANY_VALIDATION_SCHEMA}
+        validationSchema={getValidationSchema()}
         onSubmit={onSubmit}
         validateOnChange={true}
         validateOnBlur={true}

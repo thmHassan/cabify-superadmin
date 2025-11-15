@@ -34,8 +34,8 @@ const ModalComponent = ({ size = "xl", children, className }) => {
       ref={parentRef}
       className={classNames(
         "fixed z-[2000] top-0 left-0 w-full h-screen overflow-y-auto bg-[#00000050] flex justify-center",
-        isChildGreater 
-          ? "py-4 sm:py-8 md:py-[60px] lg:py-[140px]" 
+        isChildGreater
+          ? "py-4 sm:py-8 md:py-[60px] lg:py-[140px]"
           : "items-start sm:items-center py-4 sm:py-8"
       )}
     >
