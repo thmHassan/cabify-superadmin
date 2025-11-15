@@ -81,7 +81,7 @@ const UserPageContainer = ({ children }) => {
         </div>
         <div className="flex flex-col gap-[30px]">
           {navElements.map(({ title, routes }, index) => (
-            <div key={index}>
+            <div key={index} className={index === 0 ? "mb-8" : ""}>
               <div className="text-[#7A7A7A] px-6 lg:px-8 text-sm leading-[19px] font-semibold mb-[18px]">
                 {title}
               </div>
