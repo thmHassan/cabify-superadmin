@@ -130,7 +130,7 @@ const UserPageContainer = ({ children }) => {
             </div>
           </div>
           <div className="flex gap-1.5 sm:gap-3 lg:gap-5 items-center flex-shrink-0">
-            <div className="flex min-w-[40px] h-[40px] sm:min-w-[50px] sm:h-[50px] rounded-full bg-[#FFFFFF] justify-center items-center">
+            <div className="flex min-w-[40px] h-[40px] sm:min-w-[50px] sm:h-[50px] rounded-full bg-[#FFFFFF] justify-center items-center hidden">
               <div className="w-[18px] h-[18px] sm:w-[25px] sm:h-[26px] flex items-center justify-center">
                 <SettingIcon width={18} height={18} className="w-full h-full" />
               </div>
