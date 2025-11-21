@@ -24,7 +24,7 @@ import {
 } from "../../../../validators/pages/companies.validation";
 import * as Yup from "yup";
 
-const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
+// const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
 
 const AddCompanyModal = ({
   modalType = "company",
@@ -42,57 +42,57 @@ const AddCompanyModal = ({
   const [submitError, setSubmitError] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [initialValues, setInitialValues] = useState({
-    company_name: formData.company_name ||  (defaultFormValue ? "jiya123" : ""),
+    company_name: formData.company_name,
     company_admin_name:
-      formData.company_admin_name || (defaultFormValue ? "Jiya Admin" : ""),
-    user_name: formData.user_name || (defaultFormValue ? "jiyauser" : ""),
-    password: formData.password || (defaultFormValue ? "123456" : ""),
-    company_id: formData.company_id || (defaultFormValue ? "jiyaId" : ""),
+      formData.company_admin_name,
+    user_name: formData.user_name,
+    password: formData.password,
+    company_id: formData.company_id,
     contact_person:
-      formData.contact_person || (defaultFormValue ? "Test123" : ""),
-    email: formData.email || (defaultFormValue ? "jiya@mailinator.com" : ""),
-    phone: formData.phone || (defaultFormValue ? "9876543210" : ""),
-    address: formData.address || (defaultFormValue ? "Surat" : ""),
-    city: formData.city || (defaultFormValue ? "Surat" : ""),
-    currency: formData.currency || (defaultFormValue ? "USD" : ""),
-    maps_api: formData.maps_api || (defaultFormValue ? "barikoi" : ""),
-    search_api: formData.search_api || (defaultFormValue ? "barikoi" : ""),
+      formData.contact_person,
+    email: formData.email,
+    phone: formData.phone,
+    address: formData.address,
+    city: formData.city,
+    currency: formData.currency,
+    maps_api: formData.maps_api,
+    search_api: formData.search_api,
     passengers_allowed:
-      formData.passengers_allowed || (defaultFormValue ? "20" : ""),
+      formData.passengers_allowed,
     dispatchers_allowed:
-      formData.dispatchers_allowed || (defaultFormValue ? "20" : ""),
-    drivers_allowed: formData.drivers_allowed || (defaultFormValue ? "10" : ""),
+      formData.dispatchers_allowed,
+    drivers_allowed: formData.drivers_allowed,
     subscription_type:
-      formData.subscription_type || (defaultFormValue ? "test" : ""),
+      formData.subscription_type,
     log_map_search_result:
-      formData.log_map_search_result || (defaultFormValue ? true : false),
-    voip: formData.voip || (defaultFormValue ? true : false),
-    sub_company: formData.sub_company || (defaultFormValue ? true : false),
+      formData.log_map_search_result,
+    voip: formData.voip,
+    sub_company: formData.sub_company,
     uber_plot_hybrid:
-      formData.uber_plot_hybrid || (defaultFormValue ? "uber" : ""),
+      formData.uber_plot_hybrid,
     fleet_management:
-      formData.fleet_management || (defaultFormValue ? "yes" : ""),
-    sos_features: formData.sos_features || (defaultFormValue ? "yes" : ""),
-    notes: formData.notes || (defaultFormValue ? "test notes" : ""),
-    units: formData.units || (defaultFormValue ? "test" : ""),
-    country_of_use: formData.country_of_use || (defaultFormValue ? "test" : ""),
-    time_zone: formData.time_zone || (defaultFormValue ? "test" : ""),
-    stripe_enable: formData.stripe_enable || (defaultFormValue ? true : false),
-    enable_smtp: formData.enable_smtp || (defaultFormValue ? true : false),
+      formData.fleet_management,
+    sos_features: formData.sos_features,
+    notes: formData.notes,
+    units: formData.units,
+    country_of_use: formData.country_of_use,
+    time_zone: formData.time_zone,
+    stripe_enable: formData.stripe_enable,
+    enable_smtp: formData.enable_smtp,
     stripe_enablement:
-      formData.stripe_enablement || (defaultFormValue ? "tets" : ""),
-    dispatcher: formData.dispatcher || (defaultFormValue ?? false),
-    map: formData.map || (defaultFormValue ?? false),
+      formData.stripe_enablement,
+    dispatcher: formData.dispatcher,
+    map: formData.map,
     push_notification:
-      formData.push_notification || (defaultFormValue ?? false),
-    usage_monitoring: formData.usage_monitoring || (defaultFormValue ?? false),
+      formData.push_notification,
+    usage_monitoring: formData.usage_monitoring,
     revenue_statements:
-      formData.revenue_statements || (defaultFormValue ?? false),
-    zone: formData.zone || (defaultFormValue ?? false),
-    manage_zones: formData.manage_zones || (defaultFormValue ?? false),
-    cms: formData.cms || (defaultFormValue ?? false),
-    lost_found: formData.lost_found || (defaultFormValue ?? false),
-    accounts: formData.accounts || (defaultFormValue ?? false),
+      formData.revenue_statements,
+    zone: formData.zone,
+    manage_zones: formData.manage_zones,
+    cms: formData.cms,
+    lost_found: formData.lost_found,
+    accounts: formData.accounts,
   });
   const fileInputRef = useRef(null);
 
