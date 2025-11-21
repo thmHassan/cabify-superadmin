@@ -90,9 +90,9 @@ BaseService.interceptors.response.use(
       );
       clearAllAuthData();
 
-      if (window.location.pathname !== appConfig.unAuthenticatedEntryPath) {
-        window.location.href = appConfig.unAuthenticatedEntryPath;
-      }
+      // if (window.location.pathname !== appConfig.unAuthenticatedEntryPath) {
+      //   window.location.href = appConfig.unAuthenticatedEntryPath;
+      // }
     }
 
     return Promise.reject(error);

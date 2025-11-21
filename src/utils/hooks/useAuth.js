@@ -69,8 +69,6 @@ function useAuth() {
       const resp = await apiAdminSignIn(values);
       if (resp.data && resp.data.success === 1) {
         const { access_token, user } = resp.data;
-        console.log(user, "admin resp.data.user====");
-
         // Store encrypted token in localStorage
         storeEncryptedToken(access_token);
 
