@@ -2,18 +2,18 @@ import React from "react";
 import CardContainer from "../../../../../../components/shared/CardContainer";
 import PageSubTitle from "../../../../../../components/ui/PageSubTitle";
 import FormikCheckbox from "../../../../../../components/ui/FormikCheckbox";
+import { NAV_ELEMENTS } from "../../../../../../constants/nav.route.constant/nav.route.constant";
+import { useAppSelector } from "../../../../../../store";
 
 const PERMISSION_CONFIG = [
-  { label: "Users", value: "users" },
-  { label: "Drivers", value: "drivers" },
-  { label: "Packages", value: "packages" },
-  { label: "Rides", value: "rides" },
-  { label: "Users1", value: "users1" },
-  { label: "Drivers1", value: "drivers1" },
-  { label: "Packages1", value: "packages1" },
-  { label: "Rides1", value: "rides1" },
-  { label: "Packages2", value: "packages2" },
-  { label: "Rides2", value: "rides2" },
+  { label: "Dashboard", value: "dashboard" },
+  { label: "Companies", value: "compaines" },
+  { label: "Onboarding", value: "onBoarding" },
+  { label: "Subscription", value: "subscription" },
+  { label: "Usage Monitoring", value: "usag_monitoring" },
+  { label: "Maps Configuration", value: "maps_configuration" },
+  { label: "VoIP Settings", value: "voIp_settings" },
+  { label: "Payments", value: "payments" }
 ];
 
 const PERMISSIONS = [
@@ -25,7 +25,6 @@ const PERMISSIONS = [
 ];
 
 const ViewPermissions = ({ values, setFieldValue, readonly = false }) => {
-  console.log(values, "inner-value");
   return (
     <div className="flex flex-col gap-3 sm:gap-4 lg:gap-5">
       {PERMISSION_CONFIG.map(({ label, value }, index) => (
