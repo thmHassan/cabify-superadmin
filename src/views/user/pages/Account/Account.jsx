@@ -8,10 +8,10 @@ import ImageUploadIcon from "../../../../components/svg/ImageUploadIcon";
 import Password from "../../../../components/elements/CustomPassword/Password";
 import {
   apiChangePassword,
+  apiGetProfile,
   apiProfileUpdate,
 } from "../../../../services/AccountService";
-import { useAppSelector } from "../../../../store";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { convertToFormData } from "../../../../utils/functions/common.function";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import { CHANGE_PASSWORD_SCHEMA, PROFILE_SCHEMA } from "../../validators/pages/account.validation";
@@ -19,13 +19,36 @@ import { CHANGE_PASSWORD_SCHEMA, PROFILE_SCHEMA } from "../../validators/pages/a
 const Account = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [formData, setFormData] = useState({});
-  const user = useAppSelector((state) => state.auth.user) || null;
+  const [profile, setProfile] = useState({name:"", email:""})
 
   const fileInputRef = useRef(null);
 
   const handlePickImage = () => {
     fileInputRef.current?.click();
   };
+
+  const loadUserProfile = async () => {
+    try {
+      const userId = localStorage.getItem("id")
+      const response = await apiGetProfile(userId);
+      
+      if (response?.status === 200 && response.data?.subadmin) {
+        const user = response.data.subadmin;
+
+        setProfile(user);
+
+        if (user.profile_picture_url) {
+          setImagePreviewUrl(user.profile_picture_url);
+        }
+      }
+    } catch (error) {
+      console.log("Error loading profile:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files && e.target.files[0];
@@ -39,16 +62,11 @@ const Account = () => {
     });
   };
 
-  console.log(user, "user=====");
   const onPasswordChange = async (values, { setSubmitting }) => {
     try {
       setSubmitting(true);
       const { old_password, new_password } = values;
-      const result = await apiChangePassword({ old_password, new_password });
-      if (result?.status === 200) {
-        console.log("innnnnnnnn");
-        console.log(result, "res====");
-      }
+      await apiChangePassword({ old_password, new_password });
     } catch (error) {
       console.log("error", error);
     } finally {
@@ -61,11 +79,7 @@ const Account = () => {
       setSubmitting(true);
       const { name, email } = values;
       const formDataToSend = convertToFormData({ name, email, ...formData });
-      const result = await apiProfileUpdate(formDataToSend);
-      if (result?.status === 200) {
-        console.log("innnnnnnnn");
-        console.log(result, "res====");
-      }
+      await apiProfileUpdate(formDataToSend);
     } catch (error) {
       console.log("error", error);
     } finally {
@@ -73,9 +87,9 @@ const Account = () => {
     }
   };
 
-  
 
-  if (!user.name || !user.email) {
+
+  if (!profile.name || !profile.email) {
     return (
       <div className="flex items-center justify-center min-h-screen w-full">
         <AppLogoLoader />
@@ -92,7 +106,7 @@ const Account = () => {
         </div>
         <Formik
           enableReinitialize
-          initialValues={{ name: user.name || "", email: user.email || "" }}
+          initialValues={{ name: profile.name || "", email: profile.email || "" }}
           validationSchema={PROFILE_SCHEMA}
           onSubmit={onProfileUpdate}
         >

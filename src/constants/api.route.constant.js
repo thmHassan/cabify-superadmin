@@ -48,6 +48,7 @@ export const GET_USAGE_MONITORING = "/super-admin/usage-monitoring";
 // api for account
 export const CHANGE_PASSWORD = "/super-admin/change-password";
 export const UPDATE_PROFILE = "/super-admin/update-profile";
+export const GET_USER_PROFILE = "/super-admin/edit-subadmin";
 
 // api for API Keys
 export const GET_API_KEY = "/super-admin/api-keys";

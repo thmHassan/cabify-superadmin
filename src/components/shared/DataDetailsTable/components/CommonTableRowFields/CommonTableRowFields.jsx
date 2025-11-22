@@ -14,9 +14,8 @@ const CommonTableRowFields = ({
   trClassNames,
   itemData = null,
 }) => {
-  const { icon, name, status, actionOptions } = data;
+  const { icon, name, status, actionOptions, profile_picture } = data;
 
-  console.log(actionOptions, "actionOptions=========");
   const Icon = icon ? icon.component : false;
   return (
     <div
@@ -35,8 +34,20 @@ const CommonTableRowFields = ({
                 </div>
               )}
               <div className="flex flex-col gap-2.5">
+                <div className="flex justify-start items-center gap-4">
+                <div className="flex flex-wrap w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
+                  {profile_picture && 
+                  <img
+                    src="/src/assets/Images/71067d46ba23cf7a8102bc3d1fab56453de3b958.jpg"
+                    // src={profile_picture}
+                    alt={name}
+                    className="w-full h-full object-cover"
+                  />
+                  }
+                </div>
                 <div className="max-w-[350px] cursor-pointer" title={name}>
                   <CardSubtitle type={1} subtitle={name} className="truncate" />
+                </div>
                 </div>
                 {status && (
                   <div className="flex gap-[15px] min-w-[200px] ">

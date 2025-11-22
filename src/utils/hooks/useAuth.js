@@ -49,6 +49,7 @@ function useAuth() {
             )
           );
         }
+        localStorage.setItem("id", resp.data.user.id)
         const redirectUrl = query.get(REDIRECT_URL_KEY);
         navigate(redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath);
         return {
@@ -85,6 +86,7 @@ function useAuth() {
             })
           );
         }
+        localStorage.setItem("id", user.id)
 
         // Redirect to home page on success
         const redirectUrl = query.get(REDIRECT_URL_KEY);
