@@ -10,4 +10,6 @@ export const SUBSCRIPTION_VALIDATION_SCHEMA = Yup.object().shape({
   features: Yup.array()
     .of(Yup.string().trim())
     .min(1, "Select at least one feature"),
+  billing_cycle_deduct_option: Yup.string().trim().required("Billing cycle deduct option please required"),
+  deduct_type: Yup.string().trim().required("Deduct type please required")
 });

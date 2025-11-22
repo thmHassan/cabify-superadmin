@@ -345,7 +345,6 @@ const Subscription = () => {
       setIsSubscriptionCardDetailsLoading(true);
       const result = await apiGetSubscriptionCardDetails();
       if (result?.status === 200) {
-        console.log(result, "res======");
         setSubscriptionCardDetails(result?.data?.data);
       }
     } catch (errors) {
@@ -632,9 +631,8 @@ const Subscription = () => {
               key={index}
               data={{
                 ...card,
-                value: `${card?.valuePreAssets || ""}${
-                  subscriptionCardDetails[card?.value] ?? 0
-                }`,
+                value: `${card?.valuePreAssets || ""}${subscriptionCardDetails[card?.value] ?? 0
+                  }`,
               }}
               className={
                 DASHBOARD_CARDS.length - 1 === index
@@ -675,7 +673,7 @@ const Subscription = () => {
                 </div>
               </Loading>
               {Array.isArray(subscriptionListDisplay) &&
-              subscriptionListDisplay.length > 0 ? (
+                subscriptionListDisplay.length > 0 ? (
                 <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
                     currentPage={currentPage}
@@ -806,7 +804,7 @@ const Subscription = () => {
                 />
               </div>
               {Array.isArray(subscriptionManagementDisplay) &&
-              subscriptionManagementDisplay.length > 0 ? (
+                subscriptionManagementDisplay.length > 0 ? (
                 <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
                     currentPage={subscriptionManagementCurrentPage}
@@ -910,7 +908,7 @@ const Subscription = () => {
                 />
               </div>
               {Array.isArray(pendingSubscriptionDisplay) &&
-              pendingSubscriptionDisplay.length > 0 ? (
+                pendingSubscriptionDisplay.length > 0 ? (
                 <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
                     currentPage={pendingSubscriptionCurrentPage}
