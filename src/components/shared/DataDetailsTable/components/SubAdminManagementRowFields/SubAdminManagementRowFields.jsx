@@ -3,7 +3,7 @@ import CommonTableRowFields from "../CommonTableRowFields/CommonTableRowFields";
 import Tag from "../../../../ui/Tag";
 
 const SubAdminManagementRowFields = ({ actionOptions, data, onViewClick }) => {
-  const { name, permissions } = data;
+  const { name, permissions, profile_picture } = data;
   console.log(JSON.parse(permissions), "permissions=====");
   return (
     <CommonTableRowFields
@@ -12,6 +12,7 @@ const SubAdminManagementRowFields = ({ actionOptions, data, onViewClick }) => {
         name,
         icon: false,
         actionOptions,
+        profile_picture
       }}
     >
       <td className="w-full">
