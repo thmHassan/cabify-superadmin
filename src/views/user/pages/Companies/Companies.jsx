@@ -45,7 +45,10 @@ const Companies = () => {
   const [_selectedStatus, setSelectedStatus] = useState(
     STATUS_OPTIONS.find((o) => o.value === "all") ?? STATUS_OPTIONS[0]
   );
-  const [_selectedPlan, setSelectedPlan] = useState(PLAN_OPTIONS[0]);
+  const [_selectedPlan, setSelectedPlan] = useState({
+    value: "all",
+    label: "All Plans"
+  }); 
   const [companyCards, setCompanyCards] = useState(null);
   const [companyListRaw, setCompanyListRaw] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -199,6 +202,40 @@ const Companies = () => {
       setTableLoading(false);
     }
   };
+  const [subscriptionOptions, setSubscriptionOptions] = useState([]);
+  const [isLoadingSubscriptions, setIsLoadingSubscriptions] = useState(false);
+  const [subscriptionError, setSubscriptionError] = useState(null);
+
+  useEffect(() => {
+    const fetchSubscriptionList = async () => {
+      setIsLoadingSubscriptions(true);
+      setSubscriptionError(null);
+
+      try {
+        const response = await ApiService.getSubscriptionList();
+        if (response.data.success === 1 && response.data.list.data) {
+          const options = response.data.list.data.map((subscription) => ({
+            value: subscription.plan_name.toLowerCase(),
+            label: subscription.plan_name,
+          }));
+          setSubscriptionOptions([{ value: "all", label: "All Plans" }, ...options]);
+        }
+      } catch (error) {
+        console.error("Error fetching subscription list:", error);
+        setSubscriptionError("Failed to load subscription options");
+
+        setSubscriptionOptions([
+          { value: "all", label: "All Plans" },
+          { value: "basic", label: "Basic" },
+          { value: "premium", label: "Premium" },
+          { value: "enterprise", label: "Enterprise" },
+        ]);
+      } finally {
+        setIsLoadingSubscriptions(false);
+      }
+    };
+    fetchSubscriptionList();
+  }, [])
 
   useEffect(() => {
     fetchCompanyCards();
@@ -358,7 +395,7 @@ const Companies = () => {
                   />
                   <CustomSelect
                     variant={2}
-                    options={PLAN_OPTIONS}
+                    options={subscriptionOptions}
                     value={_selectedPlan}
                     onChange={handlePlanChange}
                     placeholder="All Plans"
@@ -390,7 +427,7 @@ const Companies = () => {
                 />
               </Loading>
               {Array.isArray(companyListDisplay) &&
-              companyListDisplay.length > 0 ? (
+                companyListDisplay.length > 0 ? (
                 <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
                     currentPage={currentPage}

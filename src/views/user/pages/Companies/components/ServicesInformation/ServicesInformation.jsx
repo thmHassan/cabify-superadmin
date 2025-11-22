@@ -38,7 +38,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
         const response = await ApiService.getSubscriptionList();
         if (response.data.success === 1 && response.data.list.data) {
           const options = response.data.list.data.map((subscription) => ({
-            value: subscription.id,
+            value: subscription.plan_name,
             label: subscription.plan_name,
           }));
           setSubscriptionOptions(options);
@@ -47,12 +47,12 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
         console.error("Error fetching subscription list:", error);
         setSubscriptionError("Failed to load subscription options");
 
-        setSubscriptionOptions([
-          { value: "test", label: "Test" },
-          { value: "basic", label: "Basic" },
-          { value: "premium", label: "Premium" },
-          { value: "enterprise", label: "Enterprise" },
-        ]);
+        // setSubscriptionOptions([
+        //   { value: "test", label: "Test" },
+        //   { value: "basic", label: "Basic" },
+        //   { value: "premium", label: "Premium" },
+        //   { value: "enterprise", label: "Enterprise" },
+        // ]);
       } finally {
         setIsLoadingSubscriptions(false);
       }
