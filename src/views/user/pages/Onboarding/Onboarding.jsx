@@ -19,6 +19,8 @@ import {
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import Modal from "../../../../components/shared/Modal";
 import _ from "lodash";
+import Pagination from "../../../../components/ui/Pagination";
+import { PAGE_SIZE_OPTIONS } from "../../../../constants/selectOptions";
 
 const Onboarding = () => {
   const [isManualRequestModal, setIsManualRequestModal] = useState({
@@ -31,6 +33,9 @@ const Onboarding = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isOnboardingEditLoading, setIsOnboardingEditLoading] = useState(false);
   const [initialValues, setInitialValues] = useState({});
+  const [currentPage, setCurrentPage] = useState(1)
+  const [lastPage, setLastPage] = useState(3)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
 
   const TABS_CONFIGS = [
     {
@@ -54,6 +59,15 @@ const Onboarding = () => {
   ];
 
   const [tabConfig, setTabConfig] = useState(TABS_CONFIGS);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1);
+  };
 
   const onEdit = async (data) => {
     try {
@@ -127,10 +141,15 @@ const Onboarding = () => {
       setIsOnboardingLoading(true);
       const result = await apiGetOnboarding({
         status: tabConfig[currentTabIndex].status,
+        page: currentPage,
+        perPage: itemsPerPage,
       });
-      console.log(result, "result======");
       if (result?.status === 200) {
-        setAllOnboardings(result?.data?.list?.data);
+        const list = result?.data?.list;
+        setAllOnboardings(list?.data || []);
+        setLastPage(list?.last_page);
+        setCurrentPage(list?.current_page || 1)
+        setItemsPerPage(list?.per_page || itemsPerPage)
         if (currentTabIndex === 0) {
           const { pendingCount, rejectedCount, approvedCount } =
             result?.data || {
@@ -173,6 +192,11 @@ const Onboarding = () => {
     getOnboarding();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTabIndex, refreshTrigger]);
+
+  useEffect(() => {
+    getOnboarding();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, itemsPerPage, currentTabIndex]);
 
   // console.log(currentTabIndex, "currentTabIndex=====");
 
@@ -227,6 +251,18 @@ const Onboarding = () => {
           isOnboardingLoading={isOnboardingLoading}
           onRefresh={handleRefresh}
           onEdit={onEdit}
+        />
+      </div>
+
+      <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={lastPage}
+          itemsPerPage={itemsPerPage}
+          onPageChange={handlePageChange}
+          onItemsPerPageChange={handleItemsPerPageChange}
+          itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+          pageKey="onBoarding"
         />
       </div>
       <Modal
