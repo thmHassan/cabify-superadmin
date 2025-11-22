@@ -148,8 +148,8 @@ const Onboarding = () => {
         const list = result?.data?.list;
         setAllOnboardings(list?.data || []);
         setLastPage(list?.last_page);
-        setCurrentPage(list?.current_page || 1)
-        setItemsPerPage(list?.per_page || itemsPerPage)
+        // setCurrentPage(list?.current_page)
+        // setItemsPerPage(list?.per_page)
         if (currentTabIndex === 0) {
           const { pendingCount, rejectedCount, approvedCount } =
             result?.data || {
@@ -196,7 +196,7 @@ const Onboarding = () => {
   useEffect(() => {
     getOnboarding();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, itemsPerPage, currentTabIndex]);
+  }, [currentPage, itemsPerPage]);
 
   // console.log(currentTabIndex, "currentTabIndex=====");
 
