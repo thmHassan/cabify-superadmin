@@ -13,6 +13,7 @@ const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
 const SubscriptionModal = ({
   submitError,
   setIsOpen,
+  isEdit = false,
   onSubmit,
   initialValues,
 }) => {
@@ -54,7 +55,7 @@ const SubscriptionModal = ({
           onSubmit={onSubmit}
           enableReinitialize={true}
         >
-          {({ values, setFieldValue }) => (
+          {({ values, setFieldValue }) => (            
             <Form>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 mb-6">
                 {/* Left Column */}
@@ -180,7 +181,7 @@ const SubscriptionModal = ({
                   type="filled"
                   className="w-full sm:w-auto !px-10 !pt-4 pb-[15px] leading-[25px]"
                 >
-                  <span>Create</span>
+                  <span>{isEdit ? 'Update' : 'Create'}</span>
                 </Button>
               </div>
             </Form>
