@@ -16,12 +16,18 @@ const TYPE_CONFIG = {
 };
 
 const RequestComponent = ({ type = "pending", data, onRefresh, onEdit }) => {
-  console.log(data, "data====");
   return (
     <CardContainer className="lg:p-5 sm:px-4 px-3 sm:py-5 py-3 2xl:p-[30px] flex flex-col gap-4 sm:gap-5">
       <div className="flex flex-col lg:flex-row lg:justify-between gap-4 sm:gap-5">
         <div className="flex-1">
-          <Button onClick={() => onEdit(data)}>
+          <Button
+            onClick={() => {
+              if (data.status === "pending") {
+                onEdit(data);
+              }
+            }}
+            disabled={data.status !== "pending"}
+          >
             <CardSubtitle
               subtitle={data?.company_name}
               type={2}
