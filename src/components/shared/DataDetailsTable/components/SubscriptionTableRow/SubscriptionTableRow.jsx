@@ -66,16 +66,13 @@ const SubscriptionTableRow = (props) => {
     return <CompanyTableRow {...props} />;
   } else {
     // Use status from data if available, otherwise default to Active and Premium
-    const statusTags = status || ["Active", "Premium"];
     
     return (
       <CommonTableRowFields
         itemData={data}
         data={{
           name: plan_name,
-          status: statusTags,
           actionOptions,
-          icon: ICON_CONFIG[type],
         }}
       >
         <td className="min-w-[631px] w-full">
