@@ -85,7 +85,7 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
           <div className="sm:h-16 h-14">
             <Password
               name="password"
-              disabled={type === "edit"}
+              // disabled={type === "edit"}
               className="sm:px-5 px-4 sm:py-[21px] py-4 !select-none border border-[#8D8D8D] rounded-lg w-full h-14 sm:h-16 shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold disabled:bg-gray-100 disabled:cursor-not-allowed"
               placeholder={type === "edit" ? "Password cannot be changed" : "Enter password"}
               autoComplete="off"

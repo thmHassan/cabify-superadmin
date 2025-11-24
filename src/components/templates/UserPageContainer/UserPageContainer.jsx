@@ -126,7 +126,7 @@ const UserPageContainer = ({ children }) => {
               <SearchIcon width={18} height={18} />
             </button>
             <div className="min-w-0 flex-1 hidden sm:block">
-              <SearchBar />
+              <SearchBar className="hidden" />
             </div>
           </div>
           <div className="flex gap-1.5 sm:gap-3 lg:gap-5 items-center flex-shrink-0">

@@ -3,9 +3,7 @@
 export const STATUS_OPTIONS = [
   { value: "all", label: "All Status" },
   { value: "active", label: "Active" },
-  { value: "inactive", label: "Inactive" },
-  { value: "pending", label: "Pending" },
-  { value: "suspended", label: "Suspended" },
+  { value: "inactive", label: "Inactive" }
 ];
 
 export const PLAN_OPTIONS = [

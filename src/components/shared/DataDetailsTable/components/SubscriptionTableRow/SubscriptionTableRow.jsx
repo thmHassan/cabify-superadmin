@@ -37,20 +37,20 @@ const CompanyTableRow = (props) => {
       <td className="min-w-[631px] w-full">
         <div className="min-h-[120px] py-[30px]">
           <div className="flex gap-[30px] items-center min-h-max">
-            <Tag size="md" variant="mediumGray">
+            <Tag size="md" variant="mediumGray" className="min-w-[210px]">
               <span>{location}</span>
             </Tag>
-            <Tag size="md" variant="mediumGray">
+            <Tag size="md" variant="mediumGray" className="min-w-[210px]">
               <span>{drivers}</span>
             </Tag>
-            <Tag size="md" variant="mediumGray">
+            <Tag size="md" variant="mediumGray" className="min-w-[210px]">
               <span>{contact}</span>
             </Tag>
           </div>
         </div>
       </td>
 
-      <td className="py-[30px] flex flex-col justify-center min-w-[199px]">
+      <td className="py-[30px] flex pl-[50Px] flex-col justify-center min-w-[199px]">
         <CardSubtitle type={1} subtitle={revenue} />
         <ChildText text="monthly revenue" />
       </td>

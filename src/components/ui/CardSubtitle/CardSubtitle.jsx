@@ -16,7 +16,7 @@ const CardSubtitle = ({ type = 0, variant = 0, subtitle, className }) => {
   return (
     <p
       className={classNames(
-        "font-semibold max-w-[150px] truncate",
+        "font-semibold max-w-[250px]",
         VARIANT_CONFIG[variant],
         COLOR_CONFIG[type],
         className
