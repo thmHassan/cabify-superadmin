@@ -7,7 +7,7 @@ import {
 import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 
-const EditSubscriptionModal = ({ setIsOpen, id, onRefresh }) => {
+const EditSubscriptionModal = ({ setIsOpen, id, onRefresh, isReadOnly }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [initialValues, setInitialValues] = useState(null);
   const [submitError, setSubmitError] = useState(null);
@@ -15,7 +15,7 @@ const EditSubscriptionModal = ({ setIsOpen, id, onRefresh }) => {
   const getSubscriptionById = async () => {
     try {
       setIsLoading(true);
-      
+
       const result = await apiGetSubscriptionById({ id });
 
       if (result?.status === 200) {
@@ -43,6 +43,7 @@ const EditSubscriptionModal = ({ setIsOpen, id, onRefresh }) => {
   };
 
   const onSubmit = async (values, { setSubmitting }) => {
+    if (isReadOnly) return;
     try {
       setSubmitting(true);
       setSubmitError(null);
@@ -64,7 +65,7 @@ const EditSubscriptionModal = ({ setIsOpen, id, onRefresh }) => {
         error.response?.data?.message || "Failed to update subscription"
       );
     } finally {
-      setSubmitting(false); 
+      setSubmitting(false);
     }
   };
 
@@ -85,7 +86,8 @@ const EditSubscriptionModal = ({ setIsOpen, id, onRefresh }) => {
     <SubscriptionModal
       submitError={submitError}
       setIsOpen={setIsOpen}
-      isEdit={true}
+      isEdit={!isReadOnly}
+      isReadOnly={isReadOnly}
       onSubmit={onSubmit}
       initialValues={initialValues}
     />
