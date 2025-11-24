@@ -62,11 +62,13 @@ const Onboarding = () => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleItemsPerPageChange = (newItemsPerPage) => {
     setItemsPerPage(newItemsPerPage);
     setCurrentPage(1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const onEdit = async (data) => {
@@ -189,6 +191,7 @@ const Onboarding = () => {
   };
 
   useEffect(() => {
+    setAllOnboardings([]);
     getOnboarding();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTabIndex, refreshTrigger]);
@@ -246,11 +249,15 @@ const Onboarding = () => {
         <TabView
           align="left"
           tabs={tabConfig}
-          onTabChange={(index) => setCurrentTabIndex(index)}
-          allOnboardings={allOnboardings}
-          isOnboardingLoading={isOnboardingLoading}
-          onRefresh={handleRefresh}
-          onEdit={onEdit}
+          onTabChange={(index) => {
+            setCurrentTabIndex(index);
+            setCurrentPage(1);
+            window.scrollTo({ top: 0 });
+          }}
+        allOnboardings={allOnboardings}
+        isOnboardingLoading={isOnboardingLoading}
+        onRefresh={handleRefresh}
+        onEdit={onEdit}
         />
       </div>
 
