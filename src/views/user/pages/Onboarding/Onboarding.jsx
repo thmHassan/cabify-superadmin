@@ -229,6 +229,7 @@ const Onboarding = () => {
             btnSize="2xl"
             onClick={() => {
               lockBodyScroll();
+              setInitialValues({});
               setIsManualRequestModal({ isOpen: true, type: "new" });
             }}
             className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3 !py-3.5 sm:!py-3 lg:!py-3"
