@@ -27,7 +27,7 @@ const SearchBar = ({ onSearchChange, value, variant = 0, className }) => {
   return (
     <div
       className={classNames(
-        "max-w-[400px] h-[54px] relative rounded-[10px] hidden",
+        "max-w-[400px] h-[54px] relative rounded-[10px]",
         VARIANT_CONFIG[variant],
         className
       )}

@@ -27,9 +27,9 @@ const RecentCompaniesActivity = ({ companies }) => {
               <div className="mb-[5px]">
                 <CardSubtitle type={1} subtitle={c.company_name ?? "-"} />
               </div>
-              <p className="text-[#6C6C6C] text-sm leading-[19px] font-semibold mb-[5px]">
+              {/* <p className="text-[#6C6C6C] text-sm leading-[19px] font-semibold mb-[5px]">
                 New company registered
-              </p>
+              </p> */}
               <div className="flex gap-x-10 gap-y-1 flex-wrap">
                 <ChildText text={`Plan: ${c.subscription_type ?? "-"}`} />
                 {c.created_at && (

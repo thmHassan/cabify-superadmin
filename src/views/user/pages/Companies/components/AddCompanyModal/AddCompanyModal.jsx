@@ -132,7 +132,7 @@ const AddCompanyModal = ({
     },
   ];
 
-  const onSubmit = async (values, { setSubmitting }) => {
+  const onSubmit = async (values, { setSubmitting }) => {    
     try {
       setSubmitting(true);
       setIsCreatingCompany(true);
@@ -141,6 +141,7 @@ const AddCompanyModal = ({
         log_map_search_result,
         accounts,
         dispatcher,
+        password,
         map,
         push_notification,
         usage_monitoring,
@@ -177,7 +178,7 @@ const AddCompanyModal = ({
       const formValues = { ...formattedValues, ...formData };
       console.log(formValues, "formValues====");
       const latestFormData =
-        type === "edit" ? { id, ...formValues, password: null } : formValues;
+        type === "edit" ? { id, ...formValues, password: password } : formValues;
 
       console.log(latestFormData, "latestFormData=======");
 

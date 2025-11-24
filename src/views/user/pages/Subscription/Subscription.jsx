@@ -668,6 +668,16 @@ const Subscription = () => {
                           }
                         },
                       },
+                      {
+                        label: "View",
+                        onClick: (item) => {
+                          setSelectedId(item?.id);
+                          setIsSubscriptionModalOpen({
+                            type: "view",
+                            isOpen: true,
+                          });
+                        },
+                      },
                     ]}
                   />
                 </div>
@@ -1013,7 +1023,8 @@ const Subscription = () => {
           <EditSubscriptionModal
             id={selectedId}
             setIsOpen={setIsSubscriptionModalOpen}
-            onRefresh={handleRefresh}
+            onRefresh={isSubscriptionModalOpen.type === "edit" ? handleRefresh : null}
+            isReadOnly={isSubscriptionModalOpen.type === "view"}
           />
         )}
       </Modal>

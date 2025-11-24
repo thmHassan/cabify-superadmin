@@ -14,6 +14,7 @@ const SubscriptionModal = ({
   submitError,
   setIsOpen,
   isEdit = false,
+  isReadOnly = false,
   onSubmit,
   initialValues,
 }) => {
@@ -29,140 +30,136 @@ const SubscriptionModal = ({
           <img src={addSubscriptionIcon} />
         </div>
         <div className="lg:text-[26px] text-xl leading-9 font-semibold text-[#252525] mb-3 sm:mb-7 text-center">
-          <span>Add New Subscription</span>
+          <span>
+            {isReadOnly ? "View Subscription" : isEdit ? "Edit Subscription" : "Add New Subscription"}
+          </span>
         </div>
       </div>
       <div>
         <Formik
-          initialValues={
-            defaultFormValue
-              ? {
-                  plan_name: "Premuim",
-                  billing_cycle: "monthly",
-                  amount: 700,
-                  deduct_type: "cash",
-                  billing_cycle_deduct_option: "at_start",
-                }
-              : initialValues || {
-                  plan_name: "",
-                  billing_cycle: "",
-                  amount: "",
-                  deduct_type: "",
-                  billing_cycle_deduct_option: "",
-                }
-          }
+          initialValues={defaultFormValue
+            ? {
+              plan_name: "Premuim",
+              billing_cycle: "monthly",
+              amount: 700,
+              deduct_type: "cash",
+              billing_cycle_deduct_option: "at_start",
+            }
+            : initialValues}
           validationSchema={SUBSCRIPTION_VALIDATION_SCHEMA}
           onSubmit={onSubmit}
           enableReinitialize={true}
         >
-          {({ values, setFieldValue }) => (            
+          {({ values, setFieldValue }) => (
             <Form>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 mb-6">
-                {/* Left Column */}
-                <div className="flex flex-col gap-3 sm:gap-5">
-                  <div>
-                    <FormLabel htmlFor="plan_name">Plan</FormLabel>
-                    <div className="sm:h-16 h-14">
-                      <Field
-                        type="text"
+              <fieldset disabled={isReadOnly} className="w-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-5 mb-6">
+                  {/* Left Column */}
+                  <div className="flex flex-col gap-3 sm:gap-5">
+                    <div>
+                      <FormLabel htmlFor="plan_name">Plan</FormLabel>
+                      <div className="sm:h-16 h-14">
+                        <Field
+                          type="text"
+                          name="plan_name"
+                          className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
+                          placeholder="Name of New Subscription Plan"
+                        />
+                      </div>
+                      <ErrorMessage
                         name="plan_name"
-                        className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
-                        placeholder="Name of New Subscription Plan"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
                       />
                     </div>
-                    <ErrorMessage
-                      name="plan_name"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-                  <div>
-                    <FormLabel htmlFor="amount">Amount</FormLabel>
-                    <div className="sm:h-16 h-14">
-                      <Field
-                        type="text"
+                    <div>
+                      <FormLabel htmlFor="amount">Amount</FormLabel>
+                      <div className="sm:h-16 h-14">
+                        <Field
+                          type="text"
+                          name="amount"
+                          className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
+                          placeholder="Subscription Cost for Client"
+                        />
+                      </div>
+                      <ErrorMessage
                         name="amount"
-                        className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
-                        placeholder="Subscription Cost for Client"
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
                       />
                     </div>
-                    <ErrorMessage
-                      name="amount"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-                  <div>
-                    <FormLabel htmlFor="deduct_type">Deduct type</FormLabel>
-                    <div className="sm:h-16 h-14">
-                      <FormSelection
+                    <div>
+                      <FormLabel htmlFor="deduct_type">Deduct type</FormLabel>
+                      <div className="sm:h-16 h-14">
+                        <FormSelection
+                          name="deduct_type"
+                          value={values?.deduct_type}
+                          onChange={(val) => setFieldValue("deduct_type", val)}
+                          placeholder="Deduct Type"
+                          options={[
+                            { label: "Card", value: "card" },
+                            { label: "Cash", value: "cash" },
+                          ]}
+                        />
+                      </div>
+                      <ErrorMessage
                         name="deduct_type"
-                        value={values?.deduct_type}
-                        onChange={(val) => setFieldValue("deduct_type", val)}
-                        placeholder="Deduct Type"
-                        options={[
-                          { label: "Card", value: "card" },
-                          { label: "Cash", value: "cash" },
-                        ]}
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
                       />
                     </div>
-                    <ErrorMessage
-                      name="deduct_type"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
                   </div>
-                </div>
 
-                {/* Right Column */}
-                <div className="flex flex-col gap-3 sm:gap-5">
-                  <div>
-                    <FormLabel htmlFor="billing_cycle">Billing Cycle</FormLabel>
-                    <div className="sm:h-16 h-14">
-                      <FormSelection
+                  {/* Right Column */}
+                  <div className="flex flex-col gap-3 sm:gap-5">
+                    <div>
+                      <FormLabel htmlFor="billing_cycle">Billing Cycle</FormLabel>
+                      <div className="sm:h-16 h-14">
+                        <FormSelection
+                          name="billing_cycle"
+                          value={values?.billing_cycle}
+                          onChange={(val) => setFieldValue("billing_cycle", val)}
+                          placeholder="Billing Cycle"
+                          options={[
+                            { label: "monthly", value: "monthly" },
+                            { label: "yearly", value: "yearly" },
+                            { label: "weekly", value: "weekly" },
+                          ]}
+                        />
+                      </div>
+                      <ErrorMessage
                         name="billing_cycle"
-                        value={values?.billing_cycle}
-                        onChange={(val) => setFieldValue("billing_cycle", val)}
-                        placeholder="Billing Cycle"
-                        options={[
-                          { label: "monthly", value: "monthly" },
-                          { label: "yearly", value: "yearly" },
-                          { label: "weekly", value: "weekly" },
-                        ]}
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
                       />
                     </div>
-                    <ErrorMessage
-                      name="billing_cycle"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
-                  </div>
-                  <div>
-                    <FormLabel htmlFor="billing_cycle_deduct_option">
-                      Billing Cycle Deduct Option
-                    </FormLabel>
-                    <div className="sm:h-16 h-14">
-                      <FormSelection
+                    <div>
+                      <FormLabel htmlFor="billing_cycle_deduct_option">
+                        Billing Cycle Deduct Option
+                      </FormLabel>
+                      <div className="sm:h-16 h-14">
+                        <FormSelection
+                          name="billing_cycle_deduct_option"
+                          value={values?.billing_cycle_deduct_option}
+                          onChange={(val) =>
+                            setFieldValue("billing_cycle_deduct_option", val)
+                          }
+                          placeholder="Billing Cycle Deduct Option"
+                          options={[
+                            { label: "At Start", value: "at_start" },
+                            { label: "At End", value: "at_end" },
+                          ]}
+                        />
+                      </div>
+                      <ErrorMessage
                         name="billing_cycle_deduct_option"
-                        value={values?.billing_cycle_deduct_option}
-                        onChange={(val) =>
-                          setFieldValue("billing_cycle_deduct_option", val)
-                        }
-                        placeholder="Billing Cycle Deduct Option"
-                        options={[
-                          { label: "At Start", value: "at_start" },
-                          { label: "At End", value: "at_end" },
-                        ]}
+                        component="div"
+                        className="text-red-500 text-sm mt-1"
                       />
                     </div>
-                    <ErrorMessage
-                      name="billing_cycle_deduct_option"
-                      component="div"
-                      className="text-red-500 text-sm mt-1"
-                    />
                   </div>
                 </div>
-              </div>
+              </fieldset>
               <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-5 sm:justify-end">
                 <Button
                   btnSize="md"
@@ -175,14 +172,16 @@ const SubscriptionModal = ({
                 >
                   <span>Cancel</span>
                 </Button>
-                <Button
-                  btnType="submit"
-                  btnSize="md"
-                  type="filled"
-                  className="w-full sm:w-auto !px-10 !pt-4 pb-[15px] leading-[25px]"
-                >
-                  <span>{isEdit ? 'Update' : 'Create'}</span>
-                </Button>
+                {!isReadOnly && (
+
+                  <Button
+                    btnType="submit"
+                    btnSize="md"
+                    type="filled"
+                    className="w-full sm:w-auto !px-10 !pt-4 pb-[15px] leading-[25px]"
+                  >
+                    <span>{isEdit ? 'Update' : 'Create'}</span>
+                  </Button>)}
               </div>
             </Form>
           )}

@@ -29,13 +29,13 @@ const CommonTableRowFields = ({
           <td className="min-w-[368px] w-[368px] pr-20">
             <div className="p-[30px] flex gap-[15px] items-center">
               {icon && (
-                <div className="h-[60px] min-w-[60px] bg-[#F9F9F9] rounded-lg flex justify-center items-center">
+                <div className="h-[60px] min-w-[60px] bg-[#F9F9F9] flex justify-center items-center rounded-full">
                   <Icon {...icon} />
                 </div>
               )}
               <div className="flex flex-col gap-2.5">
                 <div className="flex justify-start items-center gap-4">
-                <div className="flex flex-wrap w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
+                {/* <div className="flex flex-wrap w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
                   {profile_picture && 
                   <img
                     src="/src/assets/Images/71067d46ba23cf7a8102bc3d1fab56453de3b958.jpg"
@@ -44,9 +44,9 @@ const CommonTableRowFields = ({
                     className="w-full h-full object-cover"
                   />
                   }
-                </div>
+                </div> */}
                 <div className="max-w-[350px] cursor-pointer" title={name}>
-                  <CardSubtitle type={1} subtitle={name} className="truncate" />
+                  <CardSubtitle type={1} subtitle={name} />
                 </div>
                 </div>
                 {status && (
