@@ -41,6 +41,7 @@ export const GET_SUBSCRIPTION_BY_ID = "/super-admin/edit-subscription";
 export const EDIT_SUBSCRIPTION = "/super-admin/edit-subscription";
 export const GET_SUBSCRIPTIONS = "/super-admin/subscription-list";
 export const GET_SUBSCRIPTION_CARDS = "/super-admin/subscription-cards";
+export const GET_SUBSCRIPTIONS_MANAGEMENT = "/super-admin/subscription-management";
 
 // api for usage monitoring
 export const GET_USAGE_MONITORING = "/super-admin/usage-monitoring";

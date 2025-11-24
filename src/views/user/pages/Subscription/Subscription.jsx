@@ -28,6 +28,7 @@ import {
 import Modal from "../../../../components/shared/Modal";
 import {
   apiGetSubscriptionCardDetails,
+  apiGetSubscriptionManagement,
   apiGetSubscriptions,
 } from "../../../../services/SubscriptionService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
@@ -340,6 +341,30 @@ const Subscription = () => {
     }
   };
 
+  const getSubscriptionManagement = async (search = "") => {
+    try {
+      setIsSubscriptionsLoading(true);
+      const result = await apiGetSubscriptionManagement({
+        page: currentPage,
+        perPage: itemsPerPage,
+        search: search || undefined,
+      });
+
+      if (result?.status === 200) {
+        const list = result?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setSubscriptionManagementDisplay(list);
+        setSubscriptionListRaw(rows);
+        setSubscriptionManagementDisplay(rows);
+      }
+    } catch (errors) {
+      setSubscriptionListRaw([]);
+      setSubscriptionListDisplay([]);
+    } finally {
+      setIsSubscriptionsLoading(false);
+    }
+  };
+
   const getSubscriptionCardDetails = async () => {
     try {
       setIsSubscriptionCardDetailsLoading(true);
@@ -518,7 +543,14 @@ const Subscription = () => {
       prevItemsPerPageRef.current = itemsPerPage;
       prevCurrentPageRef.current = currentPage;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    if (!hasCalledInitial.current) {
+      hasCalledInitial.current = true;
+      getSubscriptionManagement(debouncedSearchQuery);
+      prevSearchRef.current = debouncedSearchQuery;
+      prevItemsPerPageRef.current = itemsPerPage;
+      prevCurrentPageRef.current = currentPage;
+    }
   }, []);
 
   useEffect(() => {
@@ -526,6 +558,7 @@ const Subscription = () => {
       return;
     }
     getSubscriptions(debouncedSearchQuery);
+    getSubscriptionManagement(debouncedSearchQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger]);
 
@@ -549,6 +582,7 @@ const Subscription = () => {
     const itemsPerPageChanged = prevItemsPerPageRef.current !== itemsPerPage;
     if (pageChanged || searchChanged || itemsPerPageChanged) {
       getSubscriptions(debouncedSearchQuery);
+      getSubscriptionManagement(debouncedSearchQuery);
       prevCurrentPageRef.current = currentPage;
       prevSearchRef.current = debouncedSearchQuery;
       prevItemsPerPageRef.current = itemsPerPage;
@@ -592,8 +626,6 @@ const Subscription = () => {
       </div>
     );
   }
-
-  console.log(allSubscription, "allSubscription=====");
 
   return (
     <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
@@ -794,7 +826,7 @@ const Subscription = () => {
             <div>
               {/* Subscription Management - Static data, show 4 items per page, no search/filters */}
               <div>
-                <DataDetailsTable
+                {/* <DataDetailsTable
                   rowType="subscription"
                   companies={subscriptionManagementDisplay}
                   actionOptions={[
@@ -810,10 +842,20 @@ const Subscription = () => {
                         }
                       },
                     },
+                    {
+                      label: "View",
+                      onClick: (item) => {
+                        setSelectedId(item?.id);
+                        setIsSubscriptionModalOpen({
+                          type: "view",
+                          isOpen: true,
+                        });
+                      },
+                    },
                   ]}
-                />
+                /> */}
               </div>
-              {Array.isArray(subscriptionManagementDisplay) &&
+              {/* {Array.isArray(subscriptionManagementDisplay) &&
                 subscriptionManagementDisplay.length > 0 ? (
                 <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
@@ -830,7 +872,7 @@ const Subscription = () => {
                     pageKey="subscriptionManagement"
                   />
                 </div>
-              ) : null}
+              ) : null} */}
             </div>
             {/* Pending Subscription Section - Static data with search/filters */}
             <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-[#1F41BB]">
