@@ -178,6 +178,7 @@ const AddCompanyModal = ({
       let latestFormData =
         type === "edit" ? { id, ...formValues, password: password } : formValues;
       delete latestFormData.subscription;
+      delete latestFormData.picture;
 
       const formDataToSend = convertToFormData(latestFormData);
       const payload = modalType === "company" ? formDataToSend : latestFormData;
