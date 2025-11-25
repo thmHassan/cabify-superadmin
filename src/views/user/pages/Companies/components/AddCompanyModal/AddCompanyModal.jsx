@@ -33,7 +33,7 @@ const AddCompanyModal = ({
   id,
   onRefresh,
   initialValue = {},
-}) => {
+}) => {  
   const { type } = isCompanyModalOpen;
   const [formData, setFormData] = useState(initialValue);
   const [companyCreated, setCompanyCreated] = useState(false);
@@ -46,7 +46,7 @@ const AddCompanyModal = ({
     company_admin_name:
       formData.company_admin_name,
     user_name: formData.user_name,
-    password: formData.password,
+    password: "",
     company_id: formData.company_id,
     contact_person:
       formData.contact_person,
@@ -101,17 +101,20 @@ const AddCompanyModal = ({
     fileInputRef.current?.click();
   };
 
+
   const handleImageChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
-    // Optionally, validate file type/size here
+
     setFormData((prev) => ({ ...prev, picture: file }));
+
     const objectUrl = URL.createObjectURL(file);
     setImagePreviewUrl((prevUrl) => {
       if (prevUrl) URL.revokeObjectURL(prevUrl);
       return objectUrl;
     });
   };
+
   const TABS_CONFIGS = [
     {
       title: "Basic Info",
@@ -131,97 +134,109 @@ const AddCompanyModal = ({
     },
   ];
 
-  const onSubmit = async (values, { setSubmitting }) => {
-    try {
-      setSubmitting(true);
-      setIsCreatingCompany(true);
-      setSubmitError(null);
-      const {
-        log_map_search_result,
-        accounts,
-        dispatcher,
-        password,
-        map,
-        push_notification,
-        usage_monitoring,
-        revenue_statements,
-        zone,
-        manage_zones,
-        cms,
-        lost_found,
-        voip,
-        enable_smtp,
-        sub_company,
-        stripe_enable,
-      } = values;
+ const onSubmit = async (values, { setSubmitting }) => {
+  try {
+    setSubmitting(true);
+    setIsCreatingCompany(true);
+    setSubmitError(null);
 
-      const formattedValues = {
-        ...values,
-        stripe_enable: toYesNo(stripe_enable),
-        log_map_search_result: toYesNo(log_map_search_result, 3),
-        accounts: toYesNo(accounts, 2),
-        enable_smtp: toYesNo(enable_smtp),
-        sub_company: toYesNo(sub_company),
-        dispatcher: toYesNo(dispatcher, 2),
-        map: toYesNo(map, 2),
-        push_notification: toYesNo(push_notification, 2),
-        usage_monitoring: toYesNo(usage_monitoring, 2),
-        revenue_statements: toYesNo(revenue_statements, 2),
-        zone: toYesNo(zone, 2),
-        manage_zones: toYesNo(manage_zones, 2),
-        cms: toYesNo(cms, 2),
-        lost_found: toYesNo(lost_found, 2),
-        voip: toYesNo(voip, 2),
-      };
+    const {
+      log_map_search_result,
+      accounts,
+      dispatcher,
+      password,
+      map,
+      push_notification,
+      usage_monitoring,
+      revenue_statements,
+      zone,
+      manage_zones,
+      cms,
+      lost_found,
+      voip,
+      enable_smtp,
+      sub_company,
+      stripe_enable,
+    } = values;
 
-      const formValues = { ...formattedValues, ...formData };
-      let latestFormData =
-        type === "edit" ? { id, ...formValues, password: password } : formValues;
-      delete latestFormData.subscription;
-      delete latestFormData.picture;
+    const formattedValues = {
+      ...values,
+      stripe_enable: toYesNo(stripe_enable),
+      log_map_search_result: toYesNo(log_map_search_result, 3),
+      accounts: toYesNo(accounts, 2),
+      enable_smtp: toYesNo(enable_smtp),
+      sub_company: toYesNo(sub_company),
+      dispatcher: toYesNo(dispatcher, 2),
+      map: toYesNo(map, 2),
+      push_notification: toYesNo(push_notification, 2),
+      usage_monitoring: toYesNo(usage_monitoring, 2),
+      revenue_statements: toYesNo(revenue_statements, 2),
+      zone: toYesNo(zone, 2),
+      manage_zones: toYesNo(manage_zones, 2),
+      cms: toYesNo(cms, 2),
+      lost_found: toYesNo(lost_found, 2),
+      voip: toYesNo(voip, 2),
+    };
 
-      const formDataToSend = convertToFormData(latestFormData);
-      const payload = modalType === "company" ? formDataToSend : latestFormData;
-      const response =
-        type === "edit"
-          ? await MODAL_CONFIG[modalType][type].api({}, payload)
-          : await MODAL_CONFIG[modalType][type].api(payload);
+    let latestFormData = type === "edit" 
+      ? { id, ...formattedValues, password: password }
+      : { ...formattedValues };
 
-      if (response.status === 200 || response.status === 201) {
-        if (modalType === "company") {
-          setCompanyCreated(true);
-          const companyId =
-            response.data.tenant.id ||
-            response.data.company_id ||
-            response.data.data?.id;
-          setCreatedCompanyId(companyId);
-        } else {
-          setFormData({});
-          unlockBodyScroll();
-          onRefresh();
-          setIsOpen({ type: "new", isOpen: false });
-        }
+    delete latestFormData.subscription;
+
+    // Construct final FormData
+    const formDataToSend = new FormData();
+    for (let key in latestFormData) {
+      if (key !== "picture") {
+        formDataToSend.append(key, latestFormData[key]);
       }
-    } catch (error) {
-      if (error.name === "ValidationError" && Array.isArray(error.errors)) {
-        setSubmitError(error.errors.join(", "));
-      } else {
-        setSubmitError(
-          error.response?.data?.message || "Failed to create company21251514"
-        );
-      }
-    } finally {
-      setIsCreatingCompany(false);
-      setSubmitting(false);
     }
-  };
+
+    // Attach image correctly
+    if (formData.picture instanceof File) {
+      formDataToSend.append("picture", formData.picture);
+    }
+
+    // API call
+    const response =
+      type === "edit"
+        ? await MODAL_CONFIG[modalType][type].api({}, formDataToSend)
+        : await MODAL_CONFIG[modalType][type].api(formDataToSend);
+
+    if (response.status === 200 || response.status === 201) {
+      if (modalType === "company") {
+        setCompanyCreated(true);
+        const companyId =
+          response.data.tenant.id ||
+          response.data.company_id ||
+          response.data.data?.id;
+        setCreatedCompanyId(companyId);
+      } else {
+        setFormData({});
+        unlockBodyScroll();
+        onRefresh();
+        setIsOpen({ type: "new", isOpen: false });
+      }
+    }
+  } catch (error) {
+    if (error.name === "ValidationError" && Array.isArray(error.errors)) {
+      setSubmitError(error.errors.join(", "));
+    } else {
+      setSubmitError(
+        error.response?.data?.message || "Failed to create company"
+      );
+    }
+  } finally {
+    setIsCreatingCompany(false);
+    setSubmitting(false);
+  }
+};
+
 
   const getCompanyDetailsById = async () => {
     try {
       // setIsSubAdminDetailsLoading(true);
       const result = await apiGetCompanyDetailsById({ id });
-      console.log(result?.data?.company, 'result?.data?.company');
-
       if (result?.status === 200) {
         const {
           company_name,
@@ -295,7 +310,6 @@ const AddCompanyModal = ({
           stripe_enable: toBoolean(stripe_enable),
           enable_smtp: toBoolean(enable_smtp),
           stripe_enablement,
-          picture,
           dispatcher: toBoolean(dispatcher, 2),
           map: toBoolean(map, 2),
           zone: toBoolean(zone, 2),
@@ -306,8 +320,13 @@ const AddCompanyModal = ({
           push_notification: toBoolean(push_notification, 2),
           usage_monitoring: toBoolean(usage_monitoring, 2),
           revenue_statements: toBoolean(revenue_statements, 2),
-          subscription: result?.data?.subscription
+          subscription: result?.data?.subscription,
+          picture
         });
+        if (picture) {
+          setImagePreviewUrl(`${import.meta.env.VITE_BACKEND_URL}/${picture}`);
+        }
+
       }
     } catch (error) {
     } finally {
@@ -347,8 +366,7 @@ const AddCompanyModal = ({
         enableReinitialize={true}
       >
         {({ values, ...formEl }) => {
-          console.log('✌️values --->', values);
-
+                
           return (
             <Form>
               <div
@@ -356,11 +374,15 @@ const AddCompanyModal = ({
                 onClick={handlePickImage}
                 title="Click to upload"
               >
-                {values?.picture ? (
+                {imagePreviewUrl ? (
+                  <img
+                    src={imagePreviewUrl}
+                    className="w-full h-full object-cover"
+                  />
+                ) : values?.picture ? (
                   <img
                     src={`${import.meta.env.VITE_BACKEND_URL}/${values.picture}`}
-                    alt="Company"
-                    className="w-full h-full object-fit"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <ImageUploadIcon />

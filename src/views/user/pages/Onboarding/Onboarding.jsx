@@ -36,6 +36,8 @@ const Onboarding = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [lastPage, setLastPage] = useState(3)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [onBoardingId, setOnBoardingId] = useState(null)
+
 
   const TABS_CONFIGS = [
     {
@@ -72,9 +74,10 @@ const Onboarding = () => {
   };
 
   const onEdit = async (data) => {
-    try {
+    try {      
       setIsOnboardingEditLoading(true);
       setIsManualRequestModal({ isOpen: true, type: "edit" });
+      setOnBoardingId(data?.id)
       const result = await apiGetOnboardingById({ id: data?.id });
       if (result?.status === 200 && result?.data?.onboardingRequest) {
         const {
@@ -93,23 +96,23 @@ const Onboarding = () => {
           enable_smtp,
           sub_company,
         } =
-          result?.data?.onboardingRequest |
-          {
-            log_map_search_result: false,
-            accounts: false,
-            dispatcher: false,
-            map: false,
-            push_notification: false,
-            usage_monitoring: false,
-            revenue_statements: false,
-            zone: false,
-            manage_zones: false,
-            cms: false,
-            lost_found: false,
-            voip: false,
-            enable_smtp: false,
-            sub_company: false,
-          };
+          result?.data?.onboardingRequest;
+          // {
+          //   log_map_search_result: false,
+          //   accounts: false,
+          //   dispatcher: false,
+          //   map: false,
+          //   push_notification: false,
+          //   usage_monitoring: false,
+          //   revenue_statements: false,
+          //   zone: false,
+          //   manage_zones: false,
+          //   cms: false,
+          //   lost_found: false,
+          //   voip: false,
+          //   enable_smtp: false,
+          //   sub_company: false,
+          // };
         const formattedValues = {
           ...result?.data?.onboardingRequest,
           log_map_search_result: toBoolean(log_map_search_result, 3),
@@ -130,7 +133,6 @@ const Onboarding = () => {
         setInitialValues(formattedValues);
       }
     } catch (error) {
-      console.log("err--", error);
     } finally {
       setIsOnboardingEditLoading(false);
     }
@@ -180,7 +182,6 @@ const Onboarding = () => {
         }
       }
     } catch (errors) {
-      console.log(errors, "err---");
       // ErrorNotification(
       //   errors?.response?.data?.message ||
       //     "Failed to fetch booking list. Please reload."
@@ -253,10 +254,10 @@ const Onboarding = () => {
             setCurrentTabIndex(index);
             setCurrentPage(1);
           }}
-        allOnboardings={allOnboardings}
-        isOnboardingLoading={isOnboardingLoading}
-        onRefresh={handleRefresh}
-        onEdit={onEdit}
+          allOnboardings={allOnboardings}
+          isOnboardingLoading={isOnboardingLoading}
+          onRefresh={handleRefresh}
+          onEdit={onEdit}
         />
       </div>
 
@@ -281,6 +282,7 @@ const Onboarding = () => {
           setIsOpen={setIsManualRequestModal}
           onRefresh={handleRefresh}
           initialValue={initialValues}
+          id={onBoardingId}
         />
       </Modal>
     </div>
