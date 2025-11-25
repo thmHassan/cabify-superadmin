@@ -44,29 +44,33 @@ const Payments = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [allPayment, setAllPayment] = useState([]);
 
-  const getAllPaymentList = async (page = 1,
-    perPage = itemsPerPage) => {
+  const getAllPaymentList = async (page = 1, perPage = 10) => {
     try {
       const response = await apiGetAllPaymentsList({
         page,
         perPage,
       });
+
       const formattedData = response.data.list.data.map(item => ({
         ...item,
         date: formatDate(item.created_at),
-      }))
+      }));
 
-      setAllPayment(formattedData)
-      setItemsPerPage(response.data.list.per_page)
-      setTotalPages(response.data.list.totalPages)
+      setAllPayment(formattedData);
+      setItemsPerPage(response.data.list.per_page);
+      const totalCount = response?.data?.list?.total;
+      const per_page = response?.data?.list?.per_page;
+      const calculatedPages = Math.ceil(totalCount / per_page);
+      setTotalPages(calculatedPages);
+
     } catch (error) {
       setAllPayment([]);
     }
-  }
+  };
 
   useEffect(() => {
-    getAllPaymentList()
-  }, [currentPage, itemsPerPage])
+    getAllPaymentList(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
