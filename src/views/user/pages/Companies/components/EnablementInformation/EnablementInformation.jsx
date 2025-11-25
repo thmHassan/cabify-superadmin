@@ -13,7 +13,8 @@ const EnablementInformation = ({
   companyCreated,
   createdCompanyId,
   isCreatingCompany,
-}) => {
+  formEl
+}) => {  
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState(null);
 
@@ -31,7 +32,6 @@ const EnablementInformation = ({
         setIsOpen(false);
       }
     } catch (error) {
-      console.error("Cash payment error:", error);
       setPaymentError(error.response?.data?.message || "Cash payment failed");
     } finally {
       setIsProcessingPayment(false);
@@ -45,12 +45,11 @@ const EnablementInformation = ({
 
       const paymentData = new FormData();
       paymentData.append("id", createdCompanyId);
+      paymentData.append("amount", Number(formEl.values?.subscription?.amount));
 
       const response = await ApiService.createStripePaymentUrl(paymentData);
 
       if (response.status === 200 || response.status === 201) {
-        console.log("Stripe payment URL created:", response.data);
-
         if (response.data.url) {
           window.open(response.data.url, "_blank");
         }
@@ -58,7 +57,6 @@ const EnablementInformation = ({
         setIsOpen(false);
       }
     } catch (error) {
-      console.error("Online payment error:", error);
       setPaymentError(error.response?.data?.message || "Online payment failed");
     } finally {
       setIsProcessingPayment(false);

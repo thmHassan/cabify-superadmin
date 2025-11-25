@@ -17,7 +17,6 @@ const TabView = ({ align = "center", tabs, onTabChange, ...rest }) => {
   const previousTabRef = useRef(0);
 
   const { component: CurrentTab, ...restProps } = tabs[currentTab];
-  
   const handleTabChange = (index, title) => {
     previousTabRef.current = currentTab;
     setTabViewScreen({ tabViewScreen: title || "" });
