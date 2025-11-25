@@ -23,9 +23,7 @@ const SubAdminModal = ({
 }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const handleImageChange = (file, previewUrl) => {
-    console.log("in");
     if (!file) return;
-    console.log(file, "file=====");
     // Optionally, validate file type/size here
     setFormData((prev) => ({ ...prev, profile_picture: file }));
     if (previewUrl) {
@@ -52,7 +50,7 @@ const SubAdminModal = ({
       <CommonImageUploader
         onChange={handleImageChange}
         defaultImage={imagePreviewUrl}
-        label="Add Sub Admin"
+        label={type == "edit" ? "Edit Sub Admin" : "Add Sub Admin"}
         icon={<ImageUploadIcon />}
         className="w-20 h-20 sm:w-[100px] sm:h-[100px] lg:w-[120px] lg:h-[120px]"
       />
