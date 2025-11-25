@@ -5,6 +5,7 @@ export const GET_DASHBOARD_DETAILS = "/super-admin/dashboard";
 export const GET_COMPANY_CARD_DETAILS = "/super-admin/company-cards";
 export const GET_COMPANY_BY_ID = "/super-admin/edit-company";
 export const EDIT_COMPANY = "/super-admin/edit-company";
+export const GET_COMPANY_PAYMENT_HISTORY = "/super-admin/payment-history";
 
 // api for onboarding
 export const CREATE_ONBOARDING_REQUEST =

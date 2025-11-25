@@ -28,8 +28,6 @@ const EnablementInformation = ({
       const response = await ApiService.cashPayment(paymentData);
 
       if (response.status === 200 || response.status === 201) {
-        console.log("Cash payment successful:", response.data);
-        setFormData({});
         setIsOpen(false);
       }
     } catch (error) {
