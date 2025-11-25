@@ -4,6 +4,7 @@ import Tag from "../../../../../../components/ui/Tag";
 import PaymentTable from "../../../../../../components/shared/PaymentTable";
 import ApiService from "../../../../../../services/ApiService";
 import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
+import { apiGetCompanyPaymentHistoryById } from "../../../../../../services/CompanyService";
 
 const PAYMENT_STATUS = {
   paid: "green",
@@ -13,29 +14,28 @@ const PAYMENT_STATUS = {
 };
 
 const CompanyPaymentHistory = ({ companyId }) => {
-  const [companyDetails, setCompanyDetails] = useState(null);
+  const [companyPaymentHistory, setCompanyPaymentHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchCompanyDetails = useCallback(async () => {
+  const getPaymentHistoryDetails = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await ApiService.getCompanyDetails(companyId);
-      setCompanyDetails(response?.data || null);
+      const response = await apiGetCompanyPaymentHistoryById({ user_id: companyId })
+      setCompanyPaymentHistory(response.data.list)
     } catch (err) {
       setError(err.message || "Failed to fetch company details");
-      console.error("Error fetching company details:", err);
     } finally {
       setLoading(false);
     }
-  }, [companyId]);
+  }
 
   useEffect(() => {
     if (companyId) {
-      fetchCompanyDetails();
+      getPaymentHistoryDetails()
     }
-  }, [companyId, fetchCompanyDetails]);
+  }, [companyId]);
 
   if (loading) {
     return (
@@ -52,7 +52,7 @@ const CompanyPaymentHistory = ({ companyId }) => {
           Error: {error}
         </p>
         <button
-          onClick={fetchCompanyDetails}
+          onClick={getPaymentHistoryDetails}
           className="px-4 sm:px-6 py-2 sm:py-2.5 bg-[#1F41BB] text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-[#1a3599] transition-colors"
         >
           Retry
@@ -61,7 +61,7 @@ const CompanyPaymentHistory = ({ companyId }) => {
     );
   }
 
-  if (!companyDetails) {
+  if (!companyPaymentHistory) {
     return (
       <div className="text-center py-8 sm:py-12 px-4">
         <p className="text-gray-500 text-sm sm:text-base">
@@ -70,6 +70,13 @@ const CompanyPaymentHistory = ({ companyId }) => {
       </div>
     );
   }
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const d = new Date(dateString);
+    return d.toISOString().split("T")[0]; // formats to YYYY-MM-DD
+  };
+
   const columns = [
     { header: "Date", accessor: "date" },
     { header: "Amount", accessor: "amount" },
@@ -87,10 +94,8 @@ const CompanyPaymentHistory = ({ companyId }) => {
     { header: "Method", accessor: "method" },
   ];
 
-  const paymentHistory = companyDetails?.data?.payment_history || [];
-
-  const data = paymentHistory.map((payment) => ({
-    date: payment.date || "N/A",
+  const data = companyPaymentHistory.map((payment) => ({
+    date: formatDate(payment.created_at),
     amount: payment.amount || "N/A",
     status: payment.status || "Unknown",
     method: payment.method || "N/A",

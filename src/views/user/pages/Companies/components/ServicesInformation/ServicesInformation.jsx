@@ -38,13 +38,13 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
         const response = await ApiService.getSubscriptionList();
         if (response.data.success === 1 && response.data.list.data) {
           const options = response.data.list.data.map((subscription) => ({
-            value: subscription.plan_name,
+            value: Number(subscription.id),
             label: subscription.plan_name,
           }));
+
           setSubscriptionOptions(options);
         }
       } catch (error) {
-        console.error("Error fetching subscription list:", error);
         setSubscriptionError("Failed to load subscription options");
 
         // setSubscriptionOptions([
@@ -185,7 +185,11 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               <FormSelection
                 label="Select Subscription Type"
                 name="subscription_type"
-                value={values.subscription_type}
+                value={
+                  subscriptionOptions.length > 0
+                    ? Number(values.subscription_type)
+                    : ""
+                }
                 onChange={(val) => setFieldValue("subscription_type", val)}
                 placeholder={isLoadingSubscriptions ? "Loading..." : "Select"}
                 options={subscriptionOptions}

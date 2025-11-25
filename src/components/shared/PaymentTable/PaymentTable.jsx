@@ -63,7 +63,7 @@ const PaymentTable = ({ columns, data }) => {
           </tbody>
         </table>
       </div>
-      <div className="border-t border-[#E9E9E9] py-3 sm:py-3.5 px-3 sm:px-5"> 
+      {/* <div className="border-t border-[#E9E9E9] py-3 sm:py-3.5 px-3 sm:px-5"> 
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
@@ -72,7 +72,7 @@ const PaymentTable = ({ columns, data }) => {
           onItemsPerPageChange={handleItemsPerPageChange}
           itemsPerPageOptions={PAGE_SIZE_OPTIONS}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

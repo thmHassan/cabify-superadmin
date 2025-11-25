@@ -5,6 +5,7 @@ export const GET_DASHBOARD_DETAILS = "/super-admin/dashboard";
 export const GET_COMPANY_CARD_DETAILS = "/super-admin/company-cards";
 export const GET_COMPANY_BY_ID = "/super-admin/edit-company";
 export const EDIT_COMPANY = "/super-admin/edit-company";
+export const GET_COMPANY_PAYMENT_HISTORY = "/super-admin/payment-history";
 
 // api for onboarding
 export const CREATE_ONBOARDING_REQUEST =
@@ -41,6 +42,7 @@ export const GET_SUBSCRIPTION_BY_ID = "/super-admin/edit-subscription";
 export const EDIT_SUBSCRIPTION = "/super-admin/edit-subscription";
 export const GET_SUBSCRIPTIONS = "/super-admin/subscription-list";
 export const GET_SUBSCRIPTION_CARDS = "/super-admin/subscription-cards";
+export const GET_SUBSCRIPTIONS_MANAGEMENT = "/super-admin/subscription-management";
 
 // api for usage monitoring
 export const GET_USAGE_MONITORING = "/super-admin/usage-monitoring";
@@ -52,3 +54,6 @@ export const GET_USER_PROFILE = "/super-admin/edit-subadmin";
 
 // api for API Keys
 export const GET_API_KEY = "/super-admin/api-keys";
+
+// api for payment
+export const GET_PAYMENT_LIST = "/super-admin/payment-list";
