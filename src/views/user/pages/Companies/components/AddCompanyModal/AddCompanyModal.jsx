@@ -93,11 +93,10 @@ const AddCompanyModal = ({
     cms: formData.cms,
     lost_found: formData.lost_found,
     accounts: formData.accounts,
+    subscription: {},
+    picture: ''
   });
   const fileInputRef = useRef(null);
-
-  console.log(type, "type=======");
-
   const handlePickImage = () => {
     fileInputRef.current?.click();
   };
@@ -132,7 +131,7 @@ const AddCompanyModal = ({
     },
   ];
 
-  const onSubmit = async (values, { setSubmitting }) => {    
+  const onSubmit = async (values, { setSubmitting }) => {
     try {
       setSubmitting(true);
       setIsCreatingCompany(true);
@@ -176,15 +175,13 @@ const AddCompanyModal = ({
       };
 
       const formValues = { ...formattedValues, ...formData };
-      console.log(formValues, "formValues====");
-      const latestFormData =
+      let latestFormData =
         type === "edit" ? { id, ...formValues, password: password } : formValues;
-
-      console.log(latestFormData, "latestFormData=======");
+      delete latestFormData.subscription;
+      delete latestFormData.picture;
 
       const formDataToSend = convertToFormData(latestFormData);
       const payload = modalType === "company" ? formDataToSend : latestFormData;
-      console.log(payload, "payload===");
       const response =
         type === "edit"
           ? await MODAL_CONFIG[modalType][type].api({}, payload)
@@ -204,20 +201,14 @@ const AddCompanyModal = ({
           onRefresh();
           setIsOpen({ type: "new", isOpen: false });
         }
-        console.log(
-          MODAL_CONFIG[modalType][type].successMessage,
-          response.data
-        );
       }
     } catch (error) {
-      console.error("Error creating company:", error);
       if (error.name === "ValidationError" && Array.isArray(error.errors)) {
         setSubmitError(error.errors.join(", "));
       } else {
         setSubmitError(
           error.response?.data?.message || "Failed to create company21251514"
         );
-        console.log(error, "er====");
       }
     } finally {
       setIsCreatingCompany(false);
@@ -228,10 +219,10 @@ const AddCompanyModal = ({
   const getCompanyDetailsById = async () => {
     try {
       // setIsSubAdminDetailsLoading(true);
-      console.log("object");
       const result = await apiGetCompanyDetailsById({ id });
+      console.log(result?.data?.company, 'result?.data?.company');
+
       if (result?.status === 200) {
-        console.log(result, "res-company");
         const {
           company_name,
           company_admin_name,
@@ -272,6 +263,7 @@ const AddCompanyModal = ({
           push_notification,
           usage_monitoring,
           revenue_statements,
+          picture
         } = result?.data?.company || {};
         setInitialValues({
           company_name,
@@ -303,6 +295,7 @@ const AddCompanyModal = ({
           stripe_enable: toBoolean(stripe_enable),
           enable_smtp: toBoolean(enable_smtp),
           stripe_enablement,
+          picture,
           dispatcher: toBoolean(dispatcher, 2),
           map: toBoolean(map, 2),
           zone: toBoolean(zone, 2),
@@ -313,17 +306,16 @@ const AddCompanyModal = ({
           push_notification: toBoolean(push_notification, 2),
           usage_monitoring: toBoolean(usage_monitoring, 2),
           revenue_statements: toBoolean(revenue_statements, 2),
+          subscription: result?.data?.subscription
         });
       }
     } catch (error) {
-      console.log(error);
     } finally {
       // setIsSubAdminDetailsLoading(false);
     }
   };
 
   useEffect(() => {
-    console.log(type, id, "tttttttttttt");
     if (type === "edit" && id) {
       getCompanyDetailsById();
     }
@@ -355,7 +347,8 @@ const AddCompanyModal = ({
         enableReinitialize={true}
       >
         {({ values, ...formEl }) => {
-          console.log(values, "values=====");
+          console.log('✌️values --->', values);
+
           return (
             <Form>
               <div
@@ -363,15 +356,16 @@ const AddCompanyModal = ({
                 onClick={handlePickImage}
                 title="Click to upload"
               >
-                {imagePreviewUrl ? (
+                {values?.picture ? (
                   <img
-                    src={imagePreviewUrl}
+                    src={`${import.meta.env.VITE_BACKEND_URL}/${values.picture}`}
                     alt="Company"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-fit"
                   />
                 ) : (
                   <ImageUploadIcon />
                 )}
+
                 <input
                   ref={fileInputRef}
                   type="file"
