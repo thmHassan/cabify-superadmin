@@ -3,6 +3,7 @@ import DriverDocumentsRowFields from "../DriverDocumentsRowFields";
 import MapProviderRowField from "../MapProviderRowField";
 import SubAdminManagementRowFields from "../SubAdminManagementRowFields";
 import SubscriptionManagementRow from "../SubscriptionManagement";
+import SubscriptionPendingRow from "../SubscriptionPendingRow";
 import SubscriptionTableRow from "../SubscriptionTableRow";
 import SystemAnalyticsTableRow from "../SystemAnalyticsTableRow";
 import UsageMonitoringTableRow from "../UsageMonitoringTableRow";
@@ -12,6 +13,7 @@ const DataDetailsRow = ({ type = "subscription", ...props }) => {
   const TABLE_ROW_CONFIG = {
     company: (props) => <SubscriptionTableRow type={type} {...props} />,
     subscription: SubscriptionTableRow,
+    SubscriptionPending: SubscriptionPendingRow,
     subscriptionManagement: SubscriptionManagementRow,
     usageMonitoring: UsageMonitoringTableRow,
     systemAnalytics: SystemAnalyticsTableRow,

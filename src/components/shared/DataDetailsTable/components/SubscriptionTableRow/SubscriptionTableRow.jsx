@@ -60,8 +60,7 @@ const CompanyTableRow = (props) => {
 
 const SubscriptionTableRow = (props) => {
   const { actionOptions, data, type = "subscription" } = props;
-  console.log(data, "data======", type);
-  const { plan_name, amount, billing_cycle, features, account, next_billing, due_date, payment_type, deduct_type, billing_cycle_deduct_option, status } = data;
+  const { phone,plan_name, amount, billing_cycle, features, account, next_billing, due_date, payment_type, deduct_type, billing_cycle_deduct_option, status } = data;
   if (type === "company") {
     return <CompanyTableRow {...props} />;
   } else {
@@ -78,10 +77,9 @@ const SubscriptionTableRow = (props) => {
         <td className="min-w-[631px] w-full">
           <div className="min-h-[120px] py-[30px]">
             <div className="flex gap-[30px] items-center min-h-max">
-              {/* Show account and next_billing if available */}
-              {account && (
+              {phone && (
                 <Tag size="sm" variant="mediumGray">
-                  <span>{account}</span>
+                  <span>{phone}</span>
                 </Tag>
               )}
               {next_billing && (

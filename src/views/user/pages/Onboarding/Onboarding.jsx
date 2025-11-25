@@ -191,7 +191,6 @@ const Onboarding = () => {
   };
 
   useEffect(() => {
-    setAllOnboardings([]);
     getOnboarding();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTabIndex, refreshTrigger]);
@@ -253,7 +252,6 @@ const Onboarding = () => {
           onTabChange={(index) => {
             setCurrentTabIndex(index);
             setCurrentPage(1);
-            window.scrollTo({ top: 0 });
           }}
         allOnboardings={allOnboardings}
         isOnboardingLoading={isOnboardingLoading}

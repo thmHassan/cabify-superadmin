@@ -58,8 +58,9 @@ const CompanyTableRow = (props) => {
   );
 };
 
-const SubscriptionManagementRow = (props) => {
-  const { actionOptions, data, type = "subscriptionManagement" } = props;
+
+const SubscriptionPendingRow = (props) => {
+  const { actionOptions, data, type = "SubscriptionPending" } = props;
   const { company_name, phone, email, company_id, payment_amount } = data;
   if (type === "company") {
     return <CompanyTableRow {...props} />;
@@ -70,7 +71,7 @@ const SubscriptionManagementRow = (props) => {
         data={{
           name: company_name,
           icon: false,
-          actionOptions:false,
+          actionOptions: false,
         }}
       >
         <td className="min-w-[631px] w-full">
@@ -103,4 +104,4 @@ const SubscriptionManagementRow = (props) => {
   }
 };
 
-export default SubscriptionManagementRow;
+export default SubscriptionPendingRow;

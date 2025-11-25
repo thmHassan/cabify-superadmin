@@ -5,6 +5,7 @@ import {
   GET_SUBSCRIPTION_CARDS,
   GET_SUBSCRIPTIONS,
   GET_SUBSCRIPTIONS_MANAGEMENT,
+  GET_SUBSCRIPTIONS_PENDING,
 } from "../constants/api.route.constant";
 import { METHOD_GET, METHOD_POST } from "../constants/method.constant";
 import { replaceSlash } from "../utils/functions/common.function";
@@ -28,6 +29,15 @@ export async function apiGetSubscriptions(params) {
 
 export async function apiGetSubscriptionManagement(params) {
   const url = typeof params === 'string' ? replaceSlash(params, GET_SUBSCRIPTIONS_MANAGEMENT) : GET_SUBSCRIPTIONS_MANAGEMENT;
+  return ApiService.fetchData({
+    url,
+    method: METHOD_GET,
+    params: typeof params === 'object' ? params : undefined,
+  });
+}
+
+export async function apiGetSubscriptionPending(params) {
+  const url = typeof params === 'string' ? replaceSlash(params, GET_SUBSCRIPTIONS_PENDING) : GET_SUBSCRIPTIONS_PENDING;
   return ApiService.fetchData({
     url,
     method: METHOD_GET,

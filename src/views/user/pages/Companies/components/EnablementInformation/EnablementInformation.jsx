@@ -14,9 +14,15 @@ const EnablementInformation = ({
   createdCompanyId,
   isCreatingCompany,
   formEl
-}) => {  
+}) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState(null);
+  const today = new Date();
+  const endDate = new Date(formEl.values.subscription?.end_date);
+  const isSubscriptionRunning = endDate > today;
+  const paymentStatus = formEl.values.company?.payment_status;
+  const isPaymentCompleted = paymentStatus === "success";
+  const showPaymentButtons = !isSubscriptionRunning && !isPaymentCompleted;
 
   const handleCashPayment = async () => {
     try {
@@ -148,30 +154,34 @@ const EnablementInformation = ({
           <span>Cancel</span>
         </Button>
         {modalType === "company" && companyCreated ? (
-          <>
-            <Button
-              btnSize="md"
-              type="filled"
-              className="!px-10 pt-4 pb-[15px] leading-[25px]"
-              onClick={handleCashPayment}
-              disabled={isProcessingPayment}
-            >
-              <span>
-                {isProcessingPayment ? "Processing..." : "Cash Payment"}
-              </span>
-            </Button>
-            <Button
-              btnSize="md"
-              type="filled"
-              className="!px-10 pt-4 pb-[15px] leading-[25px]"
-              onClick={handleOnlinePayment}
-              disabled={isProcessingPayment}
-            >
-              <span>
-                {isProcessingPayment ? "Processing..." : "Online Payment"}
-              </span>
-            </Button>
-          </>
+          showPaymentButtons ? (
+            <>
+              <Button
+                btnSize="md"
+                type="filled"
+                className="!px-10 pt-4 pb-[15px] leading-[25px]"
+                onClick={handleCashPayment}
+                disabled={isProcessingPayment}
+              >
+                <span>{isProcessingPayment ? "Processing..." : "Cash Payment"}</span>
+              </Button>
+              <Button
+                btnSize="md"
+                type="filled"
+                className="!px-10 pt-4 pb-[15px] leading-[25px]"
+                onClick={handleOnlinePayment}
+                disabled={isProcessingPayment}
+              >
+                <span>{isProcessingPayment ? "Processing..." : "Online Payment"}</span>
+              </Button>
+            </>
+          ) : (
+            <div className="text-green-600 font-semibold">
+              {isPaymentCompleted
+                ? "Payment completed successfully"
+                : `Subscription Running Until ${formEl.values.subscription?.end_date}`}
+            </div>
+          )
         ) : (
           <Button
             btnSize="md"
@@ -183,6 +193,7 @@ const EnablementInformation = ({
             <span>{isCreatingCompany ? "Creating Company..." : "Submit"}</span>
           </Button>
         )}
+
       </div>
     </>
   );

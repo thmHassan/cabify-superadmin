@@ -29,6 +29,7 @@ import Modal from "../../../../components/shared/Modal";
 import {
   apiGetSubscriptionCardDetails,
   apiGetSubscriptionManagement,
+  apiGetSubscriptionPending,
   apiGetSubscriptions,
 } from "../../../../services/SubscriptionService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
@@ -271,10 +272,10 @@ const Subscription = () => {
     }, 500)
   );
 
-  const handleSearchChange = useCallback((value) => {
-    setSearchQuery(value);
-    debouncedSearchRef.current(value);
-  }, []);
+  // const handleSearchChange = useCallback((value) => {
+  //   setSearchQuery(value);
+  //   debouncedSearchRef.current(value);
+  // }, []);
 
   useEffect(() => {
     const debouncedFn = debouncedSearchRef.current;
@@ -329,7 +330,6 @@ const Subscription = () => {
         setSubscriptionListDisplay(rows);
       }
     } catch (errors) {
-      console.log(errors, "err---");
       setSubscriptionListRaw([]);
       setSubscriptionListDisplay([]);
       // ErrorNotification(
@@ -353,9 +353,31 @@ const Subscription = () => {
       if (result?.status === 200) {
         const list = result?.data?.list;
         const rows = Array.isArray(list?.data) ? list?.data : [];
-        setSubscriptionManagementDisplay(list);
         setSubscriptionListRaw(rows);
         setSubscriptionManagementDisplay(rows);
+      }
+    } catch (errors) {
+      setSubscriptionListRaw([]);
+      setSubscriptionListDisplay([]);
+    } finally {
+      setIsSubscriptionsLoading(false);
+    }
+  };
+
+  const getSubscriptionPending = async (search = "") => {
+    try {
+      setIsSubscriptionsLoading(true);
+      const result = await apiGetSubscriptionPending({
+        page: currentPage,
+        perPage: itemsPerPage,
+        search: search || undefined,
+      });
+
+      if (result?.status === 200) {
+        const list = result?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setSubscriptionListRaw(rows);
+        setPendingSubscriptionDisplay(rows);
       }
     } catch (errors) {
       setSubscriptionListRaw([]);
@@ -373,7 +395,6 @@ const Subscription = () => {
         setSubscriptionCardDetails(result?.data?.data);
       }
     } catch (errors) {
-      console.log(errors, "err---");
     } finally {
       setIsSubscriptionCardDetailsLoading(false);
     }
@@ -423,82 +444,82 @@ const Subscription = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Filter and search logic for pending subscriptions
-    let filteredData = [...subscriptionManagementData];
+  // useEffect(() => {
+  // Filter and search logic for pending subscriptions
+  // let filteredData = [...subscriptionManagementData];
 
-    // Search filter
-    if (debouncedPendingSearchQuery && debouncedPendingSearchQuery.trim()) {
-      const searchLower = debouncedPendingSearchQuery.toLowerCase().trim();
-      filteredData = filteredData.filter(
-        (sub) =>
-          sub.plan_name?.toLowerCase().includes(searchLower) ||
-          sub.account?.toLowerCase().includes(searchLower)
-      );
-    }
+  // // Search filter
+  // if (debouncedPendingSearchQuery && debouncedPendingSearchQuery.trim()) {
+  //   const searchLower = debouncedPendingSearchQuery.toLowerCase().trim();
+  //   filteredData = filteredData.filter(
+  //     (sub) =>
+  //       sub.plan_name?.toLowerCase().includes(searchLower) ||
+  //       sub.account?.toLowerCase().includes(searchLower)
+  //   );
+  // }
 
-    // Status filter
-    if (pendingSelectedStatus?.value && pendingSelectedStatus.value !== "all") {
-      filteredData = filteredData.filter((sub) =>
-        sub.status?.some(
-          (s) => s.toLowerCase() === pendingSelectedStatus.value.toLowerCase()
-        )
-      );
-    }
+  // // Status filter
+  // if (pendingSelectedStatus?.value && pendingSelectedStatus.value !== "all") {
+  //   filteredData = filteredData.filter((sub) =>
+  //     sub.status?.some(
+  //       (s) => s.toLowerCase() === pendingSelectedStatus.value.toLowerCase()
+  //     )
+  //   );
+  // }
 
-    // Plan filter
-    if (pendingSelectedPlan?.value && pendingSelectedPlan.value !== "all") {
-      filteredData = filteredData.filter((sub) =>
-        sub.status?.some(
-          (s) => s.toLowerCase() === pendingSelectedPlan.value.toLowerCase()
-        )
-      );
-    }
+  // // Plan filter
+  // if (pendingSelectedPlan?.value && pendingSelectedPlan.value !== "all") {
+  //   filteredData = filteredData.filter((sub) =>
+  //     sub.status?.some(
+  //       (s) => s.toLowerCase() === pendingSelectedPlan.value.toLowerCase()
+  //     )
+  //   );
+  // }
 
-    // Payment type filter
-    if (
-      pendingSelectedPaymentType?.value &&
-      pendingSelectedPaymentType.value !== "all"
-    ) {
-      filteredData = filteredData.filter(
-        (sub) =>
-          sub.payment_type?.toLowerCase() ===
-          pendingSelectedPaymentType.value.toLowerCase()
-      );
-    }
+  // // Payment type filter
+  // if (
+  //   pendingSelectedPaymentType?.value &&
+  //   pendingSelectedPaymentType.value !== "all"
+  // ) {
+  //   filteredData = filteredData.filter(
+  //     (sub) =>
+  //       sub.payment_type?.toLowerCase() ===
+  //       pendingSelectedPaymentType.value.toLowerCase()
+  //   );
+  // }
 
-    // Pagination - show items per page
-    const startIndex =
-      (pendingSubscriptionCurrentPage - 1) * pendingItemsPerPage;
-    const endIndex = startIndex + pendingItemsPerPage;
-    const paginatedData = filteredData.slice(startIndex, endIndex);
+  // // Pagination - show items per page
+  // const startIndex =
+  //   (pendingSubscriptionCurrentPage - 1) * pendingItemsPerPage;
+  // const endIndex = startIndex + pendingItemsPerPage;
+  // const paginatedData = filteredData.slice(startIndex, endIndex);
 
-    // Update total pages
-    const totalPages = Math.ceil(filteredData.length / pendingItemsPerPage);
-    setAllPendingSubscription({
-      data: filteredData,
-      last_page: totalPages || 1,
-    });
+  // // Update total pages
+  // const totalPages = Math.ceil(filteredData.length / pendingItemsPerPage);
+  // setAllPendingSubscription({
+  //   data: filteredData,
+  //   last_page: totalPages || 1,
+  // });
 
-    setPendingSubscriptionDisplay(paginatedData);
-  }, [
-    pendingSubscriptionCurrentPage,
-    pendingItemsPerPage,
-    debouncedPendingSearchQuery,
-    pendingSelectedStatus,
-    pendingSelectedPlan,
-    pendingSelectedPaymentType,
-  ]);
+  // setPendingSubscriptionDisplay(paginatedData);
+  // }, [
+  //   pendingSubscriptionCurrentPage,
+  //   pendingItemsPerPage,
+  //   debouncedPendingSearchQuery,
+  //   pendingSelectedStatus,
+  //   pendingSelectedPlan,
+  //   pendingSelectedPaymentType,
+  // ]);
 
-  const handlePendingSubscriptionPageChange = (pageNumber) => {
-    setPendingSubscriptionCurrentPage(pageNumber);
-  };
+  // const handlePendingSubscriptionPageChange = (pageNumber) => {
+  //   setPendingSubscriptionCurrentPage(pageNumber);
+  // };
 
-  const handlePendingSubscriptionItemsPerPageChange = (newItemsPerPage) => {
-    // Fixed at 4 items per page for Pending Subscription
-    setPendingItemsPerPage(4);
-    setPendingSubscriptionCurrentPage(1);
-  };
+  // const handlePendingSubscriptionItemsPerPageChange = (newItemsPerPage) => {
+  //   // Fixed at 4 items per page for Pending Subscription
+  //   setPendingItemsPerPage(4);
+  //   setPendingSubscriptionCurrentPage(1);
+  // };
 
   const handlePendingStatusChange = (option) => {
     setPendingSelectedStatus(option);
@@ -551,6 +572,14 @@ const Subscription = () => {
       prevItemsPerPageRef.current = itemsPerPage;
       prevCurrentPageRef.current = currentPage;
     }
+
+    if (!hasCalledInitial.current) {
+      hasCalledInitial.current = true;
+      getSubscriptionPending(debouncedSearchQuery);
+      prevSearchRef.current = debouncedSearchQuery;
+      prevItemsPerPageRef.current = itemsPerPage;
+      prevCurrentPageRef.current = currentPage;
+    }
   }, []);
 
   useEffect(() => {
@@ -559,6 +588,7 @@ const Subscription = () => {
     }
     getSubscriptions(debouncedSearchQuery);
     getSubscriptionManagement(debouncedSearchQuery);
+    getSubscriptionPending(debouncedSearchQuery)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger]);
 
@@ -593,31 +623,31 @@ const Subscription = () => {
   // Pagination for Subscription Management (static data, no filters/search)
   const [subscriptionManagementDisplay, setSubscriptionManagementDisplay] =
     useState([]);
-  const [
-    subscriptionManagementCurrentPage,
-    setSubscriptionManagementCurrentPage,
-  ] = useState(1);
+  // const [
+  //   subscriptionManagementCurrentPage,
+  //   setSubscriptionManagementCurrentPage,
+  // ] = useState(1);
 
-  useEffect(() => {
-    // Pagination - show 4 items per page for Subscription Management
-    const startIndex = (subscriptionManagementCurrentPage - 1) * 4;
-    const endIndex = startIndex + 4;
-    const paginatedData = subscriptionManagementData.slice(
-      startIndex,
-      endIndex
-    );
+  // useEffect(() => {
+  //   // Pagination - show 4 items per page for Subscription Management
+  //   const startIndex = (subscriptionManagementCurrentPage - 1) * 4;
+  //   const endIndex = startIndex + 4;
+  //   const paginatedData = subscriptionManagementData.slice(
+  //     startIndex,
+  //     endIndex
+  //   );
 
-    setSubscriptionManagementDisplay(paginatedData);
-  }, [subscriptionManagementCurrentPage]);
+  //   setSubscriptionManagementDisplay(paginatedData);
+  // }, [subscriptionManagementCurrentPage]);
 
-  const handleSubscriptionManagementPageChange = (pageNumber) => {
-    setSubscriptionManagementCurrentPage(pageNumber);
-  };
+  // const handleSubscriptionManagementPageChange = (pageNumber) => {
+  //   setSubscriptionManagementCurrentPage(pageNumber);
+  // };
 
-  const handleSubscriptionManagementItemsPerPageChange = (newItemsPerPage) => {
-    // Items per page is fixed at 4 for Subscription Management
-    setSubscriptionManagementCurrentPage(1);
-  };
+  // const handleSubscriptionManagementItemsPerPageChange = (newItemsPerPage) => {
+  //   // Items per page is fixed at 4 for Subscription Management
+  //   setSubscriptionManagementCurrentPage(1);
+  // };
 
   if (isSubscriptionCardDetailsLoading) {
     return (
@@ -826,8 +856,8 @@ const Subscription = () => {
             <div>
               {/* Subscription Management - Static data, show 4 items per page, no search/filters */}
               <div>
-                {/* <DataDetailsTable
-                  rowType="subscription"
+                <DataDetailsTable
+                  rowType="subscriptionManagement"
                   companies={subscriptionManagementDisplay}
                   actionOptions={[
                     {
@@ -853,7 +883,7 @@ const Subscription = () => {
                       },
                     },
                   ]}
-                /> */}
+                />
               </div>
               {/* {Array.isArray(subscriptionManagementDisplay) &&
                 subscriptionManagementDisplay.length > 0 ? (
@@ -941,7 +971,7 @@ const Subscription = () => {
               </div>
               <div>
                 <DataDetailsTable
-                  rowType="subscription"
+                  rowType="SubscriptionPending"
                   companies={pendingSubscriptionDisplay}
                   actionOptions={[
                     {
@@ -959,7 +989,7 @@ const Subscription = () => {
                   ]}
                 />
               </div>
-              {Array.isArray(pendingSubscriptionDisplay) &&
+              {/* {Array.isArray(pendingSubscriptionDisplay) &&
                 pendingSubscriptionDisplay.length > 0 ? (
                 <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
                   <Pagination
@@ -974,7 +1004,7 @@ const Subscription = () => {
                     pageKey="pendingSubscription"
                   />
                 </div>
-              ) : null}
+              ) : null} */}
               {/* Mobile Filter Bottom Sheet */}
               <AnimatePresence>
                 {isPendingFilterOpen && (
