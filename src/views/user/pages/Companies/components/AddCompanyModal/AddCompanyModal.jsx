@@ -175,8 +175,9 @@ const AddCompanyModal = ({
       };
 
       const formValues = { ...formattedValues, ...formData };
-      const latestFormData =
+      let latestFormData =
         type === "edit" ? { id, ...formValues, password: password } : formValues;
+      delete latestFormData.subscription;
 
       const formDataToSend = convertToFormData(latestFormData);
       const payload = modalType === "company" ? formDataToSend : latestFormData;
