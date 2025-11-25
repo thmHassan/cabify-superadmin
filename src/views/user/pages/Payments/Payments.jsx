@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageTitle from "../../../../components/ui/PageTitle";
 import PageSubTitle from "../../../../components/ui/PageSubTitle";
 import CardContainer from "../../../../components/shared/CardContainer";
@@ -10,6 +10,9 @@ import PaymentProviderIcon from "../../../../components/svg/PaymentProviderIcon"
 import PaymentsIcon from "../../../../components/svg/PaymentsIcon";
 import SearchBar from "../../../../components/shared/SearchBar";
 import DataDetailsTable from "../../../../components/shared/DataDetailsTable";
+import { apiGetAllPaymentsList } from "../../../../services/PaymentService";
+import Pagination from "../../../../components/ui/Pagination";
+import { PAGE_SIZE_OPTIONS } from "../../../../constants/selectOptions";
 
 const PAYMENT_STATUS = {
   Paid: "green",
@@ -29,7 +32,51 @@ const paymentProviderData = [
   },
 ];
 
+const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
+  return new Date(dateString).toISOString().split("T")[0];
+}
+
+
 const Payments = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [allPayment, setAllPayment] = useState([]);
+
+  const getAllPaymentList = async (page = 1,
+    perPage = itemsPerPage) => {
+    try {
+      const response = await apiGetAllPaymentsList({
+        page,
+        perPage,
+      });
+      const formattedData = response.data.list.data.map(item => ({
+        ...item,
+        date: formatDate(item.created_at),
+      }))
+
+      setAllPayment(formattedData)
+      setItemsPerPage(response.data.list.per_page)
+      setTotalPages(response.data.list.totalPages)
+    } catch (error) {
+      setAllPayment([]);
+    }
+  }
+
+  useEffect(() => {
+    getAllPaymentList()
+  }, [currentPage, itemsPerPage])
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleItemsPerPageChange = (size) => {
+    setItemsPerPage(size);
+    setCurrentPage(1)
+  };
+
   const columns = [
     { header: "Date", accessor: "date" },
     { header: "Amount", accessor: "amount" },
@@ -47,23 +94,6 @@ const Payments = () => {
     { header: "Method", accessor: "method" },
   ];
 
-  const data = [
-    { date: "2024-12-01", amount: "$199", status: "Paid", method: "online" },
-    { date: "2024-12-01", amount: "$199", status: "Failed", method: "$199" },
-    {
-      date: "2024-12-01",
-      amount: "$199",
-      status: "Processing",
-      method: "$199",
-    },
-    { date: "2024-12-01", amount: "$199", status: "Pending", method: "$199" },
-    { date: "2024-12-01", amount: "$199", status: "Paid", method: "$199" },
-    { date: "2024-12-01", amount: "$199", status: "Paid", method: "$199" },
-    { date: "2024-12-01", amount: "$199", status: "Paid", method: "$199" },
-    { date: "2024-12-01", amount: "$199", status: "Paid", method: "$199" },
-    { date: "2024-12-01", amount: "$199", status: "Paid", method: "$199" },
-    { date: "2024-12-01", amount: "$199", status: "Paid", method: "$199" },
-  ];
   return (
     <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
       <div className="flex flex-col gap-2.5 sm:mb-[30px] mb-4">
@@ -110,8 +140,17 @@ const Payments = () => {
             </div>
           </div>
           <div className="bg-[#ffffff] rounded-[10px] overflow-x-auto">
-            <PaymentTable columns={columns} data={data} />
+            <PaymentTable columns={columns} data={allPayment} />
           </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+            pageKey="payments"
+          />
         </div>
       </CardContainer>
     </div>

@@ -54,3 +54,6 @@ export const GET_USER_PROFILE = "/super-admin/edit-subadmin";
 
 // api for API Keys
 export const GET_API_KEY = "/super-admin/api-keys";
+
+// api for payment
+export const GET_PAYMENT_LIST = "/super-admin/payment-list";
