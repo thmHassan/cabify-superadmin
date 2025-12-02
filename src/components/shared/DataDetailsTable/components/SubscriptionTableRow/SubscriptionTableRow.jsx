@@ -60,7 +60,7 @@ const CompanyTableRow = (props) => {
 
 const SubscriptionTableRow = (props) => {
   const { actionOptions, data, type = "subscription" } = props;
-  console.log(data, "data======", type);
+  // console.log(data, "data======", type);
   const { plan_name, amount, billing_cycle, features, account, next_billing, due_date, payment_type, deduct_type, billing_cycle_deduct_option, status } = data;
   if (type === "company") {
     return <CompanyTableRow {...props} />;

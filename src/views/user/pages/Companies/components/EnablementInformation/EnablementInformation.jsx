@@ -2,7 +2,6 @@ import Button from "../../../../../../components/ui/Button/Button";
 import Switch from "../../../../../../components/ui/Switch";
 import FormLabel from "../../../../../../components/ui/FormLabel";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
-// import { enablementInformationSchema } from "../../validators/companyValidation";
 import ApiService from "../../../../../../services/ApiService";
 import { useState } from "react";
 
@@ -14,7 +13,7 @@ const EnablementInformation = ({
   createdCompanyId,
   isCreatingCompany,
   formEl
-}) => {  
+}) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState(null);
 
@@ -63,69 +62,50 @@ const EnablementInformation = ({
     }
   };
 
+  const company =
+    companyCreated && typeof companyCreated === "object"
+      ? companyCreated
+      : formEl?.values?.company || {};
+
+  const paymentStatus = company?.payment_status;
+  const expiryDate = company?.expiry_date;
+
+  const isExpired = expiryDate ? new Date(expiryDate) <= new Date() : false;
+
+  const shouldShowPaymentButtons =
+    paymentStatus === "pending" || (paymentStatus === "success" && isExpired);
+
+  console.log("company", company);
+  console.log("paymentStatus", paymentStatus);
+  console.log("shouldShowPaymentButtons", shouldShowPaymentButtons);
+
   return (
     <>
       <div className="flex flex-wrap gap-4 sm:gap-5 mb-6 sm:mb-[60px]">
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="dispatcher" className="w-[calc(100%-63px)]">
-            Dispatcher
-          </FormLabel>
-          <Switch name="dispatcher" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="map" className="w-[calc(100%-63px)]">
-            Map
-          </FormLabel>
-          <Switch name="map" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="push_notification" className="w-[calc(100%-63px)]">
-            Push Notification
-          </FormLabel>
-          <Switch name="push_notification" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="usage_monitoring" className="w-[calc(100%-63px)]">
-            Usage Monitoring
-          </FormLabel>
-          <Switch name="usage_monitoring" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="revenue_statements" className="w-[calc(100%-63px)]">
-            Revenue & Statements
-          </FormLabel>
-          <Switch name="revenue_statements" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="zone" className="w-[calc(100%-63px)]">
-            Zone
-          </FormLabel>
-          <Switch name="zone" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="manage_zones" className="w-[calc(100%-63px)]">
-            Manage Zones
-          </FormLabel>
-          <Switch name="manage_zones" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="cms" className="w-[calc(100%-63px)]">
-            CMS
-          </FormLabel>
-          <Switch name="cms" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="lost_found" className="w-[calc(100%-63px)]">
-            Lost & Found
-          </FormLabel>
-          <Switch name="lost_found" />
-        </div>
-        <div className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center">
-          <FormLabel htmlFor="accounts" className="w-[calc(100%-63px)]">
-            Accounts
-          </FormLabel>
-          <Switch name="accounts" />
-        </div>
+        {[
+          "dispatcher",
+          "map",
+          "push_notification",
+          "usage_monitoring",
+          "revenue_statements",
+          "zone",
+          "manage_zones",
+          "cms",
+          "lost_found",
+          "accounts"
+        ].map((feature) => (
+          <div
+            key={feature}
+            className="w-full sm:w-[calc((100%-20px)/2)] gap-3 flex justify-between h-[31px] items-center"
+          >
+            <FormLabel htmlFor={feature} className="w-[calc(100%-63px)]">
+              {feature
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase())}
+            </FormLabel>
+            <Switch name={feature} />
+          </div>
+        ))}
       </div>
 
       {paymentError && (
@@ -147,7 +127,7 @@ const EnablementInformation = ({
         >
           <span>Cancel</span>
         </Button>
-        {modalType === "company" && companyCreated ? (
+        {modalType === "company" && companyCreated && shouldShowPaymentButtons ? (
           <>
             <Button
               btnSize="md"
@@ -156,9 +136,7 @@ const EnablementInformation = ({
               onClick={handleCashPayment}
               disabled={isProcessingPayment}
             >
-              <span>
-                {isProcessingPayment ? "Processing..." : "Cash Payment"}
-              </span>
+              <span>{isProcessingPayment ? "Processing..." : "Cash Payment"}</span>
             </Button>
             <Button
               btnSize="md"
@@ -167,9 +145,7 @@ const EnablementInformation = ({
               onClick={handleOnlinePayment}
               disabled={isProcessingPayment}
             >
-              <span>
-                {isProcessingPayment ? "Processing..." : "Online Payment"}
-              </span>
+              <span>{isProcessingPayment ? "Processing..." : "Online Payment"}</span>
             </Button>
           </>
         ) : (

@@ -1,4 +1,5 @@
 import {
+  DELETE_COMPANY,
   EDIT_COMPANY,
   GET_COMPANY_BY_ID,
   GET_COMPANY_CARD_DETAILS,
@@ -34,5 +35,12 @@ export async function apiEditCompanyDetails(params, data) {
     url: params ? replaceSlash(params, EDIT_COMPANY) : EDIT_COMPANY,
     method: METHOD_POST,
     data,
+  });
+}
+
+export async function apiDeleteCompany(params) {
+  return ApiService.fetchData({
+    url: `${DELETE_COMPANY}?id=${params.id}`,
+    method: METHOD_GET,
   });
 }

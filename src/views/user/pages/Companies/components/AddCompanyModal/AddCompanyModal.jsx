@@ -24,8 +24,6 @@ import {
 } from "../../../../validators/pages/companies.validation";
 import * as Yup from "yup";
 
-// const defaultFormValue = import.meta.env.VITE_IS_DEFAULT_VALUES || false;
-
 const AddCompanyModal = ({
   modalType = "company",
   isCompanyModalOpen,
@@ -37,6 +35,7 @@ const AddCompanyModal = ({
   const { type } = isCompanyModalOpen;
   const [formData, setFormData] = useState(initialValue);
   const [companyCreated, setCompanyCreated] = useState(false);
+  const [createdCompany, setCreatedCompany] = useState(null);
   const [createdCompanyId, setCreatedCompanyId] = useState(null);
   const [isCreatingCompany, setIsCreatingCompany] = useState(false);
   const [submitError, setSubmitError] = useState(null);
@@ -94,23 +93,32 @@ const AddCompanyModal = ({
     lost_found: formData.lost_found,
     accounts: formData.accounts,
     subscription: {},
-    picture: ''
+    picture: formData.picture
   });
   const fileInputRef = useRef(null);
   const handlePickImage = () => {
     fileInputRef.current?.click();
   };
 
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files && e.target.files[0];
+  //   if (!file) return;
+  //   // Optionally, validate file type/size here
+  //   setFormData((prev) => ({ ...prev, picture: file }));
+  //   const objectUrl = URL.createObjectURL(file);
+  //   setImagePreviewUrl((prevUrl) => {
+  //     if (prevUrl) URL.revokeObjectURL(prevUrl);
+  //     return objectUrl;
+  //   });
+  // };
+
   const handleImageChange = (e) => {
-    const file = e.target.files && e.target.files[0];
+    const file = e.target.files[0];
     if (!file) return;
-    // Optionally, validate file type/size here
-    setFormData((prev) => ({ ...prev, picture: file }));
-    const objectUrl = URL.createObjectURL(file);
-    setImagePreviewUrl((prevUrl) => {
-      if (prevUrl) URL.revokeObjectURL(prevUrl);
-      return objectUrl;
-    });
+
+    setFormData(prev => ({ ...prev, picture: file }));
+
+    setImagePreviewUrl(URL.createObjectURL(file));
   };
   const TABS_CONFIGS = [
     {
@@ -176,31 +184,40 @@ const AddCompanyModal = ({
 
       const formValues = { ...formattedValues, ...formData };
       let latestFormData =
-        type === "edit" ? { id, ...formValues, password: password } : formValues;
+        type === "edit" ? { id, ...formValues, password } : formValues;
+
       delete latestFormData.subscription;
-      delete latestFormData.picture;
 
       const formDataToSend = convertToFormData(latestFormData);
-      const payload = modalType === "company" ? formDataToSend : latestFormData;
+
+      const payload =
+        modalType === "company"
+          ? formDataToSend
+          : convertToFormData(latestFormData);
+
       const response =
         type === "edit"
-          ? await MODAL_CONFIG[modalType][type].api({}, payload)
+          ? await MODAL_CONFIG[modalType][type].api(id, payload)
           : await MODAL_CONFIG[modalType][type].api(payload);
 
       if (response.status === 200 || response.status === 201) {
         if (modalType === "company") {
           setCompanyCreated(true);
+
+          const companyObj = response.data.company || response.data.tenant || {};
+          setCreatedCompany(companyObj);
+
           const companyId =
-            response.data.tenant.id ||
+            companyObj.id ||
             response.data.company_id ||
             response.data.data?.id;
           setCreatedCompanyId(companyId);
-        } else {
-          setFormData({});
-          unlockBodyScroll();
-          onRefresh();
-          setIsOpen({ type: "new", isOpen: false });
         }
+      } else {
+        setFormData({});
+        unlockBodyScroll();
+        onRefresh();
+        setIsOpen({ type: "new", isOpen: false });
       }
     } catch (error) {
       if (error.name === "ValidationError" && Array.isArray(error.errors)) {
@@ -354,13 +371,13 @@ const AddCompanyModal = ({
               <div
                 className="w-20 h-20 sm:w-[100px] sm:h-[100px] lg:w-[120px] lg:h-[120px] rounded-full bg-[#EEEEEE] flex justify-center items-center mx-auto mb-4 sm:mb-5 overflow-hidden cursor-pointer"
                 onClick={handlePickImage}
-                title="Click to upload"
               >
-                {values?.picture ? (
+                {imagePreviewUrl ? (
+                  <img src={imagePreviewUrl} className="w-full h-full object-cover" />
+                ) : values.picture ? (
                   <img
                     src={`${import.meta.env.VITE_BACKEND_URL}/${values.picture}`}
-                    alt="Company"
-                    className="w-full h-full object-fit"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <ImageUploadIcon />
@@ -391,7 +408,7 @@ const AddCompanyModal = ({
                 setIsOpen={setIsOpen}
                 type={type}
                 modalType={modalType}
-                companyCreated={companyCreated}
+                companyCreated={createdCompany}
                 createdCompanyId={createdCompanyId}
                 isCreatingCompany={isCreatingCompany}
                 formEl={{ ...formEl, values }}
