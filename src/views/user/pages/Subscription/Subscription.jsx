@@ -30,6 +30,7 @@ import {
   apiGetSubscriptionCardDetails,
   apiGetSubscriptionManagement,
   apiGetSubscriptions,
+  apiDeleteSubscription
 } from "../../../../services/SubscriptionService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import EditSubscriptionModal from "./components/EditSubscriptionModal";
@@ -252,6 +253,9 @@ const Subscription = () => {
     type: "new",
   });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [subscriptionToDelete, setSubscriptionToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Pending Subscription - Static data (same as Subscription Management)
 
@@ -376,6 +380,25 @@ const Subscription = () => {
       console.log(errors, "err---");
     } finally {
       setIsSubscriptionCardDetailsLoading(false);
+    }
+  };
+
+  const handleDeleteSubscription = async () => {
+    if (!subscriptionToDelete) return;
+    setIsDeleting(true);
+    try {
+      const response = await apiDeleteSubscription({ id: subscriptionToDelete.id });
+      if (response?.status === 200) {
+        handleRefresh();
+        setDeleteModalOpen(false);
+        setSubscriptionToDelete(null);
+      } else {
+        console.error("Failed to delete subscription");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -710,8 +733,45 @@ const Subscription = () => {
                           });
                         },
                       },
+                      {
+                        label: "Delete",
+                        onClick: (item) => {
+                          setSubscriptionToDelete(item);
+                          setDeleteModalOpen(true);
+                        },
+                      },
                     ]}
                   />
+                  <Modal isOpen={deleteModalOpen} className="p-6 sm:p-8 w-full max-w-md">
+                    <div className="text-center">
+                      <h2 className="text-xl font-semibold mb-3">Delete subscription?</h2>
+                      <p className="text-gray-600 mb-6">
+                        Are you sure you want to delete subscription
+                      </p>
+
+                      <div className="flex justify-center gap-4">
+                        <Button
+                          type="filledGray"
+                          onClick={() => {
+                            setDeleteModalOpen(false);
+                            setSubscriptionToDelete(null);
+                          }}
+                          className="px-6 py-2"
+                        >
+                          Cancel
+                        </Button>
+
+                        <Button
+                          type="filledRed"
+                          onClick={handleDeleteSubscription}
+                          disabled={isDeleting}
+                          className="px-6 py-2"
+                        >
+                          {isDeleting ? "Deleting..." : "Delete"}
+                        </Button>
+                      </div>
+                    </div>
+                  </Modal>
                 </div>
               </Loading>
               {Array.isArray(subscriptionListDisplay) &&

@@ -1,5 +1,7 @@
+import { method } from "lodash";
 import {
   CREATE_SUB_ADMIN,
+  DELETE_SUB_ADMIN,
   EDIT_SUB_ADMIN,
   GET_SUB_ADMIN_BY_ID,
   GET_SUB_ADMINS,
@@ -37,5 +39,12 @@ export async function apiEditSubAdmin(params, data) {
     url: params ? replaceSlash(params, EDIT_SUB_ADMIN) : EDIT_SUB_ADMIN,
     method: METHOD_POST,
     data,
+  });
+}
+
+export async function apiDeleteSubAdmin(params) {
+  return ApiService.fetchData({
+    url: `${DELETE_SUB_ADMIN}?id=${params.id}`,
+    method: METHOD_GET,
   });
 }

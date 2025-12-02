@@ -1,5 +1,7 @@
+import { method } from "lodash";
 import {
   CREATE_ONBOARDING_REQUEST,
+  DELETE_ONBOARDING,
   EDIT_ONBOARDING,
   GET_ONBOARDING_BY_ID,
   GET_ONBOARDING_REQUEST,
@@ -48,5 +50,12 @@ export async function apiEditOnboarding(params, data) {
     url: params ? replaceSlash(params, EDIT_ONBOARDING) : EDIT_ONBOARDING,
     method: METHOD_POST,
     data,
+  });
+}
+
+export async function apiDeleteOnboarding(params) {
+  return ApiService.fetchData({
+    url: `${DELETE_ONBOARDING}?id=${params.id}`,
+    method: METHOD_GET,
   });
 }

@@ -30,8 +30,26 @@ const CommonTableRowFields = ({
             <div className="p-[30px] flex gap-[15px] items-center">
               {icon && (
                 <div className="h-[60px] min-w-[60px] bg-[#F9F9F9] flex justify-center items-center rounded-full">
-                  <Icon {...icon} />
+                  {profile_picture ? (
+                    <img
+                      src={`${import.meta.env.VITE_BACKEND_URL}/${profile_picture}`}
+                      alt={name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.src = "/default-company.png";
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src="/default-company.png"
+                      alt="missing"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
+                // <div className="h-[60px] min-w-[60px] bg-[#F9F9F9] flex justify-center items-center rounded-full">
+                //   <Icon {...icon} />
+                // </div>
               )}
               <div className="flex flex-col gap-2.5">
                 <div className="flex justify-start items-center gap-4">
@@ -45,9 +63,9 @@ const CommonTableRowFields = ({
                   />
                   }
                 </div> */}
-                <div className="max-w-[350px] cursor-pointer" title={name}>
-                  <CardSubtitle type={1} subtitle={name} />
-                </div>
+                  <div className="max-w-[350px] cursor-pointer" title={name}>
+                    <CardSubtitle type={1} subtitle={name} />
+                  </div>
                 </div>
                 {status && (
                   <div className="flex gap-[15px] min-w-[200px] ">
@@ -75,7 +93,7 @@ const CommonTableRowFields = ({
             <UserDropdown options={actionOptions} itemData={itemData}>
               <Button
                 className="w-10 h-10 bg-[#EFEFEF] rounded-full flex justify-center items-center"
-                // onClick={onActionClick}
+              // onClick={onActionClick}
               >
                 <ThreeDotsIcon />
               </Button>

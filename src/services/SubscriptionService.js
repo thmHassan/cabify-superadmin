@@ -1,5 +1,7 @@
+import { method } from "lodash";
 import {
   CREATE_SUBSCRIPTION,
+  DELETE_SUBSCRIPTIONS,
   EDIT_SUBSCRIPTION,
   GET_SUBSCRIPTION_BY_ID,
   GET_SUBSCRIPTION_CARDS,
@@ -58,5 +60,12 @@ export async function apiEditSubscription(params, data) {
     url: params ? replaceSlash(params, EDIT_SUBSCRIPTION) : EDIT_SUBSCRIPTION,
     method: METHOD_POST,
     data,
+  });
+}
+
+export async function apiDeleteSubscription(params) {
+  return ApiService.fetchData({
+    url: `${DELETE_SUBSCRIPTIONS}?id=${params.id}`,
+    method: METHOD_GET,
   });
 }

@@ -32,6 +32,7 @@ import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import Modal from "../../../../components/shared/Modal";
 import Loading from "../../../../components/shared/Loading/Loading";
 import { useAppSelector } from "../../../../store";
+import { apiDeleteCompany } from "../../../../services/CompanyService";
 
 const Companies = () => {
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState({
@@ -48,11 +49,14 @@ const Companies = () => {
   const [_selectedPlan, setSelectedPlan] = useState({
     value: "all",
     label: "All Plans"
-  }); 
+  });
   const [companyCards, setCompanyCards] = useState(null);
   const [companyListRaw, setCompanyListRaw] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [companyListDisplay, setCompanyListDisplay] = useState([]);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [companyToDelete, setCompanyToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const savedPagination = useAppSelector(
     (state) => state?.app?.app?.pagination?.companies
   );
@@ -179,7 +183,7 @@ const Companies = () => {
         search: search || undefined,
       });
       const list = response?.data?.list;
-      console.log(list, "list");
+      // console.log(list, "list");
       const rows = Array.isArray(list?.data) ? list?.data : [];
 
       console.log(rows, "rows");
@@ -205,6 +209,25 @@ const Companies = () => {
   const [subscriptionOptions, setSubscriptionOptions] = useState([]);
   const [isLoadingSubscriptions, setIsLoadingSubscriptions] = useState(false);
   const [subscriptionError, setSubscriptionError] = useState(null);
+
+  const handleDeleteCompany = async () => {
+    if (!companyToDelete) return;
+    setIsDeleting(true);
+    try {
+      const response = await apiDeleteCompany({ id: companyToDelete.id });
+      if (response?.status === 200) {
+        handleRefresh();
+        setDeleteModalOpen(false);
+        setCompanyToDelete(null);
+      } else {
+        console.error("Failed to delete sub admin");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   useEffect(() => {
     const fetchSubscriptionList = async () => {
@@ -237,19 +260,36 @@ const Companies = () => {
     fetchSubscriptionList();
   }, [])
 
+  // useEffect(() => {
+  //   fetchCompanyCards();
+  //   const statusParam = _selectedStatus?.value ?? "all";
+
+  //   console.log(statusParam, "statusparam");
+  //   fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [refreshTrigger]);
   useEffect(() => {
-    fetchCompanyCards();
     const statusParam = _selectedStatus?.value ?? "all";
 
-    console.log(statusParam, "statusparam");
-    fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshTrigger]);
+    fetchCompanyList(
+      currentPage,
+      statusParam,
+      itemsPerPage,
+      debouncedSearchQuery
+    );
+  }, [
+    currentPage,
+    _selectedStatus,
+    itemsPerPage,
+    debouncedSearchQuery,
+    refreshTrigger
+  ]);
 
   const mapToTableRows = (companies) => {
-    console.log(companies, "companies");
+    // console.log(companies, "companies");
     return companies.map((c) => ({
       id: c.id ?? c.company_id, // Include company ID
+      profile_picture: c.picture ?? null,
       name: c.company_name ?? "-",
       status: [c.status ?? "-", c.subscription_type ?? "-"],
       location: c.city ?? "-",
@@ -273,23 +313,23 @@ const Companies = () => {
     setCompanyListDisplay(mapToTableRows(filtered));
   }, [companyListRaw, _selectedPlan]);
 
-  useEffect(() => {
-    const statusParam = _selectedStatus?.value ?? "all";
-    setCurrentPage(1); // Reset to page 1 when search or status changes
-    fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearchQuery, _selectedStatus, itemsPerPage]);
+  // useEffect(() => {
+  //   const statusParam = _selectedStatus?.value ?? "all";
+  //   setCurrentPage(1); // Reset to page 1 when search or status changes
+  //   fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [debouncedSearchQuery, _selectedStatus, itemsPerPage]);
 
-  useEffect(() => {
-    const statusParam = _selectedStatus?.value ?? "all";
-    fetchCompanyList(
-      currentPage,
-      statusParam,
-      itemsPerPage,
-      debouncedSearchQuery
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  // useEffect(() => {
+  //   const statusParam = _selectedStatus?.value ?? "all";
+  //   fetchCompanyList(
+  //     currentPage,
+  //     statusParam,
+  //     itemsPerPage,
+  //     debouncedSearchQuery
+  //   );
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [currentPage]);
 
   if (cardsLoading) {
     return (
@@ -299,7 +339,7 @@ const Companies = () => {
     );
   }
 
-  console.log(totalItems, "totalItems===");
+  // console.log(totalItems, "totalItems===");
 
   return (
     <div className="px-4 py-5 sm:p-6 lg:p-7 2xl:p-10 min-h-[calc(100vh-64px)] sm:min-h-[calc(100vh-85px)]">
@@ -423,8 +463,45 @@ const Companies = () => {
                         }
                       },
                     },
+                    {
+                      label: "Delete",
+                      onClick: (item) => {
+                        setCompanyToDelete(item);
+                        setDeleteModalOpen(true);
+                      },
+                    },
                   ]}
                 />
+                <Modal isOpen={deleteModalOpen} className="p-6 sm:p-8 w-full max-w-md">
+                  <div className="text-center">
+                    <h2 className="text-xl font-semibold mb-3">Delete Company?</h2>
+                    <p className="text-gray-600 mb-6">
+                      Are you sure you want to delete company
+                    </p>
+
+                    <div className="flex justify-center gap-4">
+                      <Button
+                        type="filledGray"
+                        onClick={() => {
+                          setDeleteModalOpen(false);
+                          setCompanyToDelete(null);
+                        }}
+                        className="px-6 py-2"
+                      >
+                        Cancel
+                      </Button>
+
+                      <Button
+                        type="filledRed"
+                        onClick={handleDeleteCompany}
+                        disabled={isDeleting}
+                        className="px-6 py-2"
+                      >
+                        {isDeleting ? "Deleting..." : "Delete"}
+                      </Button>
+                    </div>
+                  </div>
+                </Modal>
               </Loading>
               {Array.isArray(companyListDisplay) &&
                 companyListDisplay.length > 0 ? (

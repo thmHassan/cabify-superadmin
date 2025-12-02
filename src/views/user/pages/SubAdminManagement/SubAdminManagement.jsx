@@ -15,7 +15,7 @@ import {
   unlockBodyScroll,
 } from "../../../../utils/functions/common.function";
 import AddSubAdminModal from "./components/AddSubAdminModal/AddSubAdminModal";
-import { apiGetSubAdmins } from "../../../../services/SubAdminService";
+import { apiDeleteSubAdmin, apiGetSubAdmins } from "../../../../services/SubAdminService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import Loading from "../../../../components/shared/Loading/Loading";
 import ViewPermissions from "./components/ViewPermissions";
@@ -62,6 +62,9 @@ const SubAdminManagement = () => {
   const [selectedViewData, setSelectedViewData] = useState(null);
   const [isViewPermissionModal, setIsViewPermissionModal] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [subAdminToDelete, setSubAdminToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const savedPagination = useAppSelector(
     (state) => state?.app?.app?.pagination?.subAdminManagement
@@ -138,6 +141,25 @@ const SubAdminManagement = () => {
   const prevCurrentPageRef = useRef(currentPage);
   const isInitialMount = useRef(true);
   const hasCalledInitial = useRef(false);
+
+  const handleDeleteSubAdmin = async () => {
+    if (!subAdminToDelete) return;
+    setIsDeleting(true);
+    try {
+      const response = await apiDeleteSubAdmin({ id: subAdminToDelete.id });
+      if (response?.status === 200) {
+        handleRefresh();
+        setDeleteModalOpen(false);
+        setSubAdminToDelete(null);
+      } else {
+        console.error("Failed to delete sub admin");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Initial mount - call API once
   useEffect(() => {
@@ -268,18 +290,49 @@ const SubAdminManagement = () => {
                     }
                   },
                 },
-                // {
-                //   label: "Delete",
-                //   onClick: () => {
-                //     console.log("Delete clicked");
-                //   },
-                // },
+                {
+                  label: "Delete",
+                  onClick: (item) => {
+                    setSubAdminToDelete(item);
+                    setDeleteModalOpen(true);
+                  },
+                },
               ]}
             />
+            <Modal isOpen={deleteModalOpen} className="p-6 sm:p-8 w-full max-w-md">
+              <div className="text-center">
+                <h2 className="text-xl font-semibold mb-3">Delete SubAdmin?</h2>
+                <p className="text-gray-600 mb-6">
+                  Are you sure you want to delete sub admin
+                </p>
+
+                <div className="flex justify-center gap-4">
+                  <Button
+                    type="filledGray"
+                    onClick={() => {
+                      setDeleteModalOpen(false);
+                      setSubAdminToDelete(null);
+                    }}
+                    className="px-6 py-2"
+                  >
+                    Cancel
+                  </Button>
+
+                  <Button
+                    type="filledRed"
+                    onClick={handleDeleteSubAdmin}
+                    disabled={isDeleting}
+                    className="px-6 py-2"
+                  >
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </Button>
+                </div>
+              </div>
+            </Modal>
           </div>
         </Loading>
         {Array.isArray(subAdminListDisplay) &&
-        subAdminListDisplay.length > 0 ? (
+          subAdminListDisplay.length > 0 ? (
           <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
             <Pagination
               currentPage={currentPage}
