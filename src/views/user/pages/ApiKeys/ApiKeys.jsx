@@ -97,28 +97,25 @@ const ApiKeys = () => {
           onSubmit={handleFormSubmit}
         >
           {({ values, isSubmitting }) => (
-            <Form className="flex flex-col gap-4">
+            <Form className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Object.keys(values).map((keyName) => (
-                <div
-                  key={keyName}
-                  className="flex flex-col sm:flex-row gap-3 sm:gap-5 items-center"
-                >
-                  <FormLabel className="w-full sm:w-1/3">
+                <div key={keyName}>
+                  <FormLabel className="w-full">
                     {_.startCase(keyName)}
                   </FormLabel>
                   <Field
                     type="text"
                     name={keyName}
-                    className="w-full sm:w-2/3 px-4 py-3 border rounded-lg"
+                    className="w-full px-4 py-3 border rounded-lg"
                   />
                 </div>
               ))}
 
-              <div className="flex justify-end">
+              <div className="col-span-1 md:col-span-2 flex justify-end">
                 <Button
                   type="filled"
                   btnType="submit"
-                  className="px-6 py-2"
+                  className="w-full sm:w-auto !px-6 sm:!px-[30px] !py-3 sm:!py-[13px]"
                   disabled={isSubmitting}
                 >
                   <span>Save</span>

@@ -75,14 +75,16 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <FormLabel htmlFor="time_zone">Time Zone</FormLabel>
-            <div className="sm:h-16 h-14">
-              <FormSelection
+            <div className="sm:h-16 h-14 ">
+              <div className="md:absolute md:w-[calc((90%)/2)]">
+                <FormSelection
                 name="time_zone"
                 options={timeZoneOptions}
                 value={values.time_zone}
                 onChange={(val) => setFieldValue("time_zone", val)}
                 placeholder="Select Time Zone"
               />
+              </div>
             </div>
             <ErrorMessage name="time_zone" component="div" className="text-red-500 text-sm mt-1" />
           </div>

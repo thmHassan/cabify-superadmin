@@ -77,7 +77,7 @@ const UserPageContainer = ({ children }) => {
   `}
 >
 
-        <div className="px-6 lg:px-8 mb-6 lg:mb-10 flex items-center justify-center relative">
+        <div className={`${isSidebarOpen ? "mb-10" : "mb-0"} px-6 lg:px-8 flex items-center justify-center relative`}>
           <AppLogoIcon height={95} width={95} />
           <button
   onClick={() => setIsSidebarOpen(!isSidebarOpen)}

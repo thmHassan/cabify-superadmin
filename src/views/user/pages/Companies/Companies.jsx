@@ -260,14 +260,14 @@ const Companies = () => {
     fetchSubscriptionList();
   }, [])
 
-  // useEffect(() => {
-  //   fetchCompanyCards();
-  //   const statusParam = _selectedStatus?.value ?? "all";
+  useEffect(() => {
+    fetchCompanyCards();
+    const statusParam = _selectedStatus?.value ?? "all";
 
-  //   console.log(statusParam, "statusparam");
-  //   fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [refreshTrigger]);
+    console.log(statusParam, "statusparam");
+    fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
+  }, [refreshTrigger]);
+
   useEffect(() => {
     const statusParam = _selectedStatus?.value ?? "all";
 
@@ -288,10 +288,7 @@ const Companies = () => {
   const mapToTableRows = (companies) => {
     return companies.map((c) => ({
       id: c.id ?? c.company_id,
-      picture
-        : c.picture
-          ? c.picture
-          : null,
+      picture: c.picture ? c.picture : null,
       name: c.company_name ?? "-",
       status: [c.status ?? "-", c.subscription_type ?? "-"],
       location: c.city ?? "-",

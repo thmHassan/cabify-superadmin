@@ -82,6 +82,8 @@ const AddCompanyModal = ({
       formData.stripe_enablement,
     dispatcher: formData.dispatcher,
     map: formData.map,
+    google_api_key: formData.google_api_key,
+    barikoi_api_key: formData.barikoi_api_key,
     push_notification:
       formData.push_notification,
     usage_monitoring: formData.usage_monitoring,
@@ -100,26 +102,26 @@ const AddCompanyModal = ({
     fileInputRef.current?.click();
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    setFormData((prev) => ({ ...prev, picture: file }));
+    const objectUrl = URL.createObjectURL(file);
+    setImagePreviewUrl((prevUrl) => {
+      if (prevUrl) URL.revokeObjectURL(prevUrl);
+      return objectUrl;
+    });
+  };
+
   // const handleImageChange = (e) => {
-  //   const file = e.target.files && e.target.files[0];
+  //   const file = e.target.files[0];
   //   if (!file) return;
-  //   // Optionally, validate file type/size here
-  //   setFormData((prev) => ({ ...prev, picture: file }));
-  //   const objectUrl = URL.createObjectURL(file);
-  //   setImagePreviewUrl((prevUrl) => {
-  //     if (prevUrl) URL.revokeObjectURL(prevUrl);
-  //     return objectUrl;
-  //   });
+
+  //   setFormData(prev => ({ ...prev, picture: file }));
+
+  //   setImagePreviewUrl(URL.createObjectURL(file));
   // };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setFormData(prev => ({ ...prev, picture: file }));
-
-    setImagePreviewUrl(URL.createObjectURL(file));
-  };
   const TABS_CONFIGS = [
     {
       title: "Basic Info",
@@ -280,6 +282,8 @@ const AddCompanyModal = ({
           push_notification,
           usage_monitoring,
           revenue_statements,
+          barikoi_api_key,
+          google_api_key,
           picture
         } = result?.data?.company || {};
         setInitialValues({
@@ -315,6 +319,8 @@ const AddCompanyModal = ({
           picture,
           dispatcher: toBoolean(dispatcher, 2),
           map: toBoolean(map, 2),
+          google_api_key,
+          barikoi_api_key,
           zone: toBoolean(zone, 2),
           manage_zones: toBoolean(manage_zones, 2),
           cms: toBoolean(cms, 2),
@@ -336,15 +342,13 @@ const AddCompanyModal = ({
     if (type === "edit" && id) {
       getCompanyDetailsById();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Create dynamic validation schema - make password nullable for edit mode
   const getValidationSchema = () => {
     if (type === "edit") {
       return Yup.object().shape({
         ...BASIC_INFORMATION_VALIDATION_SCHEMA,
-        password: Yup.string().nullable(), // Make password nullable for edit mode
+        password: Yup.string().nullable(), 
         ...SERVICE_INFORMATION_VALIDATION_SCHEMA,
         ...SYSTEM_INFORMATION_VALIDATION_SCHEMA,
         ...ENABLEMENT_INFORMATION_VALIDATION_SCHEMA,
