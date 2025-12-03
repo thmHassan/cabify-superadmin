@@ -23,7 +23,7 @@ const ICON_CONFIG = {
 
 const CompanyTableRow = (props) => {
   const { actionOptions, data, type } = props;
-  const { name, status, location, drivers, contact, revenue } = data;
+  const { name, status, location, drivers, contact, revenue, picture } = data;
   return (
     <CommonTableRowFields
       itemData={data}
@@ -32,6 +32,7 @@ const CompanyTableRow = (props) => {
         status,
         actionOptions,
         icon: ICON_CONFIG[type],
+        picture,
       }}
     >
       <td className="min-w-[631px] w-full">

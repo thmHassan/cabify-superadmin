@@ -36,7 +36,7 @@ const NavElement = ({ navItem, isSidebarOpen }) => {
         )}
       ></div>
 
-      <div className="w-[calc(100%-10px)] pl-2.5 pr-[5px]">
+      <div className="w-[calc(100%-10px)] pl-2.5">
         <div
           className={classNames(
             "pl-0 pr-5 group-hover:bg-[#1F41BB20] group-hover:scale-[1.025] transition-all duration-200 flex gap-[15px] items-center h-full rounded-lg",
@@ -77,7 +77,6 @@ const NavElement = ({ navItem, isSidebarOpen }) => {
         </div>
       </div>
 
-      <div className="w-[5px] rounded-r-[10px]"></div>
     </button>
   );
 };

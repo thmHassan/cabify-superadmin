@@ -2,13 +2,13 @@ import React from "react";
 import DataDetailsRow from "./components/DataDetailsRow";
 import EmptyState from "../EmptyState";
 
-const DataDetailsTable = ({ rowType, companies, actionOptions, ...rest }) => {
+const   DataDetailsTable = ({ rowType, companies, actionOptions, ...rest }) => {
   const hasData = Array.isArray(companies) && companies.length > 0;
   return (
     <div className="sm:pt-5 overflow-auto">
       {hasData ? (
-        <table className="w-full border-collapse table-auto">
-          <tbody>
+        <table className="w-full border-collapse table-auto block md:table">
+          <tbody className="block md:table-row-group">
             {companies.map((data, i) => (
               <DataDetailsRow
                 key={i}
