@@ -40,15 +40,14 @@ const AddCompanyModal = ({
   const [isCreatingCompany, setIsCreatingCompany] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
+
   const [initialValues, setInitialValues] = useState({
     company_name: formData.company_name,
-    company_admin_name:
-      formData.company_admin_name,
+    company_admin_name: formData.company_admin_name,
     user_name: formData.user_name,
     password: formData.password,
     company_id: formData.company_id,
-    contact_person:
-      formData.contact_person,
+    contact_person: formData.contact_person,
     email: formData.email,
     phone: formData.phone,
     address: formData.address,
@@ -56,21 +55,15 @@ const AddCompanyModal = ({
     currency: formData.currency,
     maps_api: formData.maps_api,
     search_api: formData.search_api,
-    passengers_allowed:
-      formData.passengers_allowed,
-    dispatchers_allowed:
-      formData.dispatchers_allowed,
+    passengers_allowed: formData.passengers_allowed,
+    dispatchers_allowed: formData.dispatchers_allowed,
     drivers_allowed: formData.drivers_allowed,
-    subscription_type:
-      formData.subscription_type,
-    log_map_search_result:
-      formData.log_map_search_result,
+    subscription_type: formData.subscription_type,
+    log_map_search_result: formData.log_map_search_result,
     voip: formData.voip,
     sub_company: formData.sub_company,
-    uber_plot_hybrid:
-      formData.uber_plot_hybrid,
-    fleet_management:
-      formData.fleet_management,
+    uber_plot_hybrid: formData.uber_plot_hybrid,
+    fleet_management: formData.fleet_management,
     sos_features: formData.sos_features,
     notes: formData.notes,
     units: formData.units,
@@ -78,24 +71,21 @@ const AddCompanyModal = ({
     time_zone: formData.time_zone,
     stripe_enable: formData.stripe_enable,
     enable_smtp: formData.enable_smtp,
-    stripe_enablement:
-      formData.stripe_enablement,
+    stripe_enablement: formData.stripe_enablement,
     dispatcher: formData.dispatcher,
     map: formData.map,
     google_api_key: formData.google_api_key,
     barikoi_api_key: formData.barikoi_api_key,
-    push_notification:
-      formData.push_notification,
+    push_notification: formData.push_notification,
     usage_monitoring: formData.usage_monitoring,
-    revenue_statements:
-      formData.revenue_statements,
+    revenue_statements: formData.revenue_statements,
     zone: formData.zone,
     manage_zones: formData.manage_zones,
     cms: formData.cms,
     lost_found: formData.lost_found,
     accounts: formData.accounts,
     subscription: {},
-    picture: formData.picture
+    picture: formData.picture,
   });
   const fileInputRef = useRef(null);
   const handlePickImage = () => {
@@ -113,32 +103,11 @@ const AddCompanyModal = ({
     });
   };
 
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
-
-  //   setFormData(prev => ({ ...prev, picture: file }));
-
-  //   setImagePreviewUrl(URL.createObjectURL(file));
-  // };
-
   const TABS_CONFIGS = [
-    {
-      title: "Basic Info",
-      component: BasicInformation,
-    },
-    {
-      title: "Services",
-      component: ServicesInformation,
-    },
-    {
-      title: "System",
-      component: SystemInformation,
-    },
-    {
-      title: "Enablement",
-      component: EnablementInformation,
-    },
+    { title: "Basic Info", component: BasicInformation },
+    { title: "Services", component: ServicesInformation },
+    { title: "System", component: SystemInformation },
+    { title: "Enablement", component: EnablementInformation },
   ];
 
   const onSubmit = async (values, { setSubmitting }) => {
@@ -185,10 +154,14 @@ const AddCompanyModal = ({
       };
 
       const formValues = { ...formattedValues, ...formData };
+
       let latestFormData =
         type === "edit" ? { id, ...formValues, password } : formValues;
 
       delete latestFormData.subscription;
+      if (type === "edit" && !(latestFormData.picture instanceof File)) {
+        delete latestFormData.picture;
+      }
 
       const formDataToSend = convertToFormData(latestFormData);
 
@@ -205,7 +178,6 @@ const AddCompanyModal = ({
       if (response.status === 200 || response.status === 201) {
         if (modalType === "company") {
           setCompanyCreated(true);
-
           const companyObj = response.data.company || response.data.tenant || {};
           setCreatedCompany(companyObj);
 
@@ -226,7 +198,7 @@ const AddCompanyModal = ({
         setSubmitError(error.errors.join(", "));
       } else {
         setSubmitError(
-          error.response?.data?.message || "Failed to create company21251514"
+          error.response?.data?.message || "Failed to create company"
         );
       }
     } finally {
@@ -237,105 +209,32 @@ const AddCompanyModal = ({
 
   const getCompanyDetailsById = async () => {
     try {
-      // setIsSubAdminDetailsLoading(true);
       const result = await apiGetCompanyDetailsById({ id });
-      console.log(result?.data?.company, 'result?.data?.company');
 
       if (result?.status === 200) {
-        const {
-          company_name,
-          company_admin_name,
-          user_name,
-          company_id,
-          contact_person,
-          email,
-          phone,
-          address,
-          city,
-          currency,
-          maps_api,
-          search_api,
-          drivers_allowed,
-          voip,
-          sub_company,
-          sos_features,
-          notes,
-          passengers_allowed,
-          dispatchers_allowed,
-          subscription_type,
-          log_map_search_result,
-          uber_plot_hybrid,
-          fleet_management,
-          units,
-          country_of_use,
-          time_zone,
-          stripe_enable,
-          enable_smtp,
-          stripe_enablement,
-          dispatcher,
-          map,
-          zone,
-          manage_zones,
-          cms,
-          lost_found,
-          accounts,
-          push_notification,
-          usage_monitoring,
-          revenue_statements,
-          barikoi_api_key,
-          google_api_key,
-          picture
-        } = result?.data?.company || {};
+        const company = result?.data?.company || {};
+
         setInitialValues({
-          company_name,
-          company_admin_name,
-          user_name,
-          company_id,
-          contact_person,
-          email,
-          phone,
-          address,
-          city,
-          currency,
-          maps_api,
-          search_api,
-          drivers_allowed,
-          voip: toBoolean(voip, 2),
-          sub_company: toBoolean(sub_company),
-          sos_features,
-          notes,
-          passengers_allowed,
-          dispatchers_allowed,
-          subscription_type,
-          log_map_search_result: toBoolean(log_map_search_result, 3),
-          uber_plot_hybrid,
-          fleet_management,
-          units,
-          country_of_use,
-          time_zone,
-          stripe_enable: toBoolean(stripe_enable),
-          enable_smtp: toBoolean(enable_smtp),
-          stripe_enablement,
-          picture,
-          dispatcher: toBoolean(dispatcher, 2),
-          map: toBoolean(map, 2),
-          google_api_key,
-          barikoi_api_key,
-          zone: toBoolean(zone, 2),
-          manage_zones: toBoolean(manage_zones, 2),
-          cms: toBoolean(cms, 2),
-          lost_found: toBoolean(lost_found, 2),
-          accounts: toBoolean(accounts, 2),
-          push_notification: toBoolean(push_notification, 2),
-          usage_monitoring: toBoolean(usage_monitoring, 2),
-          revenue_statements: toBoolean(revenue_statements, 2),
-          subscription: result?.data?.subscription
+          ...company,
+          voip: toBoolean(company.voip, 2),
+          sub_company: toBoolean(company.sub_company),
+          log_map_search_result: toBoolean(company.log_map_search_result, 3),
+          stripe_enable: toBoolean(company.stripe_enable),
+          enable_smtp: toBoolean(company.enable_smtp),
+          dispatcher: toBoolean(company.dispatcher, 2),
+          map: toBoolean(company.map, 2),
+          zone: toBoolean(company.zone, 2),
+          manage_zones: toBoolean(company.manage_zones, 2),
+          cms: toBoolean(company.cms, 2),
+          lost_found: toBoolean(company.lost_found, 2),
+          accounts: toBoolean(company.accounts, 2),
+          push_notification: toBoolean(company.push_notification, 2),
+          usage_monitoring: toBoolean(company.usage_monitoring, 2),
+          revenue_statements: toBoolean(company.revenue_statements, 2),
+          subscription: result?.data?.subscription,
         });
       }
-    } catch (error) {
-    } finally {
-      // setIsSubAdminDetailsLoading(false);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -348,7 +247,7 @@ const AddCompanyModal = ({
     if (type === "edit") {
       return Yup.object().shape({
         ...BASIC_INFORMATION_VALIDATION_SCHEMA,
-        password: Yup.string().nullable(), 
+        password: Yup.string().nullable(),
         ...SERVICE_INFORMATION_VALIDATION_SCHEMA,
         ...SYSTEM_INFORMATION_VALIDATION_SCHEMA,
         ...ENABLEMENT_INFORMATION_VALIDATION_SCHEMA,
@@ -368,8 +267,6 @@ const AddCompanyModal = ({
         enableReinitialize={true}
       >
         {({ values, ...formEl }) => {
-          console.log('✌️values --->', values);
-
           return (
             <Form>
               <div
@@ -377,7 +274,10 @@ const AddCompanyModal = ({
                 onClick={handlePickImage}
               >
                 {imagePreviewUrl ? (
-                  <img src={imagePreviewUrl} className="w-full h-full object-cover" />
+                  <img
+                    src={imagePreviewUrl}
+                    className="w-full h-full object-cover"
+                  />
                 ) : values.picture ? (
                   <img
                     src={`${import.meta.env.VITE_BACKEND_URL}/${values.picture}`}
