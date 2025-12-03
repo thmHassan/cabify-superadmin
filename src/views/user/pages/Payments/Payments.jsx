@@ -44,6 +44,19 @@ const Payments = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [allPayment, setAllPayment] = useState([]);
 
+  const getStatusColor = (status) => {
+    if (!status) return "yellow";
+
+    const s = status.toLowerCase();
+
+    if (s === "paid" || s === "success") return "green";
+    if (s === "pending") return "yellow";
+    if (s === "failed") return "red";
+    if (s === "processing") return "lightPurple";
+
+    return "yellow";
+  };
+
   const getAllPaymentList = async (page = 1, perPage = 10) => {
     try {
       const response = await apiGetAllPaymentsList({
@@ -89,7 +102,7 @@ const Payments = () => {
       accessor: "status",
       render: (value) => (
         <div className="flex">
-          <Tag variant={PAYMENT_STATUS[value]} className="!pt-1 !pb-[3px]">
+          <Tag variant={getStatusColor(value)} className="!pt-1 !pb-[3px]">
             <ChildText text={value} className="!text-[#ffffff]" />
           </Tag>
         </div>

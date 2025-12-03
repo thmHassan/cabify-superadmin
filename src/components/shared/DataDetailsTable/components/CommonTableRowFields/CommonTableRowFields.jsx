@@ -14,7 +14,7 @@ const CommonTableRowFields = ({
   trClassNames,
   itemData = null,
 }) => {
-  const { icon, name, status, actionOptions, profile_picture } = data;
+  const { icon, name, status, actionOptions, picture } = data;
 
   const Icon = icon ? icon.component : false;
   return (
@@ -27,12 +27,14 @@ const CommonTableRowFields = ({
       <tr>
         {(icon || name) && (
           <td className="min-w-[368px] w-[368px] pr-20">
-            <div className="p-[30px] flex gap-[15px] items-center">
+            <div className="p-[30px] flex gap-[15px] items-center picture">
+              {console.log("picture====", picture)
+              }
               {icon && (
-                <div className="h-[60px] min-w-[60px] bg-[#F9F9F9] flex justify-center items-center rounded-full">
-                  {profile_picture ? (
+                <div className="h-[60px] min-w-[60px] bg-[#F9F9F9] flex justify-center items-center rounded-full overflow-hidden">
+                  {picture ? (
                     <img
-                      src={`${import.meta.env.VITE_BACKEND_URL}/${profile_picture}`}
+                      src={`${import.meta.env.VITE_BACKEND_URL}${picture}`}
                       alt={name}
                       className="w-full h-full object-cover"
                       onError={(e) => {
@@ -40,24 +42,17 @@ const CommonTableRowFields = ({
                       }}
                     />
                   ) : (
-                    <img
-                      src="/default-company.png"
-                      alt="missing"
-                      className="w-full h-full object-cover"
-                    />
+                    <Icon {...icon} />
                   )}
                 </div>
-                // <div className="h-[60px] min-w-[60px] bg-[#F9F9F9] flex justify-center items-center rounded-full">
-                //   <Icon {...icon} />
-                // </div>
               )}
               <div className="flex flex-col gap-2.5">
                 <div className="flex justify-start items-center gap-4">
-                {/* <div className="flex flex-wrap w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
-                  {profile_picture && 
+                  {/* <div className="flex flex-wrap w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
+                  {picture && 
                   <img
                     src="/src/assets/Images/71067d46ba23cf7a8102bc3d1fab56453de3b958.jpg"
-                    // src={profile_picture}
+                    // src={picture}
                     alt={name}
                     className="w-full h-full object-cover"
                   />

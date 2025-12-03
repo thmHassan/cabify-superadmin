@@ -286,10 +286,12 @@ const Companies = () => {
   ]);
 
   const mapToTableRows = (companies) => {
-    // console.log(companies, "companies");
     return companies.map((c) => ({
-      id: c.id ?? c.company_id, // Include company ID
-      profile_picture: c.picture ?? null,
+      id: c.id ?? c.company_id,
+      picture
+        : c.picture
+          ? c.picture
+          : null,
       name: c.company_name ?? "-",
       status: [c.status ?? "-", c.subscription_type ?? "-"],
       location: c.city ?? "-",
@@ -298,6 +300,7 @@ const Companies = () => {
       revenue: "-",
     }));
   };
+
 
   useEffect(() => {
     const plan = _selectedPlan?.value ?? "all";
@@ -309,9 +312,13 @@ const Companies = () => {
         (c) => (c.subscription_type ?? "").toLowerCase() === plan.toLowerCase()
       );
     }
+    console.log("companyListRaw====", companyListRaw);
+
 
     setCompanyListDisplay(mapToTableRows(filtered));
   }, [companyListRaw, _selectedPlan]);
+
+
 
   // useEffect(() => {
   //   const statusParam = _selectedStatus?.value ?? "all";

@@ -3,6 +3,7 @@ import {
   CREATE_SUBSCRIPTION,
   DELETE_SUBSCRIPTIONS,
   EDIT_SUBSCRIPTION,
+  GET_STRIPE_KEYS,
   GET_SUBSCRIPTION_BY_ID,
   GET_SUBSCRIPTION_CARDS,
   GET_SUBSCRIPTIONS,
@@ -66,6 +67,13 @@ export async function apiEditSubscription(params, data) {
 export async function apiDeleteSubscription(params) {
   return ApiService.fetchData({
     url: `${DELETE_SUBSCRIPTIONS}?id=${params.id}`,
+    method: METHOD_GET,
+  });
+}
+
+export async function apiGetStripeKeys() {
+  return ApiService.fetchData({
+    url: GET_STRIPE_KEYS,
     method: METHOD_GET,
   });
 }

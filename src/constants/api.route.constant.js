@@ -47,6 +47,7 @@ export const GET_SUBSCRIPTIONS = "/super-admin/subscription-list";
 export const GET_SUBSCRIPTION_CARDS = "/super-admin/subscription-cards";
 export const GET_SUBSCRIPTIONS_MANAGEMENT = "/super-admin/subscription-management";
 export const DELETE_SUBSCRIPTIONS = "/super-admin/delete-subscription";
+export const GET_STRIPE_KEYS = "/super-admin/stripe-keys"
 
 // api for usage monitoring
 export const GET_USAGE_MONITORING = "/super-admin/usage-monitoring";
@@ -57,6 +58,7 @@ export const UPDATE_PROFILE = "/super-admin/update-profile";
 export const GET_USER_PROFILE = "/super-admin/edit-subadmin";
 
 // api for API Keys
+export const CREATE_API_KEY = "/super-admin/api-keys"
 export const GET_API_KEY = "/super-admin/api-keys";
 
 // api for payment

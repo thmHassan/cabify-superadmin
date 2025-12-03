@@ -23,10 +23,10 @@ export const BASIC_INFORMATION_VALIDATION_SCHEMA = {
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
-  phone: Yup.string()
-    .required("Phone number is required")
-    .matches(/^[0-9+\-\s()]+$/, "Invalid phone number format")
-    .min(10, "Phone number must be at least 10 digits"),
+  // phone: Yup.string()
+  //   .required("Phone number is required")
+  //   .matches(/^[0-9+\-\s()]+$/, "Invalid phone number format")
+  //   .min(10, "Phone number must be at least 10 digits"),
   address: Yup.string()
     .required("Address is required")
     .min(5, "Address must be at least 5 characters"),
