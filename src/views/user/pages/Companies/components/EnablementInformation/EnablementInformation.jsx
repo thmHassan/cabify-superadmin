@@ -4,6 +4,7 @@ import FormLabel from "../../../../../../components/ui/FormLabel";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import ApiService from "../../../../../../services/ApiService";
 import { useState } from "react";
+import { ErrorMessage, Field } from "formik";
 
 const EnablementInformation = ({
   setIsOpen,
@@ -16,6 +17,7 @@ const EnablementInformation = ({
 }) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [paymentError, setPaymentError] = useState(null);
+  const { values, setFieldValue } = formEl;
 
   const handleCashPayment = async () => {
     try {
@@ -107,6 +109,46 @@ const EnablementInformation = ({
           </div>
         ))}
       </div>
+
+      {values.map && (
+        <div className="flex flex-wrap gap-4 sm:gap-5 mb-6">
+
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
+            <FormLabel htmlFor="google_api_key">Google API Key</FormLabel>
+            <div className="sm:h-16 h-14">
+              <Field
+                type="text"
+                name="google_api_key"
+                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
+                placeholder="Enter Google API Key"
+              />
+            </div>
+            <ErrorMessage
+              name="google_api_key"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
+            <FormLabel htmlFor="barikoi_api_key">Barikoi API Key</FormLabel>
+            <div className="sm:h-16 h-14">
+              <Field
+                type="text"
+                name="barikoi_api_key"
+                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
+                placeholder="Enter Barikoi API Key"
+              />
+            </div>
+            <ErrorMessage
+              name="barikoi_api_key"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+
+        </div>
+      )}
 
       {paymentError && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">

@@ -27,8 +27,18 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
       goToNextTab?.();
     }
   };
+  const mapsApiOptions = [
+    { value: "google", label: "Google" },
+    { value: "barikoi", label: "Barikoi" },
+    { value: "both", label: "Both" },
+  ];
 
-  // Fetch subscription list on component mount
+  const searchApiOptions = [
+    { value: "google", label: "Google" },
+    { value: "barikoi", label: "Barikoi" },
+    { value: "both", label: "Both" },
+  ];
+
   useEffect(() => {
     const fetchSubscriptionList = async () => {
       setIsLoadingSubscriptions(true);
@@ -88,15 +98,15 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
       <div className="mb-6 sm:mb-[60px] flex flex-col gap-5">
         <div className="flex flex-wrap gap-3 sm:gap-5">
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
-            <FormLabel htmlFor="maps_api">
-              Maps API
-            </FormLabel>
-            <div className="sm:h-16 h-14">
-              <Field
-                type="text"
+            <FormLabel htmlFor="maps_api">Maps API</FormLabel>
+            <div className="sm:h-16 h-14 md:absolute md:w-[calc((90%)/2)]">
+              <FormSelection
                 name="maps_api"
-                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
-                placeholder="Enter Maps API"
+                options={mapsApiOptions}
+                value={values.maps_api}
+                onChange={(val) => setFieldValue("maps_api", val)}
+                placeholder="Select Maps API"
+                className="w-full absolute"
               />
             </div>
             <ErrorMessage
@@ -106,16 +116,17 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             />
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
-            <FormLabel htmlFor="search_api">
-              Search API
-            </FormLabel>
+            <FormLabel htmlFor="search_api">Search API</FormLabel>
             <div className="sm:h-16 h-14">
-              <Field
-                type="text"
-                name="search_api"
-                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
-                placeholder="Enable Search API (Google/ Barikoi)"
-              />
+              <div className="md:absolute md:w-[calc((90%)/2)]">
+                <FormSelection
+                  name="search_api"
+                  options={searchApiOptions}
+                  value={values.search_api}
+                  onChange={(val) => setFieldValue("search_api", val)}
+                  placeholder="Select Search API"
+                />
+              </div>
             </div>
             <ErrorMessage
               name="search_api"
@@ -181,7 +192,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             <FormLabel htmlFor="subscription_type">
               Subscription Type
             </FormLabel>
-            <div className="sm:h-16 h-14">
+            <div className="sm:h-16 h-14 md:absolute md:w-[calc((90%)/2)]">
               <FormSelection
                 label="Select Subscription Type"
                 name="subscription_type"
