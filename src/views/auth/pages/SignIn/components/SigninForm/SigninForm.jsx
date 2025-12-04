@@ -20,8 +20,16 @@ const SigninForm = ({
   const navigate = useNavigate();
   const { isLoading, executeWithLoader } = useApiLoader();
 
+  const detectRole = (email) => {
+    if (email === "superadmin@taxidispatch.com") return "superadmin";
+
+    if (email.endsWith("@company.com")) return "subadmin"; return "subadmin";
+  };
+
   const onSignIn = async (values, setSubmitting) => {
-    const { email, password, role } = values;
+    const { email, password } = values;
+
+    const role = detectRole(email);
 
     setSubmitting(true);
 
@@ -29,23 +37,44 @@ const SigninForm = ({
       await executeWithLoader(
         () =>
           isAdminLogin
-            ? adminSignIn({ email, password, role: role || "superadmin" })
+            ? adminSignIn({ email, password, role })
             : signIn({ email, password }),
         {
-          onSuccess: (result) => {
-            if (result?.status === "failed") {
-              // setMessage(result.message);
-            }
-          },
-          onError: (error) => {
-            console.error("Login error:", error);
-          },
+          onSuccess: () => { },
+          onError: (error) => console.error("Login error:", error),
         }
       );
     } finally {
       setSubmitting(false);
     }
   };
+
+  // const onSignIn = async (values, setSubmitting) => {
+  //   const { email, password, role } = values;
+
+  //   setSubmitting(true);
+
+  //   try {
+  //     await executeWithLoader(
+  //       () =>
+  //         isAdminLogin
+  //           ? adminSignIn({ email, password })
+  //           : signIn({ email, password }),
+  //       {
+  //         onSuccess: (result) => {
+  //           if (result?.status === "failed") {
+  //             // setMessage(result.message);
+  //           }
+  //         },
+  //         onError: (error) => {
+  //           console.error("Login error:", error);
+  //         },
+  //       }
+  //     );
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
 
   return (
     <Loading

@@ -5,7 +5,7 @@ const initialState = {
   avatar: "",
   name: "",
   email: "",
-  role: "superadmin", // Default to superadmin for encrypted token users
+  role: "", 
 };
 
 const userSlice = createSlice({

@@ -16,7 +16,7 @@ const AllRoutes = () => {
   const { role } = useAppSelector((state) => state.auth.user);
 
   // Fallback to superadmin role if no role is set (for encrypted token users)
-  const userRole = role || "superadmin";
+  const userRole = role ;
 
 
 

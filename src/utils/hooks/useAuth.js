@@ -81,7 +81,7 @@ function useAuth() {
             setUser({
               avatar: user.avatar || "",
               name: user.name || "Anonymous",
-              role: user.role || values.role || "superadmin",
+              role: user.role || values.role ,
               email: user.email || values.email,
             })
           );
