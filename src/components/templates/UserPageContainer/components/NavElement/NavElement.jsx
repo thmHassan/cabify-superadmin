@@ -44,8 +44,7 @@ const NavElement = ({ navItem, isSidebarOpen }) => {
           )}
         >
           {/* ICON */}
-          <div className="h-6 w-6 ml-4 flex items-center justify-center">
-            <Icon fill={isActiveNav ? "#1F41BB" : "#333333"} />
+          <div className={`h-6 w-6 flex items-center justify-center ${isSidebarOpen ? 'ml-4' : 'm-0'}`}>            <Icon fill={isActiveNav ? "#1F41BB" : "#333333"} />
           </div>
 
           {/* TITLE - only when sidebar open */}

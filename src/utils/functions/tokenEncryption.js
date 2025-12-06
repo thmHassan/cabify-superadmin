@@ -143,7 +143,7 @@ export const getUserDataFromToken = () => {
       id: 1,
       name: "Super Admin",
       email: "superadmin@taxidispatch.com",
-      role: "",
+      role: "superadmin",
       avatar: ""
     };
   } catch (error) {
