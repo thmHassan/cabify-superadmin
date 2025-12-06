@@ -117,13 +117,40 @@ export const clearAllAuthData = () => {
   try {
     // Remove encrypted token
     localStorage.removeItem('admin_token');
-    
-    // Remove any legacy Redux persistence data
+    localStorage.removeItem('user_data');
     localStorage.removeItem('admin');
     
     console.log('All authentication data cleared from localStorage');
   } catch (error) {
     console.error('Failed to clear authentication data:', error);
+  }
+};
+
+/**
+ * Stores user data in localStorage for persistence across refresh
+ * @param {object} userData - The user data to store
+ */
+export const storeUserData = (userData) => {
+  try {
+    if (userData) {
+      localStorage.setItem('user_data', JSON.stringify(userData));
+    }
+  } catch (error) {
+    console.error('Failed to store user data:', error);
+  }
+};
+
+/**
+ * Retrieves stored user data from localStorage
+ * @returns {object|null} - User data or null
+ */
+export const getStoredUserData = () => {
+  try {
+    const userData = localStorage.getItem('user_data');
+    return userData ? JSON.parse(userData) : null;
+  } catch (error) {
+    console.error('Failed to retrieve user data:', error);
+    return null;
   }
 };
 
@@ -137,7 +164,13 @@ export const getUserDataFromToken = () => {
     const token = getDecryptedToken();
     if (!token) return null;
     
-    // For now, return default superadmin user data
+    // Try to get stored user data from localStorage first
+    const storedUserData = getStoredUserData();
+    if (storedUserData) {
+      return storedUserData;
+    }
+    
+    // Fallback to default superadmin user data
     // In production, you might want to decode the JWT token to get user info
     return {
       id: 1,

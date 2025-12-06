@@ -38,6 +38,7 @@ export const GET_SUB_ADMIN_BY_ID = "/super-admin/edit-subadmin";
 export const CREATE_SUB_ADMIN = "/super-admin/create-subadmin";
 export const EDIT_SUB_ADMIN = "/super-admin/edit-subadmin";
 export const DELETE_SUB_ADMIN = "/super-admin/delete-subadmin"
+export const GET_SUBADMIN_PERMISSION = "/super-admin/get-subadmin-permission"
 
 // api for subscriptions
 export const CREATE_SUBSCRIPTION = "/super-admin/create-subscription";

@@ -21,6 +21,7 @@ import {
   clearAllAuthData,
   isAuthenticated,
   getUserDataFromToken,
+  storeUserData,
 } from "../functions/tokenEncryption";
 
 function useAuth() {
@@ -38,16 +39,15 @@ function useAuth() {
         console.log(resp.data.user, "resp.data.user====");
         dispatch(signInSuccess(token));
         if (resp.data.user) {
-          dispatch(
-            setUser(
-              resp.data.user || {
-                avatar: "",
-                name: "Anonymous",
-                role: "client",
-                email: "",
-              }
-            )
-          );
+          const userData = resp.data.user || {
+            avatar: "",
+            name: "Anonymous",
+            role: "client",
+            email: "",
+          };
+          dispatch(setUser(userData));
+          // Store user data for persistence across refresh
+          storeUserData(userData);
         }
         localStorage.setItem("id", resp.data.user.id)
         const redirectUrl = query.get(REDIRECT_URL_KEY);
@@ -77,14 +77,16 @@ function useAuth() {
         dispatch(signInSuccess(access_token));
 
         if (user) {
-          dispatch(
-            setUser({
-              avatar: user.avatar || "",
-              name: user.name || "Anonymous",
-              role: user.role || values.role || "superadmin" ,
-              email: user.email || values.email,
-            })
-          );
+          const userData = {
+            avatar: user.avatar || "",
+            name: user.name || "Anonymous",
+            role: user.role || values.role,
+            email: user.email || values.email,
+            id: user.id,
+          };
+          dispatch(setUser(userData));
+          // Store user data for persistence across refresh
+          storeUserData(userData);
         }
         localStorage.setItem("id", user.id)
 
