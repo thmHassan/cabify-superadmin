@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import appConfig from "../configs/app.config";
 import ProtectedRoute from "./ProtectedRoute";
 import {
@@ -9,7 +9,8 @@ import UserPageContainer from "../templates/UserPageContainer";
 import AppRoute from "./AppRoute";
 import PublicRoute from "./PublicRoute";
 import { useAppSelector } from "../../store";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import useAuth from "../../utils/hooks/useAuth";
 import { apiGetSubAdminPermission } from "../../services/SubAdminService";
 
 const { authenticatedEntryPath } = appConfig;
@@ -18,7 +19,8 @@ const AllRoutes = () => {
   const { role } = useAppSelector((state) => state.auth.user);
   const userRole = role;
 
-  const baseRole = userRole === "subadmin" ? "superadmin" : userRole;
+  const { authenticated } = useAuth();
+  const baseRole = userRole === "subadmin" ? "superadmin" : (userRole || (authenticated ? "superadmin" : userRole));
   const currentRoutes = protectedRoutes[baseRole] || [];
   const [permissions, setPermissions] = useState(null);
 
@@ -63,8 +65,8 @@ const AllRoutes = () => {
             localStorage.removeItem("subadmin_permissions");
           }
         } catch (e) {
-         console.log("error", e);
-         
+          console.log("error", e);
+
         }
       } catch (err) {
         console.error("Failed to fetch subadmin permissions", err);
@@ -104,22 +106,35 @@ const AllRoutes = () => {
     });
   })();
 
+  const IndexLoader = () => {
+    const navigate = useNavigate();
+    const navigatedRef = useRef(false);
+
+    useEffect(() => {
+      if (!authenticated) return;
+
+      if (userRole === undefined || userRole === null) return;
+      if (userRole === "subadmin" && permissions === null) return;
+
+      if (navigatedRef.current) return;
+
+      const target = userRole !== "subadmin" ? authenticatedEntryPath : (visibleRoutes[0]?.path || authenticatedEntryPath);
+      navigatedRef.current = true;
+      console.log("IndexLoader navigating to:", target, { authenticated, userRole, permissions });
+      navigate(target, { replace: true });
+    }, [authenticated, userRole, permissions, visibleRoutes, navigate]);
+
+    return null;
+  };
+
   return (
+    console.log("AllRoutes state:", { authenticated, userRole, permissions, baseRole, visibleRoutesCount: visibleRoutes.length }),
     <Routes>
       <Route path="/" element={<ProtectedRoute />}>
         <Route
-          path="/"
+          index
           element={
-            (userRole === undefined || userRole === null) || (userRole === "subadmin" && permissions === null)
-            && (
-              <Navigate replace to={
-                (() => {
-                  if (userRole !== "subadmin") return authenticatedEntryPath;
-                  const first = visibleRoutes[0];
-                  return first ? first.path : authenticatedEntryPath;
-                })()
-              } />
-            )
+            <IndexLoader />
           }
         />
         {visibleRoutes.map((route, index) => (
@@ -134,23 +149,7 @@ const AllRoutes = () => {
           />
         ))}
 
-        <Route
-          path="*"
-          element={
-            <div style={{ padding: "20px", textAlign: "center" }}>
-              {userRole === "subadmin" ? (
-                <p>Loading</p>
-              ) : (
-                <>
-                  <p>Loading routes...</p>
-                  <p>User Role: {userRole}</p>
-                  <p>Available routes: {currentRoutes.length}</p>
-                  <p>Route paths: {currentRoutes.map((r) => r.path).join(", ")}</p>
-                </>
-              )}
-            </div>
-          }
-        />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
       <Route path="/" element={<PublicRoute />}>
         {publicRoutes.map((route) => (
