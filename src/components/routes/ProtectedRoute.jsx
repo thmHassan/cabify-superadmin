@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 // import appConfig from '../configs/app.config'
 import useAuth from '../../utils/hooks/useAuth'
 import { REDIRECT_URL_KEY } from '../../constants/app.constant'
-import { SIGN_IN_KEY } from '../../constants/routes.key.constant/auth.route.key.constant'
+import { SIGN_IN_PATH } from '../../constants/routes.path.constant/auth.route.path.constant'
 
 // const { unAuthenticatedEntryPath } = appConfig
 
@@ -14,7 +14,7 @@ const ProtectedRoute = () => {
         return (
             <Navigate
                 replace
-                to={`${SIGN_IN_KEY}`}
+                to={SIGN_IN_PATH}
             />
         )
     }
