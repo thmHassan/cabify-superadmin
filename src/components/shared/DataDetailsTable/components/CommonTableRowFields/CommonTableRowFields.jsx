@@ -28,8 +28,6 @@ const CommonTableRowFields = ({
         {(icon || name) && (
           <td className="min-w-[368px] w-[368px] pr-20">
             <div className="p-[30px] flex gap-[15px] items-center picture">
-              {console.log("picture====", picture)
-              }
               {icon && (
                 <div className="h-[60px] min-w-[60px] bg-[#F9F9F9] flex justify-center items-center rounded-full overflow-hidden">
                   {picture ? (

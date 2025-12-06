@@ -17,7 +17,7 @@ import SearchIcon from "../../svg/SearchIcon";
 import DrawerIcon from "../../svg/DrawerIcon";
 import CloseIcon from "../../svg/CloseIcon";
 
-const UserPageContainer = ({ children }) => {
+const UserPageContainer = ({ children, permissions: passedPermissions }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
@@ -31,6 +31,46 @@ const UserPageContainer = ({ children }) => {
   // Fallback to admin role if superadmin role is not found in NAV_ELEMENTS
   const userRole = user.role || "admin";
   const navElements = NAV_ELEMENTS[userRole] || NAV_ELEMENTS["admin"];
+
+  // If subadmin, compute filtered nav elements from permissions.
+  // Prefer `passedPermissions` (from AllRoutes) for reactivity; fall back to persisted localStorage.
+  let filteredNavElements = navElements;
+  if (userRole === "subadmin") {
+    try {
+      const parsed =
+        passedPermissions || JSON.parse(localStorage.getItem("subadmin_permissions") || "null");
+      const PERMISSION_ROUTE_MAP = {
+        dashboard: "overview",
+        compaines: "companies",
+        onBoarding: "onboarding",
+        subscription: "subscription",
+        usag_monitoring: "usage-monitoring",
+        maps_configuration: "maps-configuration",
+        voIp_settings: "voip-settings",
+        payments: "payments",
+      };
+
+      const allowedKeys = new Set();
+      if (parsed && typeof parsed === "object") {
+        Object.keys(PERMISSION_ROUTE_MAP).forEach((permKey) => {
+          const values = parsed[permKey] || [];
+          if (Array.isArray(values) && values.includes("view")) {
+            allowedKeys.add(PERMISSION_ROUTE_MAP[permKey]);
+          }
+        });
+      }
+
+      // Filter each nav group to only include allowed routes
+      filteredNavElements = navElements
+        .map((group) => ({
+          ...group,
+          routes: group.routes.filter((r) => allowedKeys.has(r.key)),
+        }))
+        .filter((g) => g.routes && g.routes.length > 0);
+    } catch (e) {
+      filteredNavElements = navElements;
+    }
+  }
 
   // Close sidebar on route change for small screens
   useEffect(() => {
@@ -81,7 +121,7 @@ const UserPageContainer = ({ children }) => {
           <AppLogoIcon height={95} width={95} />
           <button
   onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-  className="absolute top-4 right-[13px] w-8 h-8  flex items-center justify-center transition lg:block md:hidden"
+  className="absolute top-4 right-[13px] p-2  flex items-center justify-center transition lg:block md:hidden rounded-md hover:bg-[#f3f3f3]"
 >
   {isSidebarOpen ? (
     <CloseIcon width={18} height={18} fill="#3D3D3D" /> 
@@ -90,17 +130,9 @@ const UserPageContainer = ({ children }) => {
   )}
 </button>
 
-          <button
-            type="button"
-            className="lg:hidden max-sm:hidden w-10 h-10 grid place-items-center rounded-md hover:bg-[#f3f3f3] absolute right-3 -top-1.5"
-            aria-label="Close menu"
-            onClick={() => setIsSidebarOpen(false)}
-          >
-            <CloseIcon width={18} height={18} fill="#3D3D3D" />
-          </button>
         </div>
         <div className={` flex flex-col gap-[30px]`}>
-          {navElements.map(({ title, routes }, index) => (
+          {filteredNavElements.map(({ title, routes }, index) => (
             <div key={index} className={index === 0 ? "mb-8" : ""}>
               <div className={`${isSidebarOpen ? "block" : "hidden"} text-[#7A7A7A] px-6 lg:px-8 text-sm leading-[19px] font-semibold mb-[18px]`}>
                 {title}
