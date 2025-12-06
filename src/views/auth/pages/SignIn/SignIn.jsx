@@ -7,7 +7,7 @@ const SignIn = () => {
   const initialValues = {
     email: "superadmin@taxidispatch.com",
     password: "taxidispatch@123",
-    role: "",
+    role: "superadmin",
   };
 
   return (

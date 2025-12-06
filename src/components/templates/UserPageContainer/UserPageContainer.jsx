@@ -65,7 +65,7 @@ const UserPageContainer = ({ children }) => {
     <div className="flex">
        <div
   className={`
-    border-r-[0.7px] border-[#7A7A7A] py-[21px] 
+    border-r-[0.7px] border-[#7A7A7A] pb-[21px] 
     h-screen overflow-auto fixed z-[70] bg-[#ffffff]
     transition-all duration-300 ease-in-out
 
