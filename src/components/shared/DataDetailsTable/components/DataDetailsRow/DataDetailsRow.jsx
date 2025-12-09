@@ -1,6 +1,7 @@
 import ApiKeyRowFields from "../ApiKeyRowFields";
 import DriverDocumentsRowFields from "../DriverDocumentsRowFields";
 import MapProviderRowField from "../MapProviderRowField";
+import PendingSubscriptionTableRow from "../PendingSubscriptionTableRow";
 import SubAdminManagementRowFields from "../SubAdminManagementRowFields";
 import SubscriptionManagementRow from "../SubscriptionManagement";
 import SubscriptionTableRow from "../SubscriptionTableRow";
@@ -11,6 +12,8 @@ import VehicleTypeFields from "../VehicleTypeFields";
 const DataDetailsRow = ({ type = "subscription", ...props }) => {
   const TABLE_ROW_CONFIG = {
     company: (props) => <SubscriptionTableRow type={type} {...props} />,
+    company: (props) => <PendingSubscriptionTableRow type={type} {...props} />,
+    pendingsubscription: PendingSubscriptionTableRow,
     subscription: SubscriptionTableRow,
     subscriptionManagement: SubscriptionManagementRow,
     usageMonitoring: UsageMonitoringTableRow,

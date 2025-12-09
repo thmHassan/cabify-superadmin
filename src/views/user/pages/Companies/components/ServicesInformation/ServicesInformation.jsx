@@ -92,6 +92,11 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
   //     onNext();
   //   }
   // };
+  // const options = response.data.list.data.map((subscription) => ({
+  //   value: Number(subscription.id),
+  //   label: subscription.plan_name,
+  //   fullData: subscription,
+  // }));
 
   return (
     <>
@@ -201,9 +206,19 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
                     ? Number(values.subscription_type)
                     : ""
                 }
-                onChange={(val) => setFieldValue("subscription_type", val)}
+                onChange={(val) => {
+                  const selectedObj = subscriptionOptions.find(
+                    (item) => item.value === val
+                  );
+
+                  setFieldValue("subscription_type", val);
+                  setFieldValue("subscription", selectedObj?.fullData || null);
+                }}
                 placeholder={isLoadingSubscriptions ? "Loading..." : "Select"}
-                options={subscriptionOptions}
+                options={subscriptionOptions.map((item) => ({
+                  value: item.value,
+                  label: item.label,
+                }))}
                 disabled={isLoadingSubscriptions}
               />
             </div>

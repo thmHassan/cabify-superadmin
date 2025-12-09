@@ -30,7 +30,8 @@ import {
   apiGetSubscriptionCardDetails,
   apiGetSubscriptionManagement,
   apiGetSubscriptions,
-  apiDeleteSubscription
+  apiDeleteSubscription,
+  apiGetPendingSubscriptionlist
 } from "../../../../services/SubscriptionService";
 import AppLogoLoader from "../../../../components/shared/AppLogoLoader";
 import EditSubscriptionModal from "./components/EditSubscriptionModal";
@@ -39,6 +40,7 @@ import { useAppSelector } from "../../../../store";
 import Base from "../../../../components/animations/Base";
 import Tag from "../../../../components/ui/Tag";
 import CardSubtitle from "../../../../components/ui/CardSubtitle";
+import PendingSubscription from "./components/PendingSubscription";
 
 const DASHBOARD_CARDS = [
   {
@@ -79,157 +81,7 @@ const DASHBOARD_CARDS = [
   },
 ];
 
-const companiesData = [
-  {
-    id: 1,
-    plan_name: "Subscription 1 : 100$",
-    status: ["Active", "Premium"],
-    account: "AC001",
-    next_billing: "Dec 15, 2024",
-    features_count: "3 features included",
-    amount: "4500",
-    billing_cycle: "monthly",
-  },
-];
-
-// Static data for Subscription Management
-const subscriptionManagementData = [
-  {
-    id: 1,
-    plan_name: "Metro Taxi Co.",
-    status: ["Active", "Premium"],
-    account: "AC001",
-    next_billing: "Dec 15, 2024",
-    due_date: "Dec 15, 2024",
-    payment_type: "Cash",
-    amount: "4500",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 2,
-    plan_name: "Metro Taxi Co.",
-    status: ["Suspended", "Basic"],
-    account: "AC001",
-    next_billing: "Dec 15, 2024",
-    due_date: null,
-    payment_type: "Card",
-    amount: "4500",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 3,
-    plan_name: "Metro Taxi Co.",
-    status: ["Pending", "Premium"],
-    account: "AC001",
-    next_billing: "Dec 15, 2024",
-    due_date: null,
-    payment_type: "Cash",
-    amount: "4500",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 4,
-    plan_name: "Metro Taxi Co.",
-    status: ["Active", "Premium"],
-    account: "AC001",
-    next_billing: "Dec 15, 2024",
-    due_date: null,
-    payment_type: "Cash",
-    amount: "4500",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 5,
-    plan_name: "Metro Taxi Co.",
-    status: ["Active", "Basic"],
-    account: "AC002",
-    next_billing: "Dec 20, 2024",
-    due_date: null,
-    payment_type: "Card",
-    amount: "3500",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 6,
-    plan_name: "Metro Taxi Co.",
-    status: ["Suspended", "Premium"],
-    account: "AC003",
-    next_billing: "Dec 25, 2024",
-    due_date: null,
-    payment_type: "Cash",
-    amount: "5000",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 7,
-    plan_name: "Metro Taxi Co.",
-    status: ["Pending", "Basic"],
-    account: "AC004",
-    next_billing: "Jan 1, 2025",
-    due_date: null,
-    payment_type: "Card",
-    amount: "3000",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 8,
-    plan_name: "Metro Taxi Co.",
-    status: ["Active", "Premium"],
-    account: "AC005",
-    next_billing: "Jan 5, 2025",
-    due_date: null,
-    payment_type: "Cash",
-    amount: "4800",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 9,
-    plan_name: "Metro Taxi Co.",
-    status: ["Suspended", "Basic"],
-    account: "AC006",
-    next_billing: "Jan 10, 2025",
-    due_date: null,
-    payment_type: "Card",
-    amount: "3200",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 10,
-    plan_name: "Metro Taxi Co.",
-    status: ["Pending", "Premium"],
-    account: "AC007",
-    next_billing: "Jan 15, 2025",
-    due_date: null,
-    payment_type: "Cash",
-    amount: "4600",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 11,
-    plan_name: "Metro Taxi Co.",
-    status: ["Active", "Basic"],
-    account: "AC008",
-    next_billing: "Jan 20, 2025",
-    due_date: null,
-    payment_type: "Card",
-    amount: "3400",
-    billing_cycle: "monthly",
-  },
-  {
-    id: 12,
-    plan_name: "Metro Taxi Co.",
-    status: ["Active", "Premium"],
-    account: "AC009",
-    next_billing: "Jan 25, 2025",
-    due_date: null,
-    payment_type: "Cash",
-    amount: "4900",
-    billing_cycle: "monthly",
-  },
-];
-
 const Subscription = () => {
-  // Existing Subscription Types - static
   const [_searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [_selectedStatus, setSelectedStatus] = useState(STATUS_OPTIONS[0]);
@@ -246,6 +98,8 @@ const Subscription = () => {
   });
   const [subscriptionListRaw, setSubscriptionListRaw] = useState([]);
   const [subscriptionListDisplay, setSubscriptionListDisplay] = useState([]);
+  const [pendibgSubscriptionListRaw, setPendingSubscriptionListRaw] = useState([]);
+  const [pendigSubscriptionListDisplay, setPendingSubscriptionListDisplay] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [subscriptionCardDetails, setSubscriptionCardDetails] = useState({});
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState({
@@ -345,6 +199,33 @@ const Subscription = () => {
     }
   };
 
+  const getPendingSubscriptionList = async (search = "") => {
+    try {
+      setIsSubscriptionsLoading(true);
+      const result = await apiGetPendingSubscriptionlist({
+        page: currentPage,
+        perPage: itemsPerPage, // Use itemsPerPage for Existing Subscription Types
+        search: search || undefined,
+      });
+      if (result?.status === 200) {
+        const list = result?.data?.list;
+        const rows = Array.isArray(list?.data) ? list?.data : [];
+        setPendingSubscriptionListRaw(rows);
+        setPendingSubscriptionListDisplay(rows);
+      }
+    } catch (errors) {
+      console.log(errors, "err---");
+      setPendingSubscriptionListRaw([]);
+      setPendingSubscriptionListDisplay([]);
+    } finally {
+      setIsSubscriptionsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getPendingSubscriptionList();
+  }, []);
+
   const getSubscriptionManagement = async (search = "") => {
     try {
       setIsSubscriptionsLoading(true);
@@ -402,7 +283,6 @@ const Subscription = () => {
     }
   };
 
-  // Pending Subscription - Static data with search and filters
   const [pendingSearchQuery, setPendingSearchQuery] = useState("");
   const [debouncedPendingSearchQuery, setDebouncedPendingSearchQuery] =
     useState("");
@@ -448,7 +328,7 @@ const Subscription = () => {
 
   useEffect(() => {
     // Filter and search logic for pending subscriptions
-    let filteredData = [...subscriptionManagementData];
+    let filteredData = [...pendibgSubscriptionListRaw];
 
     // Search filter
     if (debouncedPendingSearchQuery && debouncedPendingSearchQuery.trim()) {
@@ -562,6 +442,7 @@ const Subscription = () => {
     if (!hasCalledInitial.current) {
       hasCalledInitial.current = true;
       getSubscriptions(debouncedSearchQuery);
+      getPendingSubscriptionList(debouncedSearchQuery);
       prevSearchRef.current = debouncedSearchQuery;
       prevItemsPerPageRef.current = itemsPerPage;
       prevCurrentPageRef.current = currentPage;
@@ -581,6 +462,7 @@ const Subscription = () => {
       return;
     }
     getSubscriptions(debouncedSearchQuery);
+    getPendingSubscriptionList(debouncedSearchQuery);
     getSubscriptionManagement(debouncedSearchQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshTrigger]);
@@ -625,7 +507,7 @@ const Subscription = () => {
     // Pagination - show 4 items per page for Subscription Management
     const startIndex = (subscriptionManagementCurrentPage - 1) * 4;
     const endIndex = startIndex + 4;
-    const paginatedData = subscriptionManagementData.slice(
+    const paginatedData = pendibgSubscriptionListRaw.slice(
       startIndex,
       endIndex
     );
@@ -934,181 +816,9 @@ const Subscription = () => {
                 </div>
               ) : null} */}
             </div>
-            {/* Pending Subscription Section - Static data with search/filters */}
-            <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t-2 border-[#1F41BB]">
-              <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
-                <ChildText text="Pending Subscription" size="2xl" />
-              </div>
-              <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
-                <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
-                  <SearchBar
-                    value={pendingSearchQuery}
-                    onSearchChange={handlePendingSearchChange}
-                    className="w-full md:max-w-[400px] max-w-full"
-                  />
-                </div>
-                {/* Mobile filter trigger */}
-                <div className="flex justify-end md:hidden">
-                  <button
-                    type="button"
-                    className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
-                    onClick={openPendingFilter}
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M3 5H21L14 13V20L10 18V13L3 5Z"
-                        stroke="#333333"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
-                  <CustomSelect
-                    variant={2}
-                    options={[
-                      { value: "all", label: "Cash/Card" },
-                      { value: "cash", label: "Cash" },
-                      { value: "card", label: "Card" },
-                    ]}
-                    value={pendingSelectedPaymentType}
-                    onChange={handlePendingPaymentTypeChange}
-                    placeholder="Cash/Card"
-                  />
-                  <CustomSelect
-                    variant={2}
-                    options={STATUS_OPTIONS}
-                    value={pendingSelectedStatus}
-                    onChange={handlePendingStatusChange}
-                    placeholder="All Status"
-                  />
-                  <CustomSelect
-                    variant={2}
-                    options={PLAN_OPTIONS}
-                    value={pendingSelectedPlan}
-                    onChange={handlePendingPlanChange}
-                    placeholder="All Subscription"
-                  />
-                </div>
-              </div>
-              <div>
-                <DataDetailsTable
-                  rowType="subscription"
-                  companies={pendingSubscriptionDisplay}
-                  actionOptions={[
-                    {
-                      label: "Edit",
-                      onClick: (item) => {
-                        if (item) {
-                          setSelectedId(item?.id);
-                          setIsSubscriptionModalOpen({
-                            type: "edit",
-                            isOpen: true,
-                          });
-                        }
-                      },
-                    },
-                  ]}
-                />
-              </div>
-              {Array.isArray(pendingSubscriptionDisplay) &&
-                pendingSubscriptionDisplay.length > 0 ? (
-                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
-                  <Pagination
-                    currentPage={pendingSubscriptionCurrentPage}
-                    totalPages={allPendingSubscription.last_page}
-                    itemsPerPage={4}
-                    onPageChange={handlePendingSubscriptionPageChange}
-                    onItemsPerPageChange={
-                      handlePendingSubscriptionItemsPerPageChange
-                    }
-                    itemsPerPageOptions={[4]}
-                    pageKey="pendingSubscription"
-                  />
-                </div>
-              ) : null}
-              {/* Mobile Filter Bottom Sheet */}
-              <AnimatePresence>
-                {isPendingFilterOpen && (
-                  <div className="fixed inset-0 z-[2000] md:hidden">
-                    <div
-                      className="absolute inset-0 bg-black/40"
-                      onClick={closePendingFilter}
-                    ></div>
-                    <Base
-                      initial={{ y: "100%" }}
-                      animate={{ y: 0 }}
-                      exit={{ y: "100%" }}
-                      transition={{ duration: 0.25, ease: "easeOut" }}
-                      className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
-                    >
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-base font-semibold text-[#333]">
-                          Filter
-                        </span>
-                        <button
-                          type="button"
-                          aria-label="Close filter"
-                          className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
-                          onClick={closePendingFilter}
-                        >
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M18 6L6 18M6 6L18 18"
-                              stroke="#333"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                      <div className="flex flex-col gap-4">
-                        <CustomSelect
-                          variant={2}
-                          options={[
-                            { value: "all", label: "Cash/Card" },
-                            { value: "cash", label: "Cash" },
-                            { value: "card", label: "Card" },
-                          ]}
-                          value={pendingSelectedPaymentType}
-                          onChange={handlePendingPaymentTypeChange}
-                          placeholder="Cash/Card"
-                        />
-                        <CustomSelect
-                          variant={2}
-                          options={STATUS_OPTIONS}
-                          value={pendingSelectedStatus}
-                          onChange={handlePendingStatusChange}
-                          placeholder="All Status"
-                        />
-                        <CustomSelect
-                          variant={2}
-                          options={PLAN_OPTIONS}
-                          value={pendingSelectedPlan}
-                          onChange={handlePendingPlanChange}
-                          placeholder="All Subscription"
-                        />
-                      </div>
-                    </Base>
-                  </div>
-                )}
-              </AnimatePresence>
-            </div>
+          <div>
+            <PendingSubscription />
+          </div>
           </CardContainer>
         </div>
       </div>
