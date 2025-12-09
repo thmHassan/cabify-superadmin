@@ -3,11 +3,13 @@ import {
   CREATE_SUBSCRIPTION,
   DELETE_SUBSCRIPTIONS,
   EDIT_SUBSCRIPTION,
+  EXTEND_SUBSCRIPTION,
   GET_STRIPE_KEYS,
   GET_SUBSCRIPTION_BY_ID,
   GET_SUBSCRIPTION_CARDS,
   GET_SUBSCRIPTIONS,
   GET_SUBSCRIPTIONS_MANAGEMENT,
+  PENDING_SUBSCRIPTION_LIST,
 } from "../constants/api.route.constant";
 import { METHOD_GET, METHOD_POST } from "../constants/method.constant";
 import { replaceSlash } from "../utils/functions/common.function";
@@ -75,5 +77,22 @@ export async function apiGetStripeKeys() {
   return ApiService.fetchData({
     url: GET_STRIPE_KEYS,
     method: METHOD_GET,
+  });
+}
+
+export async function apiGetPendingSubscriptionlist(params) {
+  const url = typeof params === 'string' ? replaceSlash(params, PENDING_SUBSCRIPTION_LIST) : PENDING_SUBSCRIPTION_LIST;
+  return ApiService.fetchData({
+    url,
+    method: METHOD_GET,
+    params: typeof params === 'object' ? params : undefined,
+  });
+}
+
+export async function apiExtendSubscription(data) {
+  return ApiService.fetchData({
+    url: EXTEND_SUBSCRIPTION,
+    method: METHOD_POST,
+    data,
   });
 }

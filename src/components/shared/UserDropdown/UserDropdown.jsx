@@ -32,19 +32,18 @@ const UserDropdown = ({ children, options = [], className, itemData }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ Handle toggle and calculate position
+  // Toggle and set dropdown position
   const handleToggle = () => {
     if (buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setPosition({
         top: rect.bottom + window.scrollY + 8,
-        left: rect.right - 192, // 192px = width of dropdown
+        left: rect.right - 192, // dropdown width
       });
     }
     setOpen((prev) => !prev);
   };
 
-  // ✅ Dropdown content (rendered via portal)
   const dropdownContent = (
     <AnimatePresence>
       {open && (
@@ -88,10 +87,15 @@ const UserDropdown = ({ children, options = [], className, itemData }) => {
                   >
                     {Icon && (
                       <Icon
-                        color={pathname === opt?.route ? "#ffffff" : "#000000"}
+                        color={
+                          pathname === opt?.route ? "#ffffff" : "#000000"
+                        }
                       />
                     )}
-                    {opt.label}
+
+                    {typeof opt.label === "function"
+                      ? opt.label(itemData)
+                      : opt.label}
                   </div>
                 </li>
               );
@@ -104,12 +108,10 @@ const UserDropdown = ({ children, options = [], className, itemData }) => {
 
   return (
     <div className="inline-block select-none relative">
-      {/* ✅ Trigger Button */}
       <div ref={buttonRef} className="cursor-pointer" onClick={handleToggle}>
         {children}
       </div>
 
-      {/* ✅ Render dropdown only after DOM mount */}
       {mounted && createPortal(dropdownContent, document.body)}
     </div>
   );

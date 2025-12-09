@@ -110,7 +110,7 @@ const EnablementInformation = ({
         ))}
       </div>
 
-      {values.map && (
+      {/* {values.map && (
         <div className="flex flex-wrap gap-4 sm:gap-5 mb-6">
 
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
@@ -148,7 +148,7 @@ const EnablementInformation = ({
           </div>
 
         </div>
-      )}
+      )} */}
 
       {paymentError && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
