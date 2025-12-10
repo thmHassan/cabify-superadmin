@@ -79,6 +79,8 @@ export const SYSTEM_INFORMATION_VALIDATION_SCHEMA = {
 
   stripe_enable: Yup.boolean(),
   enable_smtp: Yup.boolean(),
+
+   stripe_enablement: Yup.string().nullable(),
 };
 
 
