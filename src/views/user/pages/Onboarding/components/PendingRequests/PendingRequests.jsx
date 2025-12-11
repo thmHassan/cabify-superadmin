@@ -7,6 +7,7 @@ const PendingRequests = ({
   onRefresh,
   onEdit,
   isOnboardingLoading,
+  getOnboarding,
 }) => {
   if (isOnboardingLoading) {
     return (
@@ -35,6 +36,7 @@ const PendingRequests = ({
             type="pending"
             data={data}
             onRefresh={onRefresh}
+            onStatusUpdate={getOnboarding}
           />
         </div>
       ))}

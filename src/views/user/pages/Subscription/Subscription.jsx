@@ -41,6 +41,7 @@ import Base from "../../../../components/animations/Base";
 import Tag from "../../../../components/ui/Tag";
 import CardSubtitle from "../../../../components/ui/CardSubtitle";
 import PendingSubscription from "./components/PendingSubscription";
+import ManagementSubscription from "./components/ManagementSubscription";
 
 const DASHBOARD_CARDS = [
   {
@@ -762,63 +763,11 @@ const Subscription = () => {
               )}
             </AnimatePresence>
             <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
-              <ChildText text="Subscription Management" size="2xl" />
-              <PageSubTitle title="Overview of all company subscriptions and billing status" />
+              <ManagementSubscription />
             </div>
             <div>
-              {/* Subscription Management - Static data, show 4 items per page, no search/filters */}
-              <div>
-                {/* <DataDetailsTable
-                  rowType="subscription"
-                  companies={subscriptionManagementDisplay}
-                  actionOptions={[
-                    {
-                      label: "Edit",
-                      onClick: (item) => {
-                        if (item) {
-                          setSelectedId(item?.id);
-                          setIsSubscriptionModalOpen({
-                            type: "edit",
-                            isOpen: true,
-                          });
-                        }
-                      },
-                    },
-                    {
-                      label: "View",
-                      onClick: (item) => {
-                        setSelectedId(item?.id);
-                        setIsSubscriptionModalOpen({
-                          type: "view",
-                          isOpen: true,
-                        });
-                      },
-                    },
-                  ]}
-                /> */}
-              </div>
-              {/* {Array.isArray(subscriptionManagementDisplay) &&
-                subscriptionManagementDisplay.length > 0 ? (
-                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
-                  <Pagination
-                    currentPage={subscriptionManagementCurrentPage}
-                    totalPages={Math.ceil(
-                      subscriptionManagementData.length / 4
-                    )}
-                    itemsPerPage={4}
-                    onPageChange={handleSubscriptionManagementPageChange}
-                    onItemsPerPageChange={
-                      handleSubscriptionManagementItemsPerPageChange
-                    }
-                    itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                    pageKey="subscriptionManagement"
-                  />
-                </div>
-              ) : null} */}
+              <PendingSubscription />
             </div>
-          <div>
-            <PendingSubscription />
-          </div>
           </CardContainer>
         </div>
       </div>

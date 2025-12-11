@@ -22,6 +22,12 @@ const PERMISSIONS = [
   { label: "Extra", value: "extra" },
 ];
 
+// Default shape ensures we always have an object with all permission keys
+const DEFAULT_PERMISSIONS = PERMISSION_CONFIG.reduce((acc, { value }) => {
+  acc[value] = [];
+  return acc;
+}, {});
+
 const ViewPermissions = ({ values, setFieldValue, readonly = false }) => {
   return (
     <div className="flex flex-col gap-3 sm:gap-4 lg:gap-5">
@@ -40,7 +46,8 @@ const ViewPermissions = ({ values, setFieldValue, readonly = false }) => {
             <div className="flex flex-wrap gap-3 sm:gap-4 lg:gap-5">
               {PERMISSIONS.map(
                 ({ label: permissionName, value: permissionValue }, iIndex) => {
-                  const existing = values.permissions[value] || [];
+                  const permissions = values?.permissions || DEFAULT_PERMISSIONS;
+                  const existing = permissions[value] || [];
                   const isChecked = existing.includes(permissionValue);
                   return (
                     <div key={iIndex}>
@@ -62,7 +69,8 @@ const ViewPermissions = ({ values, setFieldValue, readonly = false }) => {
                           }
 
                           setFieldValue("permissions", {
-                            ...values.permissions,
+                            ...DEFAULT_PERMISSIONS,
+                            ...permissions,
                             [value]: updated,
                           });
                         }}

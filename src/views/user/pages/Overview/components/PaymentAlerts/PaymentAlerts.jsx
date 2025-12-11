@@ -69,12 +69,12 @@ const PaymentAlerts = () => {
               </div>
             </div>
             <div className="flex gap-3 lg:ml-0 ml-20 xs:flex-row flex-col">
-              <Button type="filled" btnSize="md" className="xs:w-[calc(50%-10px)] md:w-auto w-full">
+              <Button type="filledRed" btnSize="md" className="xs:w-[calc(50%-10px)] md:w-auto w-full">
                 Send Reminder
               </Button>
-              <Button type="outline" btnSize="md" className="xs:w-[calc(50%-10px)] md:w-auto w-full">
+              {/* <Button type="outline" btnSize="md" className="xs:w-[calc(50%-10px)] md:w-auto w-full">
                 View Details
-              </Button>
+              </Button> */}
             </div>
           </CardContainer>
         );

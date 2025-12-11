@@ -68,7 +68,7 @@ export const SERVICE_INFORMATION_VALIDATION_SCHEMA = {
   uber_plot_hybrid: Yup.string().required("System type is required"),
   fleet_management: Yup.string().required("Fleet management option is required"),
   sos_features: Yup.string().required("SOS features option is required"),
-  notes: Yup.string().nullable(),
+  notes: Yup.string().required("nots is required"),
 };
 
 

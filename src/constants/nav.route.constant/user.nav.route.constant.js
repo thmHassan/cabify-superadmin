@@ -226,7 +226,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
-        isStatic: true,
+        isStatic: false,
       },
       {
         key: KEY.PAYMENTS_KEY,

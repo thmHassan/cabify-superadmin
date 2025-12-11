@@ -23,6 +23,8 @@ const RequestComponent = ({
   onApprove,
   onReject,
   onDelete,
+  onRefresh,
+  onStatusUpdate,
 }) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -136,6 +138,7 @@ const RequestComponent = ({
           onDelete={onDelete}
           onApprove={onApprove}
           onReject={onReject}
+          onRefresh={onStatusUpdate}
         />
       )}
       <Modal isOpen={deleteModalOpen} className="p-6 sm:p-8 w-full max-w-md">

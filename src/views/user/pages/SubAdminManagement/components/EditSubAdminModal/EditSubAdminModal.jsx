@@ -10,6 +10,14 @@ import {
   unlockBodyScroll,
 } from "../../../../../../utils/functions/common.function";
 
+const DEFAULT_INITIAL_VALUES = {
+  name: "",
+  email: "",
+  password: "",
+  cPassword: "",
+  permissions: {},
+};
+
 const EditSubAdminModal = ({
   setIsDocumentModalOpen,
   onRefresh,
@@ -19,7 +27,7 @@ const EditSubAdminModal = ({
   const [submitError, setSubmitError] = useState(null);
   const [isSubAdminDetailsLoading, setIsSubAdminDetailsLoading] =
     useState(false);
-  const [initialValues, setInitialValues] = useState(null);
+  const [initialValues, setInitialValues] = useState(DEFAULT_INITIAL_VALUES);
 
   const getSubAdminById = async () => {
     try {
@@ -29,11 +37,20 @@ const EditSubAdminModal = ({
       if (result?.status === 200) {
         console.log(result, "res-admin");
         const { name, email, permissions } = result?.data?.subadmin || {};
-        setInitialValues({
-          name,
-          email,
-          permissions: JSON.parse(JSON.parse(permissions)),
-        });
+        let parsedPermissions = {};
+        try {
+          parsedPermissions = permissions
+            ? JSON.parse(JSON.parse(permissions))
+            : {};
+        } catch (err) {
+          parsedPermissions = {};
+        }
+        setInitialValues((prev) => ({
+          ...prev,
+          name: name || "",
+          email: email || "",
+          permissions: parsedPermissions || {},
+        }));
       }
     } catch (error) {
       console.log(error);
@@ -97,8 +114,6 @@ const EditSubAdminModal = ({
       </div>
     );
   }
-
-  console.log("object-----edit");
 
   return (
     <SubAdminModal

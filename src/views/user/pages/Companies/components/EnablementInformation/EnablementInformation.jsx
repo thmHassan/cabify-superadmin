@@ -171,24 +171,28 @@ const EnablementInformation = ({
         </Button>
         {modalType === "company" && companyCreated && shouldShowPaymentButtons ? (
           <>
-            <Button
-              btnSize="md"
-              type="filled"
-              className="!px-10 pt-4 pb-[15px] leading-[25px]"
-              onClick={handleCashPayment}
-              disabled={isProcessingPayment}
-            >
-              <span>{isProcessingPayment ? "Processing..." : "Cash Payment"}</span>
-            </Button>
-            <Button
-              btnSize="md"
-              type="filled"
-              className="!px-10 pt-4 pb-[15px] leading-[25px]"
-              onClick={handleOnlinePayment}
-              disabled={isProcessingPayment}
-            >
-              <span>{isProcessingPayment ? "Processing..." : "Online Payment"}</span>
-            </Button>
+            {values.subscription?.deduct_type === "cash" && (
+              <Button
+                btnSize="md"
+                type="filled"
+                className="!px-10 pt-4 pb-[15px] leading-[25px]"
+                onClick={handleCashPayment}
+                disabled={isProcessingPayment}
+              >
+                <span>{isProcessingPayment ? "Processing..." : "Cash Payment"}</span>
+              </Button>
+            )}
+            {values.subscription?.deduct_type === "card" && (
+              <Button
+                btnSize="md"
+                type="filled"
+                className="!px-10 pt-4 pb-[15px] leading-[25px]"
+                onClick={handleOnlinePayment}
+                disabled={isProcessingPayment}
+              >
+                <span>{isProcessingPayment ? "Processing..." : "Online Payment"}</span>
+              </Button>
+            )}
           </>
         ) : (
           <Button

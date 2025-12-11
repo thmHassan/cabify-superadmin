@@ -61,13 +61,11 @@ const CompanyTableRow = (props) => {
 
 const PendingSubscriptionTableRow = (props) => {
     const { actionOptions, data, type = "pendingsubscription" } = props;
-    // console.log(data, "data======", type);
-    const { company_name, email, address, payment_method, account, next_billing, due_date, payment_type, deduct_type, billing_cycle_deduct_option, status } = data;
+    const { company_name, email, address, payment_method, subscription } = data;
     if (type === "company") {
         return <CompanyTableRow {...props} />;
     } else {
         // Use status from data if available, otherwise default to Active and Premium
-
         return (
             <CommonTableRowFields
                 itemData={data}
@@ -91,7 +89,19 @@ const PendingSubscriptionTableRow = (props) => {
                             )}
                             {payment_method && (
                                 <Tag size="sm" variant="mediumGray">
-                                    <span>{payment_method}</span>
+                                    <span>
+                                        {payment_method === "stripe"
+                                            ? "Online"
+                                            : payment_method === "cash"
+                                                ? "Cash"
+                                                : payment_method
+                                        }
+                                    </span>
+                                </Tag>
+                            )}
+                            {subscription?.deduct_type && (
+                                <Tag size="sm" variant="mediumGray">
+                                    <span>{subscription.deduct_type}</span>
                                 </Tag>
                             )}
                         </div>

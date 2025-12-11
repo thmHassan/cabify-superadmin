@@ -59,19 +59,18 @@ const CompanyTableRow = (props) => {
 };
 
 const SubscriptionManagementRow = (props) => {
-  const { actionOptions, data, type = "subscriptionManagement" } = props;
+  const { actionOptions, data, type = "managementsubscription" } = props;
   console.log(data, "data======datadata", type);
-  const { plan_name, amount, billing_cycle, features, account, next_billing, due_date, payment_type, deduct_type, billing_cycle_deduct_option, status } = data;
+  const { company_name, phone, city, payment_method } = data;
   if (type === "company") {
     return <CompanyTableRow {...props} />;
   } else {
-    // Use status from data if available, otherwise default to Active and Premium
-    
+
     return (
       <CommonTableRowFields
         itemData={data}
         data={{
-          name: plan_name,
+          name: company_name,
           actionOptions,
         }}
       >
@@ -79,53 +78,32 @@ const SubscriptionManagementRow = (props) => {
           <div className="min-h-[120px] py-[30px]">
             <div className="flex gap-[30px] items-center min-h-max">
               {/* Show account and next_billing if available */}
-              {account && (
+              {phone && (
                 <Tag size="sm" variant="mediumGray">
-                  <span>{account}</span>
+                  <span>{phone}</span>
                 </Tag>
               )}
-              {next_billing && (
+              {city && (
                 <Tag size="sm" variant="mediumGray">
-                  <span>{next_billing}</span>
+                  <span>{city}</span>
                 </Tag>
               )}
-              {features && Array.isArray(features) && features.length > 0 && (
-                <Tag size="sm" variant="mediumGray">
-                  <span>{features.length} features included</span>
-                </Tag>
-              )}
-              {features && !Array.isArray(features) && features !== null && (
-                <Tag size="sm" variant="mediumGray">
-                  <span>Features included</span>
-                </Tag>
-              )}
-              {/* Show API fields if account/next_billing not available */}
-              {!account && !next_billing && (
-                <>
-                  {billing_cycle && (
-                    <Tag size="sm" variant="mediumGray">
-                      <span>{billing_cycle}</span>
-                    </Tag>
-                  )}
-                  {deduct_type && (
-                    <Tag size="sm" variant="mediumGray">
-                      <span>{deduct_type.charAt(0).toUpperCase() + deduct_type.slice(1)}</span>
-                    </Tag>
-                  )}
-                  {billing_cycle_deduct_option && (
-                    <Tag size="sm" variant="mediumGray">
-                      <span>{billing_cycle_deduct_option.replace("_", " ").split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")}</span>
-                    </Tag>
-                  )}
-                </>
-              )}
+              {
+                payment_method && (
+                  <Tag size="sm" variant="mediumGray">
+                    <span>
+                      {payment_method === "stripe"
+                        ? "Online"
+                        : payment_method === "cash"
+                          ? "Cash"
+                          : payment_method
+                      }
+                    </span>
+                  </Tag>
+                )
+              }
             </div>
           </div>
-        </td>
-
-        <td className="py-[30px] flex flex-col justify-center min-w-[199px]">
-          <CardSubtitle type={1} subtitle={`$${amount}`} />
-          <ChildText text={billing_cycle} />
         </td>
       </CommonTableRowFields>
     );
