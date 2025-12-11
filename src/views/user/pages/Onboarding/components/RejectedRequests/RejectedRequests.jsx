@@ -4,7 +4,7 @@ import AppLogoLoader from "../../../../../../components/shared/AppLogoLoader";
 import EmptyState from "../../../../../../components/shared/EmptyState";
 import { apiEditOnboardingStatus } from "../../../../../../services/OnboardingService";
 
-const RejectedRequests = ({ allOnboardings: initialOnboardings, onEdit, onApprove: parentOnApprove, isOnboardingLoading }) => {
+const RejectedRequests = ({ allOnboardings: initialOnboardings, onEdit, onApprove: parentOnApprove, isOnboardingLoading, onRefresh, getOnboarding }) => {
   const [allOnboardings, setAllOnboardings] = useState(initialOnboardings || []);
   const [isProcessingIds, setIsProcessingIds] = useState([]);
 
@@ -35,6 +35,11 @@ const RejectedRequests = ({ allOnboardings: initialOnboardings, onEdit, onApprov
 
         if (typeof parentOnApprove === "function") {
           parentOnApprove({ id, ...data, status: "approved" });
+        }
+        
+        // Call getOnboarding immediately after successful status update
+        if (getOnboarding && typeof getOnboarding === "function") {
+          await getOnboarding();
         }
       } else {
         console.error("Approve API returned non-200:", response);

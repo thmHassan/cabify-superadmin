@@ -225,6 +225,7 @@ const Onboarding = () => {
           isOnboardingLoading={isOnboardingLoading}
           onRefresh={handleRefresh}
           onEdit={onEdit}
+          getOnboarding={getOnboarding}
         />
       </div>
 

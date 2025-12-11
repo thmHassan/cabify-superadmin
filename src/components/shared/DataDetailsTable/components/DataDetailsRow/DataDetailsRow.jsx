@@ -11,11 +11,20 @@ import VehicleTypeFields from "../VehicleTypeFields";
 
 const DataDetailsRow = ({ type = "subscription", ...props }) => {
   const TABLE_ROW_CONFIG = {
-    company: (props) => <SubscriptionTableRow type={type} {...props} />,
-    company: (props) => <PendingSubscriptionTableRow type={type} {...props} />,
-    pendingsubscription: PendingSubscriptionTableRow,
-    subscription: SubscriptionTableRow,
-    subscriptionManagement: SubscriptionManagementRow,
+    company: (props) => <SubscriptionTableRow type="company" {...props} />,
+    pendingsubscription: (props) => (
+      <PendingSubscriptionTableRow type="pendingsubscription" {...props} />
+    ),
+    subscription: (props) => (
+      <SubscriptionTableRow type="subscription" {...props} />
+    ),
+    managementsubscription: (props) => (
+      <SubscriptionManagementRow type="managementsubscription" {...props} />
+    ),
+    // Backwards compatibility with previous camelCase naming
+    subscriptionManagement: (props) => (
+      <SubscriptionManagementRow type="managementsubscription" {...props} />
+    ),
     usageMonitoring: UsageMonitoringTableRow,
     systemAnalytics: SystemAnalyticsTableRow,
     driverDocuments: DriverDocumentsRowFields,
@@ -26,6 +35,12 @@ const DataDetailsRow = ({ type = "subscription", ...props }) => {
   };
 
   const Row = TABLE_ROW_CONFIG[type];
+
+  if (!Row) {
+    console.warn(`Unknown DataDetailsRow type: ${type}`);
+    return null;
+  }
+
   return <Row {...props} />;
 };
 

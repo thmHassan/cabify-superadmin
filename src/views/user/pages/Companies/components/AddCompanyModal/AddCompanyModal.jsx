@@ -46,7 +46,7 @@ const AddCompanyModal = ({
     company_name: formData.company_name || "",
     company_admin_name: formData.company_admin_name || "",
     user_name: formData.user_name || "",
-    password: formData.password || "",
+    password: "",
     company_id: formData.company_id || "",
     contact_person: formData.contact_person || "",
     email: formData.email || "",
@@ -214,7 +214,7 @@ const AddCompanyModal = ({
 
       if (result?.status === 200) {
         const company = result?.data?.company || {};
-
+        company.password = "";
         setInitialValues({
           ...company,
           voip: toBoolean(company.voip, 2),
@@ -235,7 +235,7 @@ const AddCompanyModal = ({
           subscription: result?.data?.subscription,
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -300,7 +300,9 @@ const AddCompanyModal = ({
                 <span className="w-full text-center block truncate">
                   {!_.isEmpty(values.company_name)
                     ? values.company_name
-                    : "Add New Company"}
+                    : modalType === "onboarding"
+                      ? "Add Onboarding"
+                      : "Add New Company"}
                 </span>
               </div>
               {submitError && (

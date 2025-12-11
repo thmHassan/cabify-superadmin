@@ -50,6 +50,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
           const options = response.data.list.data.map((subscription) => ({
             value: Number(subscription.id),
             label: subscription.plan_name,
+            fullData: subscription,
           }));
 
           setSubscriptionOptions(options);

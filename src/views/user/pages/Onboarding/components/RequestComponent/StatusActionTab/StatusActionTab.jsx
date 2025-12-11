@@ -3,7 +3,7 @@ import Button from "../../../../../../../components/ui/Button/Button";
 import { apiDeleteOnboarding, apiEditOnboardingStatus } from "../../../../../../../services/OnboardingService";
 import Modal from "../../../../../../../components/shared/Modal";
 
-const StatusActionTab = ({ id, onDelete, onApprove, onReject }) => {
+const StatusActionTab = ({ id, onDelete, onApprove, onReject, onRefresh }) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -31,6 +31,10 @@ const StatusActionTab = ({ id, onDelete, onApprove, onReject }) => {
       if (response?.status === 200) {
         if (status === "approved" && onApprove) onApprove({ id, status });
         if (status === "rejected" && onReject) onReject({ id, status });
+        // Call getOnboarding immediately after successful status update
+        if (onRefresh && typeof onRefresh === "function") {
+          await onRefresh();
+        }
       }
     } catch (err) {
       console.error(err);

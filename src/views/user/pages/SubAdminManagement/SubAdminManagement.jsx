@@ -217,10 +217,6 @@ const SubAdminManagement = () => {
   }, [currentPage, itemsPerPage, debouncedSearchQuery]);
 
   console.log(isDocumentModalOpen, "isDocumentModalOpen====");
-  console.log(
-    selectedViewData?.permissions,
-    "selectedViewData?.permissions====="
-  );
 
   const allPermissions =
     selectedViewData?.permissions &&
