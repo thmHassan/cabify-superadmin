@@ -154,22 +154,24 @@ const AddCompanyModal = ({
         voip: toYesNo(voip, 2),
       };
 
-      const formValues = { ...formattedValues, ...formData };
+      const { picture, ...valuesWithoutPicture } = formattedValues;
+      const formValues = { ...valuesWithoutPicture };
+
+      if (formData.picture instanceof File) {
+        formValues.picture = formData.picture;
+      }
 
       let latestFormData =
         type === "edit" ? { id, ...formValues, password } : formValues;
 
-      delete latestFormData.subscription;
-      if (type === "edit" && !(latestFormData.picture instanceof File)) {
+      if (latestFormData.picture && !(latestFormData.picture instanceof File)) {
         delete latestFormData.picture;
       }
 
+      delete latestFormData.subscription;
       const formDataToSend = convertToFormData(latestFormData);
 
-      const payload =
-        modalType === "company"
-          ? formDataToSend
-          : convertToFormData(latestFormData);
+      const payload = formDataToSend;
 
       const response =
         type === "edit"
@@ -275,15 +277,19 @@ const AddCompanyModal = ({
                 onClick={handlePickImage}
               >
                 {imagePreviewUrl ? (
-                  <img
-                    src={imagePreviewUrl}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={imagePreviewUrl} className="w-full h-full object-cover" />
                 ) : values.picture ? (
-                  <img
-                    src={`${import.meta.env.VITE_BACKEND_URL}/${values.picture}`}
-                    className="w-full h-full object-cover"
-                  />
+                  values.picture instanceof File ? (
+                    <img
+                      src={URL.createObjectURL(values.picture)}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={`${import.meta.env.VITE_BACKEND_URL}/${values.picture}`}
+                      className="w-full h-full object-cover"
+                    />
+                  )
                 ) : (
                   <ImageUploadIcon />
                 )}
