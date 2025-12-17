@@ -107,6 +107,10 @@ const PendingSubscriptionTableRow = (props) => {
                         </div>
                     </div>
                 </td>
+                        {/* <td className="py-[30px] flex flex-col justify-center min-w-[199px]">
+          <CardSubtitle type={1} subtitle={`$${payment_amount}`} />
+          <ChildText text={subscription?.billing_cycle} />
+        </td> */}
             </CommonTableRowFields>
         );
     }

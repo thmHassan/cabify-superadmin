@@ -88,7 +88,7 @@ const PendingSubscription = () => {
                 : null;
 
             const billingCycle = item?.subscription?.billing_cycle || null;
-            const deductType = item?.subscription?.deduct_type; 
+            const deductType = item?.subscription?.deduct_type;
 
             if (deductType === "card") {
                 if (!amount) {
@@ -101,12 +101,12 @@ const PendingSubscription = () => {
                 const response = await ApiService.createStripePaymentUrl(formData);
 
                 if ((response.status === 200 || response.status === 201) && response.data?.url) {
-                    window.location.href = response.data.url; 
+                    window.location.href = response.data.url;
                 } else {
                     setPaymentError("Stripe URL not received.");
                 }
 
-                return; 
+                return;
             }
 
             if (deductType === "cash") {
@@ -134,7 +134,7 @@ const PendingSubscription = () => {
     };
 
     return (
-        <div className="mt-6 pt-6 border-t-2 border-[#1F41BB]">
+        <div className="mt-6 p-4">
             <ChildText text="Pending Subscription" size="2xl" />
 
             <div className="flex flex-row items-center gap-5 justify-between my-5">
@@ -185,6 +185,10 @@ const PendingSubscription = () => {
                 rowType="pendingsubscription"
                 companies={pendingSubscriptionListDisplay}
                 actionOptions={[
+                    // {
+                    //     label: "View Details",
+                    //     onClick: (item) => handleExtendSubscription(item),
+                    // },
                     {
                         label: (item) =>
                             item?.subscription?.deduct_type === "card"

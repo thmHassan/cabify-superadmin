@@ -762,12 +762,16 @@ const Subscription = () => {
                 </div>
               )}
             </AnimatePresence>
-            <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
-              <ManagementSubscription />
-            </div>
-            <div>
-              <PendingSubscription />
-            </div>
+          </CardContainer>
+        </div>
+        <div>
+          <CardContainer>
+            <ManagementSubscription />
+          </CardContainer>
+        </div>
+        <div>
+          <CardContainer>
+            <PendingSubscription />
           </CardContainer>
         </div>
       </div>

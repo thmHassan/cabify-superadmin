@@ -21,7 +21,7 @@ const AddExtendSubscription = ({ initialValue = {}, setIsOpen, onSuccess }) => {
 
     try {
       const formData = new FormData();
-      formData.append("tenant_id", values.tenant_id); // <-- correct id from your list
+      formData.append("tenant_id", values.tenant_id); 
       formData.append("expiry_date", values.expiry_date);
 
       const response = await apiExtendSubscription(formData);
@@ -33,8 +33,7 @@ const AddExtendSubscription = ({ initialValue = {}, setIsOpen, onSuccess }) => {
         setSubmitError(response?.data?.message || "Failed to extend subscription");
       }
     } catch (error) {
-      console.error("Error extending subscription:", error);
-      setSubmitError(error?.response?.data?.message || "Error extending subscription");
+      setSubmitError(error?.response?.data?.message);
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +43,7 @@ const AddExtendSubscription = ({ initialValue = {}, setIsOpen, onSuccess }) => {
     <div className="p-8 mx-auto w-full">
       <Formik
         initialValues={{
-          tenant_id: initialValue?.id || "", // <-- correct company id
+          tenant_id: initialValue?.id || "", 
           expiry_date: initialValue?.expiry_date || "",
         }}
         validationSchema={EXTEND_SUBSCRIPTION_VALIDATION_SCHEMA}
