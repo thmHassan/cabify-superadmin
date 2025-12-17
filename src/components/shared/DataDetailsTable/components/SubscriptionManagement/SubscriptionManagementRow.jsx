@@ -61,7 +61,7 @@ const CompanyTableRow = (props) => {
 const SubscriptionManagementRow = (props) => {
   const { actionOptions, data, type = "managementsubscription" } = props;
   console.log(data, "data======datadata", type);
-  const { company_name, phone, city, payment_method } = data;
+  const { company_name, phone, city, payment_method, expiry_date, subscription, billing_cycle, payment_amount } = data;
   if (type === "company") {
     return <CompanyTableRow {...props} />;
   } else {
@@ -102,8 +102,18 @@ const SubscriptionManagementRow = (props) => {
                   </Tag>
                 )
               }
+              {expiry_date && (
+                <Tag size="sm" variant="mediumGray">
+                  <span>{expiry_date}</span>
+                </Tag>
+              )}
+
             </div>
           </div>
+        </td>
+        <td className="py-[30px] flex flex-col justify-center min-w-[199px]">
+          <CardSubtitle type={1} subtitle={`$${payment_amount}`} />
+          <ChildText text={subscription?.billing_cycle} />
         </td>
       </CommonTableRowFields>
     );

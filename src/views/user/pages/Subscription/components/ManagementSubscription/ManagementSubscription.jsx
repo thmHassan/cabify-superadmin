@@ -5,6 +5,8 @@ import DataDetailsTable from "../../../../../../components/shared/DataDetailsTab
 import Pagination from "../../../../../../components/ui/Pagination";
 import { PAGE_SIZE_OPTIONS, PLAN_OPTIONS, STATUS_OPTIONS } from "../../../../../../constants/selectOptions";
 import { useAppSelector } from "../../../../../../store";
+import Modal from "../../../../../../components/shared/Modal";
+import AddExtendSubscription from "../PendingSubscription/component/AddExtendSubscription/AddExtendSubscription";
 
 
 const ManagementSubscription = () => {
@@ -12,6 +14,8 @@ const ManagementSubscription = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [_selectedStatus, setSelectedStatus] = useState(STATUS_OPTIONS[0]);
     const [_selectedPlan, setSelectedPlan] = useState(PLAN_OPTIONS[0]);
+    const [isExtendModalOpen, setIsExtendModalOpen] = useState(false);
+    const [selectedSubscription, setSelectedSubscription] = useState(null);
     const [allSubscription, setAllSubscription] = useState({
         data: [],
         last_page: 1,
@@ -40,6 +44,21 @@ const ManagementSubscription = () => {
         fetchManagementSubscriptions();
     }, []);
 
+    const handleExtendSubscription = (subscription) => {
+        setSelectedSubscription(subscription);
+        setIsExtendModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsExtendModalOpen(false);
+        setSelectedSubscription(null);
+    };
+
+    const handleExtensionSuccess = () => {
+        fetchPendingSubscriptions();
+        handleModalClose();
+    };
+
     const fetchManagementSubscriptions = async () => {
         setIsLoading(true);
         try {
@@ -56,7 +75,7 @@ const ManagementSubscription = () => {
     };
 
     return (
-        <div className="mt-6 pt-6 border-t-2 border-[#1F41BB]">
+        <div className="mt-6 p-4">
             <ChildText text="Subscription Management" size="2xl" />
 
             <DataDetailsTable
@@ -64,18 +83,13 @@ const ManagementSubscription = () => {
                 companies={ManagementSubscriptionListDisplay}
                 actionOptions={[
                     // {
-                    //     label: (item) =>
-                    //         item.payment_method === "stripe"
-                    //             ? "Online"
-                    //             : item.payment_method === "cash"
-                    //                 ? "Cash"
-                    //                 : "No Method",
+                    //     label: "View Details",
                     //     onClick: (item) => handlePaymentAction(item),
                     // },
-                    // {
-                    //     label: "Extend Subscription",
-                    //     onClick: (item) => handleExtendSubscription(item),
-                    // },
+                    {
+                        label: "Extend Subscription",
+                        onClick: (item) => handleExtendSubscription(item),
+                    },
                 ]}
             />
             {Array.isArray(ManagementSubscriptionListDisplay) &&
@@ -92,6 +106,18 @@ const ManagementSubscription = () => {
                     />
                 </div>
             ) : null}
+            <Modal
+                isOpen={isExtendModalOpen}
+                onClose={handleModalClose}
+                title="Extend Subscription"
+                maxWidth="md"
+            >
+                <AddExtendSubscription
+                    initialValue={selectedSubscription || {}}
+                    setIsOpen={setIsExtendModalOpen}
+                    onSuccess={handleExtensionSuccess}
+                />
+            </Modal>
         </div>
     );
 };
