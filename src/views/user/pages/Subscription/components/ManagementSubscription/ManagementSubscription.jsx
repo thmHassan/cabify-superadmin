@@ -7,6 +7,7 @@ import { PAGE_SIZE_OPTIONS, PLAN_OPTIONS, STATUS_OPTIONS } from "../../../../../
 import { useAppSelector } from "../../../../../../store";
 import Modal from "../../../../../../components/shared/Modal";
 import AddExtendSubscription from "../PendingSubscription/component/AddExtendSubscription/AddExtendSubscription";
+import CardContainer from "../../../../../../components/shared/CardContainer";
 
 
 const ManagementSubscription = () => {
@@ -62,7 +63,10 @@ const ManagementSubscription = () => {
     const fetchManagementSubscriptions = async () => {
         setIsLoading(true);
         try {
-            const result = await apiGetSubscriptionManagement({});
+            const result = await apiGetSubscriptionManagement({
+                page: currentPage,
+                perPage: itemsPerPage,
+            });
             if (result?.status === 200) {
                 const data = result?.data?.list?.data || [];
                 setManagementSubscriptionListDisplay(data);
@@ -75,37 +79,45 @@ const ManagementSubscription = () => {
     };
 
     return (
-        <div className="mt-6 p-4">
-            <ChildText text="Subscription Management" size="2xl" />
 
-            <DataDetailsTable
-                rowType="managementsubscription"
-                companies={ManagementSubscriptionListDisplay}
-                actionOptions={[
-                    // {
-                    //     label: "View Details",
-                    //     onClick: (item) => handlePaymentAction(item),
-                    // },
-                    {
-                        label: "Extend Subscription",
-                        onClick: (item) => handleExtendSubscription(item),
-                    },
-                ]}
-            />
-            {Array.isArray(ManagementSubscriptionListDisplay) &&
-                ManagementSubscriptionListDisplay.length > 0 ? (
-                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={allSubscription.last_page}
-                        itemsPerPage={itemsPerPage}
-                        onPageChange={handlePageChange}
-                        onItemsPerPageChange={handleItemsPerPageChange}
-                        itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                        pageKey="subscription"
-                    />
+        <div>
+            <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
+                <ChildText text="Subscription Management" size="2xl" />
+            </div>
+            <CardContainer className="p-3 sm:p-4 lg:p-5">
+                <div className="mb-4 sm:mb-7 pb-4 sm:pb-6 border-b-2 border-[#E9E9E9]">
+                    <div>
+                        <DataDetailsTable
+                            rowType="managementsubscription"
+                            companies={ManagementSubscriptionListDisplay}
+                            actionOptions={[
+                                // {
+                                //     label: "View Details",
+                                //     onClick: (item) => handlePaymentAction(item),
+                                // },
+                                {
+                                    label: "Extend Subscription",
+                                    onClick: (item) => handleExtendSubscription(item),
+                                },
+                            ]}
+                        />
+                    </div>
+                    {Array.isArray(ManagementSubscriptionListDisplay) &&
+                        ManagementSubscriptionListDisplay.length > 0 ? (
+                        <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={allSubscription.last_page}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={handlePageChange}
+                                onItemsPerPageChange={handleItemsPerPageChange}
+                                itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                                pageKey="subscription"
+                            />
+                        </div>
+                    ) : null}
                 </div>
-            ) : null}
+            </CardContainer>
             <Modal
                 isOpen={isExtendModalOpen}
                 onClose={handleModalClose}
@@ -119,6 +131,7 @@ const ManagementSubscription = () => {
                 />
             </Modal>
         </div>
+
     );
 };
 

@@ -8,6 +8,9 @@ import ApiService from "../../../../../../services/ApiService";
 import Pagination from "../../../../../../components/ui/Pagination";
 import { PAGE_SIZE_OPTIONS, PLAN_OPTIONS, STATUS_OPTIONS } from "../../../../../../constants/selectOptions";
 import { useAppSelector } from "../../../../../../store";
+import CardContainer from "../../../../../../components/shared/CardContainer";
+import Loading from "../../../../../../components/shared/Loading/Loading";
+import SearchBar from "../../../../../../components/shared/SearchBar";
 
 const PendingSubscription = () => {
     const [pendingSubscriptionListDisplay, setPendingSubscriptionListDisplay] = useState([]);
@@ -48,7 +51,10 @@ const PendingSubscription = () => {
     const fetchPendingSubscriptions = async () => {
         setIsLoading(true);
         try {
-            const result = await apiGetPendingSubscriptionlist({});
+            const result = await apiGetPendingSubscriptionlist({
+                page: currentPage,
+                perPage: itemsPerPage,
+            });
             if (result?.status === 200) {
                 const data = result?.data?.list?.data || [];
                 setPendingSubscriptionListDisplay(data);
@@ -134,91 +140,60 @@ const PendingSubscription = () => {
     };
 
     return (
-        <div className="mt-6 p-4">
-            <ChildText text="Pending Subscription" size="2xl" />
-
-            <div className="flex flex-row items-center gap-5 justify-between my-5">
-                {/* <SearchBar
-                    value={pendingSearchQuery}
-                    onSearchChange={setPendingSearchQuery}
-                    className="w-full md:max-w-[400px]"
-                /> */}
-
-                {/* <div className="hidden md:flex gap-5">
-                    <CustomSelect
-                        variant={2}
-                        options={[
-                            { value: "all", label: "Cash/Card" },
-                            { value: "cash", label: "Cash" },
-                            { value: "card", label: "Card" },
-                        ]}
-                        value={pendingSelectedPaymentType}
-                        onChange={setPendingSelectedPaymentType}
-                        placeholder="Cash/Card"
-                    />
-
-                    <CustomSelect
-                        variant={2}
-                        options={STATUS_OPTIONS}
-                        value={pendingSelectedStatus}
-                        onChange={setPendingSelectedStatus}
-                        placeholder="Status"
-                    />
-
-                    <CustomSelect
-                        variant={2}
-                        options={PLAN_OPTIONS}
-                        value={pendingSelectedPlan}
-                        onChange={setPendingSelectedPlan}
-                        placeholder="Subscription"
-                    />
-                </div> */}
+        <div>
+            <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
+                <ChildText text="Pending Subscription" size="2xl" />
             </div>
-
-            {paymentError && (
-                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                    {paymentError}
+            <CardContainer className="p-3 sm:p-4 lg:p-5">
+                <div className="flex flex-row items-center gap-5 justify-between my-5">
+                    {/* <SearchBar
+                            value={pendingSearchQuery}
+                            onSearchChange={setPendingSearchQuery}
+                            className="w-full md:max-w-[400px]"
+                        /> */}
                 </div>
-            )}
-
-            <DataDetailsTable
-                rowType="pendingsubscription"
-                companies={pendingSubscriptionListDisplay}
-                actionOptions={[
-                    // {
-                    //     label: "View Details",
-                    //     onClick: (item) => handleExtendSubscription(item),
-                    // },
-                    {
-                        label: (item) =>
-                            item?.subscription?.deduct_type === "card"
-                                ? "Online"
-                                : item?.subscription?.deduct_type === "cash"
-                                    ? "Cash"
-                                    : "No Method",
-                        onClick: (item) => handlePaymentAction(item),
-                    },
-                    {
-                        label: "Extend Subscription",
-                        onClick: (item) => handleExtendSubscription(item),
-                    },
-                ]}
-            />
-            {Array.isArray(pendingSubscriptionListDisplay) &&
-                pendingSubscriptionListDisplay.length > 0 ? (
-                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={allSubscription.last_page}
-                        itemsPerPage={itemsPerPage}
-                        onPageChange={handlePageChange}
-                        onItemsPerPageChange={handleItemsPerPageChange}
-                        itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                        pageKey="subscription"
-                    />
+                <div className="mb-4 sm:mb-7 pb-4 sm:pb-6 border-b-2 border-[#E9E9E9]">
+                    <div>
+                        <DataDetailsTable
+                            rowType="pendingsubscription"
+                            companies={pendingSubscriptionListDisplay}
+                            actionOptions={[
+                                // {
+                                //     label: "View Details",
+                                //     onClick: (item) => handleExtendSubscription(item),
+                                // },
+                                {
+                                    label: (item) =>
+                                        item?.subscription?.deduct_type === "card"
+                                            ? "Online"
+                                            : item?.subscription?.deduct_type === "cash"
+                                                ? "Cash"
+                                                : "No Method",
+                                    onClick: (item) => handlePaymentAction(item),
+                                },
+                                {
+                                    label: "Extend Subscription",
+                                    onClick: (item) => handleExtendSubscription(item),
+                                },
+                            ]}
+                        />
+                    </div>
+                    {Array.isArray(pendingSubscriptionListDisplay) &&
+                        pendingSubscriptionListDisplay.length > 0 ? (
+                        <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={allSubscription.last_page}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={handlePageChange}
+                                onItemsPerPageChange={handleItemsPerPageChange}
+                                itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                                pageKey="subscription"
+                            />
+                        </div>
+                    ) : null}
                 </div>
-            ) : null}
-
+            </CardContainer>
             <Modal
                 isOpen={isExtendModalOpen}
                 onClose={handleModalClose}

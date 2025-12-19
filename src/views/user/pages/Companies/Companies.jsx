@@ -71,8 +71,15 @@ const Companies = () => {
   const [cardsLoading, setCardsLoading] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [upcomingSubscription, setUpcomingSubscription] = useState(null);
+  const [expiredSubscription, setExpiredSubscription] = useState(null);
 
   const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
+
+  const upcomingSubOptions = Array.from({ length: 30 }, (_, i) => ({
+    value: String(i + 1),
+    label: `${i + 1} Day${i + 1 > 1 ? "s" : ""}`,
+  }));
 
   const DASHBOARD_CARDS = [
     {
@@ -180,25 +187,19 @@ const Companies = () => {
         page,
         status,
         perPage,
-        search: search || undefined,
+        search,
+        upcoming_subscription: upcomingSubscription,
+        expired_subscription: expiredSubscription ? 1 : 0,
       });
       const list = response?.data?.list;
-      // console.log(list, "list");
       const rows = Array.isArray(list?.data) ? list?.data : [];
 
-      console.log(rows, "rows");
-
       setCompanyListRaw(rows);
+      setItemsPerPage(list?.per_page ?? perPage);
+      setTotalItems(list?.total ?? 0);
+      setTotalPages(list?.last_page ?? 1);
 
-      const nextPerPage = list?.per_page ?? itemsPerPage;
-      const total = list?.total ?? rows.length;
-      const lastPage = list?.last_page ?? 1;
-
-      setItemsPerPage(nextPerPage);
-      setTotalItems(total);
-      setTotalPages(lastPage);
     } catch (error) {
-      console.log("err--", error);
       setCompanyListRaw([]);
       setTotalItems(0);
       setTotalPages(1);
@@ -206,6 +207,7 @@ const Companies = () => {
       setTableLoading(false);
     }
   };
+
   const [subscriptionOptions, setSubscriptionOptions] = useState([]);
   const [isLoadingSubscriptions, setIsLoadingSubscriptions] = useState(false);
   const [subscriptionError, setSubscriptionError] = useState(null);
@@ -282,7 +284,9 @@ const Companies = () => {
     _selectedStatus,
     itemsPerPage,
     debouncedSearchQuery,
-    refreshTrigger
+    upcomingSubscription,
+    expiredSubscription,
+    refreshTrigger,
   ]);
 
   const mapToTableRows = (companies) => {
@@ -444,6 +448,30 @@ const Companies = () => {
                     onChange={handlePlanChange}
                     placeholder="All Plans"
                   />
+                  <CustomSelect
+                    variant={2}
+                    options={upcomingSubOptions}
+                    value={upcomingSubOptions.find(
+                      (o) => o.value === upcomingSubscription
+                    )}
+                    onChange={(opt) => {
+                      setUpcomingSubscription(opt?.value || null);
+                      setCurrentPage(1);
+                    }}
+                    placeholder="Upcoming Subscription"
+                  />
+                  <label className="flex items-center gap-2 cursor-pointer bg-white text-[#6C6C6C] font-semibold p-3 rounded-md">
+                    <input
+                      type="checkbox"
+                      checked={expiredSubscription}
+                      onChange={(e) => {
+                        setExpiredSubscription(e.target.checked);
+                        setCurrentPage(1);
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-[#333]">Expired Subscription</span>
+                  </label>
                 </div>
               </div>
               <Loading loading={tableLoading} type="cover">
@@ -600,6 +628,41 @@ const Companies = () => {
                         menuPlacement="top"
                         menuPosition="fixed"
                       />
+                      <CustomSelect
+                        variant={2}
+                        options={upcomingSubOptions}
+                        value={upcomingSubOptions.find(
+                          (o) => o.value === upcomingSubscription
+                        )}
+                        onChange={(opt) => {
+                          setUpcomingSubscription(opt?.value || null);
+                          setCurrentPage(1);
+                        }}
+                        placeholder="Upcoming Subscription (Days)"
+                        className="min-w-0"
+                        mobileBgColor="#F3F6FF"
+                        mobileBorder="#D6DBF5"
+                        forceMobile
+                        menuPlacement="top"
+                        menuPosition="fixed"
+                      />
+                      <label className="flex items-center gap-2 p-3 rounded-md cursor-pointer bg-[#F3F6FF] border border-[#D6DBF5]">
+                        <input
+                          type="checkbox"
+                          checked={expiredSubscription}
+                          onChange={(e) => {
+                            setExpiredSubscription(e.target.checked);
+                            setCurrentPage(1);
+                          }}
+                          className="w-4 h-4 "
+                          mobileBgColor="#F3F6FF"
+                          mobileBorder="#D6DBF5"
+                          forceMobile
+                          menuPlacement="top"
+                          menuPosition="fixed"
+                        />
+                        <span className="text-sm text-[#333]">Expired Subscription</span>
+                      </label>
                       <button
                         type="button"
                         className="mt-1 w-full py-3 rounded-lg bg-[#1F41BB] text-white font-medium"

@@ -3,10 +3,13 @@ import PageSubTitle from "../../ui/PageSubTitle";
 import ChildText from "../../ui/ChildText.jsx/ChildText";
 import Pagination from "../../ui/Pagination";
 import { PAGE_SIZE_OPTIONS } from "../../../constants/selectOptions";
+import SearchBar from "../SearchBar";
 
-const PaymentTable = ({ columns, data }) => {
+const PaymentTable = ({ columns, data, onSearch, onDateChange }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [_searchQuery, setSearchQuery] = useState("");
+  const [_selectedDate, setSelectedDate] = useState("");
 
   const totalItems = 25;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -22,7 +25,30 @@ const PaymentTable = ({ columns, data }) => {
 
   return (
     <div className="border-[0.5px] border-[#00000050] rounded-[10px] overflow-hidden">
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto ">
+        <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0 bg-[#F5F7F9] p-3 border-b">
+          <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
+            <SearchBar
+              value={_searchQuery}
+              onSearchChange={(value) => {
+                setSearchQuery(value);
+                onSearch?.(value);
+              }}
+              className="w-full md:max-w-[400px] max-w-full"
+            />
+          </div>
+          <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
+            <input
+              type="date"
+              className="border rounded px-3 py-2"
+              value={_selectedDate}
+              onChange={(e) => {
+                setSelectedDate(e.target.value);
+                onDateChange?.(e.target.value);
+              }}
+            />
+          </div>
+        </div>
         <table className="w-full min-w-[600px]">
           <thead>
             <tr>

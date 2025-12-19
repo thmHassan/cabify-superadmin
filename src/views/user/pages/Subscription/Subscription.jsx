@@ -89,6 +89,7 @@ const Subscription = () => {
   const [_selectedPlan, setSelectedPlan] = useState(PLAN_OPTIONS[0]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isSubscriptionsLoading, setIsSubscriptionsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("existing");
   const [
     isSubscriptionCardDetailsLoading,
     setIsSubscriptionCardDetailsLoading,
@@ -177,7 +178,7 @@ const Subscription = () => {
       setIsSubscriptionsLoading(true);
       const result = await apiGetSubscriptions({
         page: currentPage,
-        perPage: itemsPerPage, // Use itemsPerPage for Existing Subscription Types
+        perPage: itemsPerPage,
         search: search || undefined,
       });
       if (result?.status === 200) {
@@ -580,200 +581,230 @@ const Subscription = () => {
             />
           ))}
         </div>
-        <div>
-          <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
-            <ChildText text="Existing Subscription Types" size="2xl" />
-            <PageSubTitle title="Overview of all company subscriptions and billing status" />
-          </div>
-          <CardContainer className="p-3 sm:p-4 lg:p-5">
-            <div className="mb-4 sm:mb-7 pb-4 sm:pb-6 border-b-2 border-[#E9E9E9]">
-              {/* Existing Subscription Types - Dynamic, show all items from API */}
-              <Loading loading={isSubscriptionsLoading} type="cover">
-                <div>
-                  <DataDetailsTable
-                    rowType="subscription"
-                    companies={subscriptionListDisplay}
-                    actionOptions={[
-                      {
-                        label: "Edit",
-                        onClick: (item) => {
-                          if (item) {
+        <div className="flex w-fit bg-[#006FFF1A] p-1 rounded-lg gap-1 mb-6">
+
+          <Button
+            btnSize="2xl"
+            className={activeTab === "existing" ? "!bg-[#1F41BB] !text-white" : ""}
+            onClick={() => setActiveTab("existing")}
+          >
+            Existing Subscription
+          </Button>
+
+          <Button
+            btnSize="2xl"
+            className={activeTab === "management" ? "!bg-[#1F41BB] !text-white" : ""}
+            onClick={() => setActiveTab("management")}
+          >
+            Subscription Management
+          </Button>
+
+          <Button
+            btnSize="2xl"
+            className={activeTab === "pending" ? "!bg-[#1F41BB] !text-white" : ""}
+            onClick={() => setActiveTab("pending")}
+          >
+            Pending Subscription
+          </Button>
+        </div>
+        {activeTab === "existing" && (
+          <div>
+            <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
+              <ChildText text="Existing Subscription Types" size="2xl" />
+              <PageSubTitle title="Overview of all company subscriptions and billing status" />
+            </div>
+            <CardContainer className="p-3 sm:p-4 lg:p-5">
+              <div className="mb-4 sm:mb-7 pb-4 sm:pb-6 border-b-2 border-[#E9E9E9]">
+                {/* Existing Subscription Types - Dynamic, show all items from API */}
+                <Loading loading={isSubscriptionsLoading} type="cover">
+                  <div>
+                    <DataDetailsTable
+                      rowType="subscription"
+                      companies={subscriptionListDisplay}
+                      actionOptions={[
+                        {
+                          label: "Edit",
+                          onClick: (item) => {
+                            if (item) {
+                              setSelectedId(item?.id);
+                              setIsSubscriptionModalOpen({
+                                type: "edit",
+                                isOpen: true,
+                              });
+                            }
+                          },
+                        },
+                        {
+                          label: "View",
+                          onClick: (item) => {
                             setSelectedId(item?.id);
                             setIsSubscriptionModalOpen({
-                              type: "edit",
+                              type: "view",
                               isOpen: true,
                             });
-                          }
+                          },
                         },
-                      },
-                      {
-                        label: "View",
-                        onClick: (item) => {
-                          setSelectedId(item?.id);
-                          setIsSubscriptionModalOpen({
-                            type: "view",
-                            isOpen: true,
-                          });
+                        {
+                          label: "Delete",
+                          onClick: (item) => {
+                            setSubscriptionToDelete(item);
+                            setDeleteModalOpen(true);
+                          },
                         },
-                      },
-                      {
-                        label: "Delete",
-                        onClick: (item) => {
-                          setSubscriptionToDelete(item);
-                          setDeleteModalOpen(true);
-                        },
-                      },
-                    ]}
-                  />
-                  <Modal isOpen={deleteModalOpen} className="p-6 sm:p-8 w-full max-w-md">
-                    <div className="text-center">
-                      <h2 className="text-xl font-semibold mb-3">Delete subscription?</h2>
-                      <p className="text-gray-600 mb-6">
-                        Are you sure you want to delete subscription
-                      </p>
+                      ]}
+                    />
+                    <Modal isOpen={deleteModalOpen} className="p-6 sm:p-8 w-full max-w-md">
+                      <div className="text-center">
+                        <h2 className="text-xl font-semibold mb-3">Delete subscription?</h2>
+                        <p className="text-gray-600 mb-6">
+                          Are you sure you want to delete subscription
+                        </p>
 
-                      <div className="flex justify-center gap-4">
-                        <Button
-                          type="filledGray"
-                          onClick={() => {
-                            setDeleteModalOpen(false);
-                            setSubscriptionToDelete(null);
-                          }}
-                          className="px-6 py-2"
-                        >
-                          Cancel
-                        </Button>
+                        <div className="flex justify-center gap-4">
+                          <Button
+                            type="filledGray"
+                            onClick={() => {
+                              setDeleteModalOpen(false);
+                              setSubscriptionToDelete(null);
+                            }}
+                            className="px-6 py-2"
+                          >
+                            Cancel
+                          </Button>
 
-                        <Button
-                          type="filledRed"
-                          onClick={handleDeleteSubscription}
-                          disabled={isDeleting}
-                          className="px-6 py-2"
-                        >
-                          {isDeleting ? "Deleting..." : "Delete"}
-                        </Button>
+                          <Button
+                            type="filledRed"
+                            onClick={handleDeleteSubscription}
+                            disabled={isDeleting}
+                            className="px-6 py-2"
+                          >
+                            {isDeleting ? "Deleting..." : "Delete"}
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  </Modal>
-                </div>
-              </Loading>
-              {Array.isArray(subscriptionListDisplay) &&
-                subscriptionListDisplay.length > 0 ? (
-                <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={allSubscription.last_page}
-                    itemsPerPage={itemsPerPage}
-                    onPageChange={handlePageChange}
-                    onItemsPerPageChange={handleItemsPerPageChange}
-                    itemsPerPageOptions={PAGE_SIZE_OPTIONS}
-                    pageKey="subscription"
-                  />
-                </div>
-              ) : null}
-            </div>
-            {/* Mobile Filter Bottom Sheet */}
-            <AnimatePresence>
-              {isFilterOpen && (
-                <div className="fixed inset-0 z-[2000] md:hidden">
-                  <div
-                    className="absolute inset-0 bg-black/40"
-                    onClick={closeFilter}
-                  ></div>
-                  <Base
-                    initial={{ y: "100%" }}
-                    animate={{ y: 0 }}
-                    exit={{ y: "100%" }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-base font-semibold text-[#333]">
-                        Filter
-                      </span>
-                      <button
-                        type="button"
-                        aria-label="Close filter"
-                        className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
-                        onClick={closeFilter}
-                      >
-                        <svg
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                    </Modal>
+                  </div>
+                </Loading>
+                {Array.isArray(subscriptionListDisplay) &&
+                  subscriptionListDisplay.length > 0 ? (
+                  <div className="mt-4 sm:mt-4 border-t border-[#E9E9E9] pt-3 sm:pt-4">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={allSubscription.last_page}
+                      itemsPerPage={itemsPerPage}
+                      onPageChange={handlePageChange}
+                      onItemsPerPageChange={handleItemsPerPageChange}
+                      itemsPerPageOptions={PAGE_SIZE_OPTIONS}
+                      pageKey="subscription"
+                    />
+                  </div>
+                ) : null}
+              </div>
+              <AnimatePresence>
+                {isFilterOpen && (
+                  <div className="fixed inset-0 z-[2000] md:hidden">
+                    <div
+                      className="absolute inset-0 bg-black/40"
+                      onClick={closeFilter}
+                    ></div>
+                    <Base
+                      initial={{ y: "100%" }}
+                      animate={{ y: 0 }}
+                      exit={{ y: "100%" }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      className="absolute left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-[-4px_8px_20px_0px_#0000000D] p-4"
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-base font-semibold text-[#333]">
+                          Filter
+                        </span>
+                        <button
+                          type="button"
+                          aria-label="Close filter"
+                          className="w-8 h-8 grid place-items-center rounded-full hover:bg-[#f3f3f3]"
+                          onClick={closeFilter}
                         >
-                          <path
-                            d="M6 6L18 18"
-                            stroke="#111111"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                          />
-                          <path
-                            d="M18 6L6 18"
-                            stroke="#111111"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <CustomSelect
-                        variant={2}
-                        options={STATUS_OPTIONS}
-                        value={_selectedStatus}
-                        onChange={(opt) => {
-                          handleStatusChange(opt);
-                        }}
-                        placeholder="All Status"
-                        className="min-w-0"
-                        mobileBgColor="#F3F6FF"
-                        mobileBorder="#D6DBF5"
-                        forceMobile
-                        menuPlacement="top"
-                        menuPosition="fixed"
-                      />
-                      <CustomSelect
-                        variant={2}
-                        options={PLAN_OPTIONS}
-                        value={_selectedPlan}
-                        onChange={(opt) => {
-                          handlePlanChange(opt);
-                        }}
-                        placeholder="All Plans"
-                        className="min-w-0"
-                        mobileBgColor="#F3F6FF"
-                        mobileBorder="#D6DBF5"
-                        forceMobile
-                        menuPlacement="top"
-                        menuPosition="fixed"
-                      />
-                      <button
-                        type="button"
-                        className="mt-1 w-full py-3 rounded-lg bg-[#1F41BB] text-white font-medium"
-                        onClick={closeFilter}
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  </Base>
-                </div>
-              )}
-            </AnimatePresence>
-          </CardContainer>
-        </div>
-        <div>
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M6 6L18 18"
+                              stroke="#111111"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+                            <path
+                              d="M18 6L6 18"
+                              stroke="#111111"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <div className="flex flex-col gap-3">
+                        <CustomSelect
+                          variant={2}
+                          options={STATUS_OPTIONS}
+                          value={_selectedStatus}
+                          onChange={(opt) => {
+                            handleStatusChange(opt);
+                          }}
+                          placeholder="All Status"
+                          className="min-w-0"
+                          mobileBgColor="#F3F6FF"
+                          mobileBorder="#D6DBF5"
+                          forceMobile
+                          menuPlacement="top"
+                          menuPosition="fixed"
+                        />
+                        <CustomSelect
+                          variant={2}
+                          options={PLAN_OPTIONS}
+                          value={_selectedPlan}
+                          onChange={(opt) => {
+                            handlePlanChange(opt);
+                          }}
+                          placeholder="All Plans"
+                          className="min-w-0"
+                          mobileBgColor="#F3F6FF"
+                          mobileBorder="#D6DBF5"
+                          forceMobile
+                          menuPlacement="top"
+                          menuPosition="fixed"
+                        />
+                        <button
+                          type="button"
+                          className="mt-1 w-full py-3 rounded-lg bg-[#1F41BB] text-white font-medium"
+                          onClick={closeFilter}
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    </Base>
+                  </div>
+                )}
+              </AnimatePresence>
+            </CardContainer>
+          </div>
+        )}
+
+        {activeTab === "management" && (
           <CardContainer>
             <ManagementSubscription />
           </CardContainer>
-        </div>
-        <div>
-          <CardContainer>
-            <PendingSubscription />
-          </CardContainer>
-        </div>
+        )}
+
+        {activeTab === "pending" && (
+          // <CardContainer>
+          <PendingSubscription />
+          // </CardContainer>
+        )}
+
       </div>
       <Modal
         isOpen={isSubscriptionModalOpen.isOpen}

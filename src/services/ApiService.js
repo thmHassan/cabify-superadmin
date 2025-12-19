@@ -98,25 +98,33 @@ const ApiService = {
     });
   },
 
-  getCompanyList({ page = 1, status = "active", perPage, search } = {}) {
+  getCompanyList({
+    page = 1,
+    status = "active",
+    perPage,
+    search,
+    upcoming_subscription,
+    expired_subscription,
+  } = {}) {
     return new Promise((resolve, reject) => {
       const params = { page, status, perPage };
-      if (search) {
-        params.search = search;
-      }
+
+      if (search) params.search = search;
+      if (upcoming_subscription !== null)
+        params.upcoming_subscription = upcoming_subscription;
+      if (expired_subscription !== null)
+        params.expired_subscription = expired_subscription;
+
       BaseService({
         method: "GET",
         url: "/super-admin/company-list",
         params,
       })
-        .then((response) => {
-          resolve(response);
-        })
-        .catch((errors) => {
-          reject(errors);
-        });
+        .then(resolve)
+        .catch(reject);
     });
   },
+
 
   createCompany(formData) {
     return new Promise((resolve, reject) => {

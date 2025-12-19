@@ -43,6 +43,8 @@ const Payments = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [allPayment, setAllPayment] = useState([]);
+  const [search, setSearch] = useState("");
+  const [date, setDate] = useState("");
 
   const getStatusColor = (status) => {
     if (!status) return "yellow";
@@ -62,10 +64,13 @@ const Payments = () => {
       const response = await apiGetAllPaymentsList({
         page,
         perPage,
+        search: search,
+        date: date,
       });
 
       const formattedData = response.data.list.data.map(item => ({
         ...item,
+        company_name: item?.company_detail?.company_name || "-",
         date: formatDate(item.created_at),
       }));
 
@@ -83,7 +88,7 @@ const Payments = () => {
 
   useEffect(() => {
     getAllPaymentList(currentPage, itemsPerPage);
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, itemsPerPage, search, date]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -95,6 +100,7 @@ const Payments = () => {
   };
 
   const columns = [
+    { header: "Company Name", accessor: "company_name" },
     { header: "Date", accessor: "date" },
     { header: "Amount", accessor: "amount" },
     {
@@ -157,7 +163,12 @@ const Payments = () => {
             </div>
           </div>
           <div className="bg-[#ffffff] rounded-[10px] overflow-x-auto">
-            <PaymentTable columns={columns} data={allPayment} />
+            <PaymentTable
+              columns={columns}
+              data={allPayment}
+              onSearch={setSearch}
+              onDateChange={setDate}
+            />
           </div>
           <Pagination
             currentPage={currentPage}
