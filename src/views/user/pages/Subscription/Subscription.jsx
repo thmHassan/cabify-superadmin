@@ -121,10 +121,11 @@ const Subscription = () => {
   const [currentPage, setCurrentPage] = useState(
     Number(savedPagination?.currentPage) || 1
   );
+
   const [itemsPerPage, setItemsPerPage] = useState(
     Number(savedPagination?.itemsPerPage) || 10
   );
-
+  
   const debouncedSearchRef = useRef(
     debounce((searchValue) => {
       setDebouncedSearchQuery(searchValue);
