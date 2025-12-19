@@ -179,8 +179,10 @@ const Subscription = () => {
       const result = await apiGetSubscriptions({
         page: currentPage,
         perPage: itemsPerPage,
-        search: search || undefined,
+        search: search || undefined,        
       });
+      console.log("currentPage====", currentPage);
+      
       if (result?.status === 200) {
         const list = result?.data?.list;
         const rows = Array.isArray(list?.data) ? list?.data : [];
