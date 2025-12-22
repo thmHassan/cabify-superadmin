@@ -118,13 +118,12 @@ const CompanyUsage = ({
             />
           </div>
           {/* Mobile filter trigger */}
-          <div className="flex justify-end md:hidden">
+          {/* <div className="flex justify-end md:hidden">
             <button
               type="button"
               className="inline-flex w-[54px] h-[54px] items-center justify-center rounded-lg bg-[#ffffff] border border-[#E9E9E9] text-[#333] text-sm font-medium shadow-sm"
               onClick={openFilter}
             >
-              {/* simple filter funnel icon */}
               <svg
                 width="16"
                 height="16"
@@ -141,8 +140,8 @@ const CompanyUsage = ({
                 />
               </svg>
             </button>
-          </div>
-          <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
+          </div> */}
+          {/* <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
             <CustomSelect
               variant={2}
               options={STATUS_OPTIONS}
@@ -157,7 +156,7 @@ const CompanyUsage = ({
               onChange={handlePlanChange}
               placeholder="All Plans"
             />
-          </div>
+          </div> */}
         </div>
         <Loading loading={isLoading} type="cover">
           <DataDetailsTable

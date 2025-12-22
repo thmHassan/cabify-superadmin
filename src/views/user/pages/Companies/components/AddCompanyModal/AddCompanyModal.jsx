@@ -41,7 +41,6 @@ const AddCompanyModal = ({
   const [submitError, setSubmitError] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
 
-  // Initialize initialValues to handle undefined or missing values
   const [initialValues, setInitialValues] = useState({
     company_name: formData.company_name || "",
     company_admin_name: formData.company_admin_name || "",
@@ -161,8 +160,22 @@ const AddCompanyModal = ({
         formValues.picture = formData.picture;
       }
 
-      let latestFormData =
-        type === "edit" ? { id, ...formValues, password } : formValues;
+      let latestFormData = { ...formValues };
+      
+      // Handle password for edit mode
+      if (type === "edit") {
+        latestFormData.id = id;
+        // Only include password if it has been changed (not empty)
+        if (password && password.trim() !== "") {
+          latestFormData.password = password;
+        } else {
+          // Remove password field if empty in edit mode
+          delete latestFormData.password;
+        }
+      } else {
+        // For new company, password is required
+        latestFormData.password = password;
+      }
 
       if (latestFormData.picture && !(latestFormData.picture instanceof File)) {
         delete latestFormData.picture;
@@ -216,6 +229,7 @@ const AddCompanyModal = ({
 
       if (result?.status === 200) {
         const company = result?.data?.company || {};
+        // Set password to empty string for edit mode
         company.password = "";
         setInitialValues({
           ...company,
@@ -250,7 +264,8 @@ const AddCompanyModal = ({
     if (type === "edit") {
       return Yup.object().shape({
         ...BASIC_INFORMATION_VALIDATION_SCHEMA,
-        password: Yup.string().nullable(),
+        // Password is optional in edit mode
+        password: Yup.string().nullable().notRequired(),
         ...SERVICE_INFORMATION_VALIDATION_SCHEMA,
         ...SYSTEM_INFORMATION_VALIDATION_SCHEMA,
         ...ENABLEMENT_INFORMATION_VALIDATION_SCHEMA,

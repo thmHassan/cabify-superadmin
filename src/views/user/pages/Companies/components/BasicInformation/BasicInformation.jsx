@@ -1,4 +1,5 @@
 import { ErrorMessage, Field } from "formik";
+import { useState } from "react";
 import Button from "../../../../../../components/ui/Button/Button";
 import Password from "../../../../../../components/elements/CustomPassword/Password";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
@@ -8,6 +9,8 @@ import { BASIC_INFORMATION_VALIDATION_SCHEMA } from "../../../../validators/page
 
 const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
   const { values, setFieldValue, setTouched, validateForm } = formEl;
+  const [showPasswordField, setShowPasswordField] = useState(type !== "edit");
+
   const currencyOptions = [
     { value: "USD", label: "USD" },
     { value: "EUR", label: "EUR" },
@@ -27,6 +30,11 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
     if (!hasErrors) {
       goToNextTab?.();
     }
+  };
+
+  const handleChangePassword = () => {
+    setShowPasswordField(true);
+    setFieldValue("password", "");
   };
 
   return (
@@ -82,15 +90,26 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
         </div>
         <div className="w-full sm:w-[calc((100%-20px)/2)]">
           <FormLabel htmlFor="password">Password</FormLabel>
-          <div className="sm:h-16 h-14">
-            <Password
-              name="password"
-              // disabled={type === "edit"}
-              className="sm:px-5 px-4 sm:py-[21px] py-4 !select-none border border-[#8D8D8D] rounded-lg w-full h-14 sm:h-16 shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold disabled:bg-gray-100 disabled:cursor-not-allowed"
-              placeholder={type === "edit" ? "Password cannot be changed" : "Enter password"}
-              autoComplete="off"
-            />
-          </div>
+          {type === "edit" && !showPasswordField ? (
+            <div className="sm:h-16 h-14">
+              <button
+                type="button"
+                onClick={handleChangePassword}
+                className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold text-left bg-white hover:bg-gray-50 transition-colors"
+              >
+                Click to change password
+              </button>
+            </div>
+          ) : (
+            <div className="sm:h-16 h-14">
+              <Password
+                name="password"
+                className="sm:px-5 px-4 sm:py-[21px] py-4 !select-none border border-[#8D8D8D] rounded-lg w-full h-14 sm:h-16 shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] sm:text-base text-sm leading-[22px] font-semibold"
+                placeholder="Enter password"
+                autoComplete="off"
+              />
+            </div>
+          )}
           <ErrorMessage
             name="password"
             component="div"
