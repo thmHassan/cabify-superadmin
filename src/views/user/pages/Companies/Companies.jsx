@@ -433,7 +433,7 @@ const Companies = () => {
                     </svg>
                   </button>
                 </div>
-                <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
+                <div className="hidden md:flex lg:flex-row flex-col gap-3 sm:gap-5 w-full sm:w-auto">
                   <CustomSelect
                     variant={2}
                     options={STATUS_OPTIONS}
