@@ -81,7 +81,7 @@ const ManagementSubscription = () => {
     return (
 
         <div>
-            <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
+           <div className="flex flex-col gap-2 sm:gap-[9px] mb-4 sm:mb-5">
                 <ChildText text="Subscription Management" size="2xl" />
             </div>
             <CardContainer className="p-3 sm:p-4 lg:p-5">

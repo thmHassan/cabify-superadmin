@@ -125,7 +125,7 @@ const Subscription = () => {
   const [itemsPerPage, setItemsPerPage] = useState(
     Number(savedPagination?.itemsPerPage) || 10
   );
-  
+
   const debouncedSearchRef = useRef(
     debounce((searchValue) => {
       setDebouncedSearchQuery(searchValue);
@@ -180,10 +180,10 @@ const Subscription = () => {
       const result = await apiGetSubscriptions({
         page: currentPage,
         perPage: itemsPerPage,
-        search: search || undefined,        
+        search: search || undefined,
       });
       console.log("currentPage====", currentPage);
-      
+
       if (result?.status === 200) {
         const list = result?.data?.list;
         const rows = Array.isArray(list?.data) ? list?.data : [];
@@ -584,7 +584,7 @@ const Subscription = () => {
             />
           ))}
         </div>
-        <div className="flex w-fit bg-[#006FFF1A] p-1 rounded-lg gap-1 mb-6">
+        <div className="flex w-fit bg-[#006FFF1A] max-sm:flex-col max-sm:w-full p-1 rounded-lg gap-1 mb-6">
 
           <Button
             btnSize="2xl"
@@ -797,9 +797,9 @@ const Subscription = () => {
         )}
 
         {activeTab === "management" && (
-          <CardContainer>
-            <ManagementSubscription />
-          </CardContainer>
+          // <CardContainer>
+          <ManagementSubscription />
+          // </CardContainer>
         )}
 
         {activeTab === "pending" && (

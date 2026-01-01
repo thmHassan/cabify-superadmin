@@ -83,10 +83,10 @@ const UsageMonitoring = () => {
         onSearchChange: handleSearchChange,
         isLoading: isUsageMonitoringDetailsLoading,
       },
-      {
-        title: "Service Performance",
-        component: ServicePerformance,
-      },
+      // {
+      //   title: "Service Performance",
+      //   component: ServicePerformance,
+      // },
     ],
     [
       allUsageMonitoring.company_list,

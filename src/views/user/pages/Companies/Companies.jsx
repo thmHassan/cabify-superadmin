@@ -400,13 +400,25 @@ const Companies = () => {
           </div>
           <div>
             <CardContainer className="p-3 sm:p-4 lg:p-5 bg-[#F5F5F5]">
-              <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
-                <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
-                  <SearchBar
-                    value={_searchQuery}
-                    onSearchChange={handleSearchChange}
-                    className="w-full md:max-w-[400px] max-w-full"
-                  />
+              <div className="flex lg:flex-row md:flex-col items-stretch gap-3 sm:gap-5 justify-between mb-4 sm:mb-0">
+                <div className="flex gap-2 w-full justify-between">
+                  <div className="md:w-full sm:flex-1">
+                    <SearchBar
+                      value={_searchQuery}
+                      onSearchChange={handleSearchChange}
+                      className="w-full md:max-w-[400px] max-w-full"
+                    />
+                  </div>
+                  <div className="w-48 flex justify-end hidden md:block">
+                    <CustomSelect
+                      variant={2}
+                      options={STATUS_OPTIONS}
+                      value={_selectedStatus}
+                      onChange={handleStatusChange}
+                      placeholder="All Status"
+                      className="w-48"
+                    />
+                  </div>
                 </div>
                 {/* Mobile filter trigger */}
                 <div className="flex justify-end md:hidden">
@@ -433,45 +445,40 @@ const Companies = () => {
                     </svg>
                   </button>
                 </div>
-                <div className="hidden md:flex lg:flex-row flex-col gap-3 sm:gap-5 w-full sm:w-auto">
-                  <CustomSelect
-                    variant={2}
-                    options={STATUS_OPTIONS}
-                    value={_selectedStatus}
-                    onChange={handleStatusChange}
-                    placeholder="All Status"
-                  />
-                  <CustomSelect
-                    variant={2}
-                    options={subscriptionOptions}
-                    value={_selectedPlan}
-                    onChange={handlePlanChange}
-                    placeholder="All Plans"
-                  />
-                  <CustomSelect
-                    variant={2}
-                    options={upcomingSubOptions}
-                    value={upcomingSubOptions.find(
-                      (o) => o.value === upcomingSubscription
-                    )}
-                    onChange={(opt) => {
-                      setUpcomingSubscription(opt?.value || null);
-                      setCurrentPage(1);
-                    }}
-                    placeholder="Upcoming Subscription"
-                  />
-                  <label className="flex items-center gap-2 cursor-pointer bg-white text-[#6C6C6C] font-semibold p-3 rounded-md">
-                    <input
-                      type="checkbox"
-                      checked={expiredSubscription}
-                      onChange={(e) => {
-                        setExpiredSubscription(e.target.checked);
+                <div className="hidden md:flex lg:flex-row flex-col gap-3 sm:gap-5 w-full">
+                  <div className="flex gap-2 w-full">
+                    <CustomSelect
+                      variant={2}
+                      options={subscriptionOptions}
+                      value={_selectedPlan}
+                      onChange={handlePlanChange}
+                      placeholder="All Plans"
+                    />
+                    <CustomSelect
+                      variant={2}
+                      options={upcomingSubOptions}
+                      value={upcomingSubOptions.find(
+                        (o) => o.value === upcomingSubscription
+                      )}
+                      onChange={(opt) => {
+                        setUpcomingSubscription(opt?.value || null);
                         setCurrentPage(1);
                       }}
-                      className="w-4 h-4"
+                      placeholder="Upcoming Subscription"
                     />
-                    <span className="text-sm text-[#333]">Expired Subscription</span>
-                  </label>
+                    <label className="flex items-center cursor-pointer bg-white text-[#6C6C6C] font-semibold w-full p-2 gap-1 rounded-md">
+                      <input
+                        type="checkbox"
+                        checked={expiredSubscription}
+                        onChange={(e) => {
+                          setExpiredSubscription(e.target.checked);
+                          setCurrentPage(1);
+                        }}
+                        className="w-4 h-4"
+                      />
+                      <span className="text-sm text-[#333]">Expired Subscription</span>
+                    </label>
+                  </div>
                 </div>
               </div>
               <Loading loading={tableLoading} type="cover">
