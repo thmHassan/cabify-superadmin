@@ -81,9 +81,8 @@ export async function apiGetStripeKeys() {
 }
 
 export async function apiGetPendingSubscriptionlist(params) {
-  const url = typeof params === 'string' ? replaceSlash(params, PENDING_SUBSCRIPTION_LIST) : PENDING_SUBSCRIPTION_LIST;
   return ApiService.fetchData({
-    url,
+    url:PENDING_SUBSCRIPTION_LIST,
     method: METHOD_GET,
     params: typeof params === 'object' ? params : undefined,
   });

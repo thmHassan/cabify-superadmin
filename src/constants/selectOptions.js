@@ -36,3 +36,15 @@ export const PAGE_SIZE_OPTIONS = [
   { value: 50, label: "50 / page" },
   { value: 100, label: "100 / page" },
 ];
+
+export const SUBSCRIPTION_OPTIONS = [
+  { value: "all", label: "All Subscription" },
+  { value: "active", label: "Active" },
+  { value: "pending", label: "Pending" },
+];
+
+export const CASH_CARD = [
+  { value: "all", label: "Cash/Card" },
+  { value: "cash", label: "Cash" },
+  { value: "card", label: "Card" },
+]
