@@ -56,23 +56,23 @@ const AddCompanyModal = ({
     phone: formData.phone || "",
     address: formData.address || "",
     city: formData.city || "",
-    currency: formData.currency || "INR",
-    maps_api: formData.maps_api || "barikoi",
-    search_api: formData.search_api || "barikoi",
-    passengers_allowed: formData.passengers_allowed || 0,
-    dispatchers_allowed: formData.dispatchers_allowed || 0,
-    drivers_allowed: formData.drivers_allowed || 0,
-    subscription_type: formData.subscription_type || 1,
+    currency: formData.currency || "",
+    maps_api: formData.maps_api || "",
+    search_api: formData.search_api || "",
+    passengers_allowed: formData.passengers_allowed,
+    dispatchers_allowed: formData.dispatchers_allowed,
+    drivers_allowed: formData.drivers_allowed,
+    subscription_type: formData.subscription_type,
     log_map_search_result: formData.log_map_search_result ?? false,
     voip: formData.voip ?? false,
     sub_company: formData.sub_company ?? false,
-    uber_plot_hybrid: formData.uber_plot_hybrid || "both",
+    uber_plot_hybrid: formData.uber_plot_hybrid || "",
     fleet_management: formData.fleet_management ?? false,
     sos_features: formData.sos_features ?? false,
     notes: formData.notes || "",
-    units: formData.units || "miles",
+    units: formData.units || "",
     country_of_use: formData.country_of_use || "",
-    time_zone: formData.time_zone || "America/New_York",
+    time_zone: formData.time_zone || "",
     stripe_enable: formData.stripe_enable ?? false,
     enable_smtp: formData.enable_smtp ?? false,
     stripe_enablement: formData.stripe_enablement || "",
@@ -95,9 +95,10 @@ const AddCompanyModal = ({
     fileInputRef.current?.click();
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e, setFieldValue) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
+    setFieldValue("picture", file);
     setFormData((prev) => ({ ...prev, picture: file }));
     const objectUrl = URL.createObjectURL(file);
     setImagePreviewUrl((prevUrl) => {
@@ -207,12 +208,12 @@ const AddCompanyModal = ({
             response.data.data?.id;
           setCreatedCompanyId(companyId);
 
-          // NEW: Check if subscription changed from cash to card
+          // Check if subscription changed from cash to card
           if (type === "edit" && response.data.newSubscriptionCreate === 1) {
             setNewSubscriptionCreated(true);
             setToastMessage("You have changed your subscription from Cash to Card. Please complete the payment.");
             setShowToast(true);
-            
+
             // Auto hide toast after 5 seconds
             setTimeout(() => {
               setShowToast(false);
@@ -292,7 +293,7 @@ const AddCompanyModal = ({
 
   return (
     <div>
-      {/* NEW: Toast Notification */}
+      {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-4 right-4 z-50 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow-lg max-w-md animate-slide-in">
           <div className="flex items-start">
@@ -305,7 +306,7 @@ const AddCompanyModal = ({
               <p className="text-sm font-semibold">Payment Required</p>
               <p className="text-sm mt-1">{toastMessage}</p>
             </div>
-            <button 
+            <button
               onClick={() => setShowToast(false)}
               className="ml-4 flex-shrink-0 text-yellow-600 hover:text-yellow-800 transition-colors"
             >
@@ -325,39 +326,49 @@ const AddCompanyModal = ({
         validateOnBlur={true}
         enableReinitialize={true}
       >
-        {({ values, ...formEl }) => {
+        {({ values, setFieldValue, errors, touched, ...formEl }) => {
           return (
             <Form>
-              <div
-                className="w-20 h-20 sm:w-[100px] sm:h-[100px] lg:w-[120px] lg:h-[120px] rounded-full bg-[#EEEEEE] flex justify-center items-center mx-auto mb-4 sm:mb-5 overflow-hidden cursor-pointer"
-                onClick={handlePickImage}
-              >
-                {imagePreviewUrl ? (
-                  <img src={imagePreviewUrl} className="w-full h-full object-cover" />
-                ) : values.picture ? (
-                  values.picture instanceof File ? (
-                    <img
-                      src={URL.createObjectURL(values.picture)}
-                      className="w-full h-full object-cover"
-                    />
+              <div className="flex flex-col items-center">
+                <div
+                  className="w-20 h-20 sm:w-[100px] sm:h-[100px] lg:w-[120px] lg:h-[120px] rounded-full bg-[#EEEEEE] flex justify-center items-center mx-auto mb-2 overflow-hidden cursor-pointer"
+                  onClick={handlePickImage}
+                >
+                  {imagePreviewUrl ? (
+                    <img src={imagePreviewUrl} className="w-full h-full object-cover" alt="Preview" />
+                  ) : values.picture ? (
+                    values.picture instanceof File ? (
+                      <img
+                        src={URL.createObjectURL(values.picture)}
+                        className="w-full h-full object-cover"
+                        alt="Preview"
+                      />
+                    ) : (
+                      <img
+                        src={`${import.meta.env.VITE_BACKEND_URL}/${values.picture}`}
+                        className="w-full h-full object-cover"
+                        alt="Company"
+                      />
+                    )
                   ) : (
-                    <img
-                      src={`${import.meta.env.VITE_BACKEND_URL}/${values.picture}`}
-                      className="w-full h-full object-cover"
-                    />
-                  )
-                ) : (
-                  <ImageUploadIcon />
-                )}
+                    <ImageUploadIcon />
+                  )}
 
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => handleImageChange(e, setFieldValue)}
+                  />
+                </div>
+                {errors.picture && touched.picture && (
+                  <div className="text-red-500 text-sm mt-1 mb-2 text-center">
+                    {errors.picture}
+                  </div>
+                )}
               </div>
+
               <div className="text-xl sm:text-2xl lg:text-[26px] leading-7 sm:leading-8 lg:leading-9 font-semibold text-[#252525] mb-4 sm:mb-6 lg:mb-7 text-center mx-auto max-w-full sm:max-w-[85%] lg:max-w-[75%] w-full px-2">
                 <span className="w-full text-center block truncate">
                   {!_.isEmpty(values.company_name)
@@ -367,11 +378,13 @@ const AddCompanyModal = ({
                       : "Add New Company"}
                 </span>
               </div>
+              
               {submitError && (
                 <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                   {submitError}
                 </div>
               )}
+              
               <TabView
                 tabs={TABS_CONFIGS}
                 setIsOpen={setIsOpen}
@@ -380,8 +393,8 @@ const AddCompanyModal = ({
                 companyCreated={createdCompany}
                 createdCompanyId={createdCompanyId}
                 isCreatingCompany={isCreatingCompany}
-                newSubscriptionCreated={newSubscriptionCreated} // NEW: Pass this prop
-                formEl={{ ...formEl, values }}
+                newSubscriptionCreated={newSubscriptionCreated}
+                formEl={{ ...formEl, values, setFieldValue, errors, touched }}
               />
             </Form>
           );

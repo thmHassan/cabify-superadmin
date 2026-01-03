@@ -141,17 +141,19 @@ const RequestComponent = ({
           onRefresh={onStatusUpdate}
         />
       )}
-      <Modal isOpen={deleteModalOpen} className="p-6 sm:p-8 w-full max-w-md">
+      <Modal isOpen={deleteModalOpen} className="p-10">
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-3">Delete Onboarding?</h2>
           <p className="text-gray-600 mb-6">Are you sure you want to delete this onboarding request?</p>
 
           <div className="flex justify-center gap-4">
-            <Button type="filledGray" className="px-6 py-2" onClick={() => setDeleteModalOpen(false)}>
+            <Button type="filledGray" className="px-6 py-2 rounded-md" 
+            onClick={() => setDeleteModalOpen(false)}
+            >
               Cancel
             </Button>
 
-            <Button type="filledRed" className="px-6 py-2" disabled={isDeleting} onClick={handleDeleteOnboarding}>
+            <Button type="filledRed" className="px-6 py-2 rounded-md" disabled={isDeleting} onClick={handleDeleteOnboarding}>
               {isDeleting ? "Deleting..." : "Delete"}
             </Button>
           </div>

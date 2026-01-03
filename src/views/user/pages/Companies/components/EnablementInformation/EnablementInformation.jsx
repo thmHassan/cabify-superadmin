@@ -13,7 +13,7 @@ const EnablementInformation = ({
   companyCreated,
   createdCompanyId,
   isCreatingCompany,
-  newSubscriptionCreated, // NEW: Add this prop
+  newSubscriptionCreated,
   formEl
 }) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
@@ -47,19 +47,50 @@ const EnablementInformation = ({
 
       const paymentData = new FormData();
       paymentData.append("id", createdCompanyId);
-      paymentData.append("amount", Number(formEl.values?.subscription?.amount));
+      
+      // NEW: Get amount from subscription object with fallback
+      const subscriptionAmount = values?.subscription?.amount || 
+                                 values?.subscription?.price || 
+                                 0;
+      
+      if (!subscriptionAmount || subscriptionAmount <= 0) {
+        setPaymentError("Subscription amount is not set. Please select a valid subscription.");
+        setIsProcessingPayment(false);
+        return;
+      }
+      
+      paymentData.append("amount", Number(subscriptionAmount));
+
+      console.log("Payment Data:", {
+        id: createdCompanyId,
+        amount: subscriptionAmount,
+        subscription: values?.subscription
+      });
 
       const response = await ApiService.createStripePaymentUrl(paymentData);
 
       if (response.status === 200 || response.status === 201) {
         if (response.data.url) {
           window.open(response.data.url, "_blank");
+          
+          // NEW: Show success message
+          setPaymentError(null);
+          
+          // Optional: Close modal after short delay
+          setTimeout(() => {
+            setFormData({});
+            setIsOpen(false);
+          }, 2000);
+        } else {
+          setPaymentError("Payment URL not received from server");
         }
-        setFormData({});
-        setIsOpen(false);
       }
     } catch (error) {
-      setPaymentError(error.response?.data?.message || "Online payment failed");
+      console.error("Payment Error:", error);
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error ||
+                          "Online payment failed. Please try again.";
+      setPaymentError(errorMessage);
     } finally {
       setIsProcessingPayment(false);
     }
@@ -108,11 +139,22 @@ const EnablementInformation = ({
         ))}
       </div>
       
+      {/* NEW: Better error/success display */}
       {paymentError && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {paymentError}
+          <strong>Error:</strong> {paymentError}
         </div>
       )}
+
+      {/* NEW: Debug info (remove in production) */}
+      {/* {process.env.NODE_ENV === 'development' && newSubscriptionCreated && (
+        <div className="mb-4 p-3 bg-blue-100 border border-blue-400 text-blue-700 rounded text-sm">
+          <strong>Debug Info:</strong>
+          <div>Company ID: {createdCompanyId}</div>
+          <div>Subscription Amount: {values?.subscription?.amount || 'Not Set'}</div>
+          <div>Deduct Type: {values?.subscription?.deduct_type || 'Not Set'}</div>
+        </div>
+      )} */}
 
       <div className="flex gap-5 justify-end">
         <Button
@@ -128,7 +170,6 @@ const EnablementInformation = ({
           <span>Cancel</span>
         </Button>
         
-        {/* NEW: Updated button logic */}
         {modalType === "company" && (companyCreated || newSubscriptionCreated) && shouldShowPaymentButtons ? (
           <>
             {/* Show Cash Payment button only if subscription is cash AND not a new subscription change */}
