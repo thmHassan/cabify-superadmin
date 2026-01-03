@@ -670,7 +670,7 @@ const Subscription = () => {
                               setDeleteModalOpen(false);
                               setSubscriptionToDelete(null);
                             }}
-                            className="px-6 py-2"
+                            className="px-6 py-2 rounded-md"
                           >
                             Cancel
                           </Button>
@@ -679,7 +679,7 @@ const Subscription = () => {
                             type="filledRed"
                             onClick={handleDeleteSubscription}
                             disabled={isDeleting}
-                            className="px-6 py-2"
+                            className="px-6 py-2 rounded-md"
                           >
                             {isDeleting ? "Deleting..." : "Delete"}
                           </Button>

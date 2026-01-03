@@ -13,6 +13,8 @@ const OPTIONAL_BOOLEAN = Yup.boolean()
   });
 
 export const BASIC_INFORMATION_VALIDATION_SCHEMA = {
+  picture: Yup.string()
+    .required("picture is required"),
   company_name: Yup.string()
     .required("Company name is required")
     .min(2, "Company name must be at least 2 characters"),
@@ -80,7 +82,7 @@ export const SYSTEM_INFORMATION_VALIDATION_SCHEMA = {
   stripe_enable: Yup.boolean(),
   enable_smtp: Yup.boolean(),
 
-   stripe_enablement: Yup.string().nullable(),
+  stripe_enablement: Yup.string().nullable(),
 };
 
 
