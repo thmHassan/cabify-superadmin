@@ -1,4 +1,4 @@
-import { CHANGE_PASSWORD, GET_USER_PROFILE, PAYMENT_REMINDER, UPDATE_PROFILE } from "../constants/api.route.constant";
+import { CHANGE_PASSWORD, GET_USER_PROFILE, PAYMENT_REMINDER, SEND_REMINDER, UPDATE_PROFILE } from "../constants/api.route.constant";
 import { METHOD_GET, METHOD_POST } from "../constants/method.constant";
 import ApiService from "./ApiService";
 
@@ -29,5 +29,13 @@ export async function apiGetPymentReminder() {
   return ApiService.fetchData({
     url: `${PAYMENT_REMINDER}`,
     method: METHOD_GET,
+  });
+}
+
+export async function apiSendReminder(data) {
+  return ApiService.fetchData({
+    url: SEND_REMINDER,
+    method: METHOD_POST,
+    data,
   });
 }
