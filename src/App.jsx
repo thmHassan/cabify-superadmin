@@ -21,9 +21,7 @@ function App() {
       <BrowserRouter>
         <ScrollToTop>
           <Suspense fallback={<Loading />}>
-             <SocketProvider>
               <AllRoutes />
-            </SocketProvider>
           </Suspense>
         </ScrollToTop>
         <Toaster
