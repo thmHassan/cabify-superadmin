@@ -5,12 +5,14 @@ import PaymentAlertIcon from "../../../../../../components/svg/PaymentAlertIcon"
 import ChildText from "../../../../../../components/ui/ChildText.jsx/ChildText";
 import Button from "../../../../../../components/ui/Button/Button";
 import WatchIcon from "../../../../../../components/svg/WatchIcon";
-import { apiGetPymentReminder } from "../../../../../../services/AccountService";
+import toast from 'react-hot-toast';
+import { apiGetPymentReminder, apiSendReminder } from "../../../../../../services/AccountService";
 
 // Fetch the payment reminder data from the API
 const PaymentAlerts = () => {
   const [paymentAlerts, setPaymentAlerts] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
+  const [sendingReminder, setSendingReminder] = useState({});
 
   const fetchPayment = async () => {
     try {
@@ -34,6 +36,29 @@ const PaymentAlerts = () => {
     const now = new Date();
     const expiry = new Date(expiryDate);
     return expiry < now;
+  };
+
+  const handleSendReminder = async (alert) => {
+    try {
+      setSendingReminder((prev) => ({ ...prev, [alert.id]: true }));
+
+      const payload = {
+        client_id: "divonyx",
+        title: `Payment Reminder for`,
+        description: `This is a reminder for your pending payment.`
+      };
+
+      const response = await apiSendReminder(payload);
+
+      if (response) {
+        console.log("Reminder sent successfully:", response);
+      }
+    } catch (error) {
+      console.error("Error sending reminder:", error);
+      // toast.error("Failed to send reminder. Please try again.");
+    } finally {
+      setSendingReminder((prev) => ({ ...prev, [alert.id]: false }));
+    }
   };
 
   return (
@@ -69,8 +94,14 @@ const PaymentAlerts = () => {
               </div>
             </div>
             <div className="flex gap-3 lg:ml-0 ml-20 xs:flex-row flex-col">
-              <Button type="filledRed" btnSize="md" className="xs:w-[calc(50%-10px)] md:w-auto w-full">
-                Send Reminder
+              <Button
+                type="filledRed"
+                btnSize="md"
+                className="xs:w-[calc(50%-10px)] md:w-auto w-full"
+                onClick={() => handleSendReminder(alert)}
+                disabled={sendingReminder[alert.id]}
+              >
+                {sendingReminder[alert.id] ? "Sending..." : "Send Reminder"}
               </Button>
               {/* <Button type="outline" btnSize="md" className="xs:w-[calc(50%-10px)] md:w-auto w-full">
                 View Details

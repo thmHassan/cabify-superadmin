@@ -60,6 +60,7 @@ export const CHANGE_PASSWORD = "/super-admin/change-password";
 export const UPDATE_PROFILE = "/super-admin/update-profile";
 export const GET_USER_PROFILE = "/super-admin/edit-subadmin";
 export const PAYMENT_REMINDER = "/super-admin/payment-reminder-list"
+export const SEND_REMINDER = "/super-admin/send-reminder"
 
 // api for API Keys
 export const CREATE_API_KEY = "/super-admin/api-keys"

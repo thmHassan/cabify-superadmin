@@ -656,7 +656,7 @@ const Subscription = () => {
                         },
                       ]}
                     />
-                    <Modal isOpen={deleteModalOpen} className="p-6 sm:p-8 w-full max-w-md">
+                    <Modal isOpen={deleteModalOpen} className="p-10">
                       <div className="text-center">
                         <h2 className="text-xl font-semibold mb-3">Delete subscription?</h2>
                         <p className="text-gray-600 mb-6">

@@ -30,13 +30,13 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
   const mapsApiOptions = [
     { value: "google", label: "Google" },
     { value: "barikoi", label: "Barikoi" },
-    { value: "both", label: "Both" },
+    // { value: "both", label: "Both" },
   ];
 
   const searchApiOptions = [
     { value: "google", label: "Google" },
     { value: "barikoi", label: "Barikoi" },
-    { value: "both", label: "Both" },
+    // { value: "both", label: "Both" },
   ];
 
   useEffect(() => {
