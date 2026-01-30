@@ -43,9 +43,9 @@ const PaymentAlerts = () => {
       setSendingReminder((prev) => ({ ...prev, [alert.id]: true }));
 
       const payload = {
-        client_id: "divonyx",
-        title: `Payment Reminder for`,
-        description: `This is a reminder for your pending payment.`
+        client_id: alert.id,
+        title: `Payment Reminder for ${alert.company_name}`,
+        description: `This is a reminder for your pending payment of ${alert.currency} ${alert.payment_amount}. Your account expires on ${alert.expiry_date}.`
       };
 
       const response = await apiSendReminder(payload);
