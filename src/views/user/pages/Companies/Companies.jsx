@@ -104,7 +104,7 @@ const Companies = () => {
     },
     {
       title: "Monthly Revenue",
-      value: "$6,800",
+      value: companyCards?.monthly_revenue,
       change: "+3 from last hour",
       icon: {
         component: MonthlyRevenueIcon,
