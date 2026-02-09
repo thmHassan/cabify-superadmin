@@ -240,7 +240,7 @@ const userNavRoutes = [
         active: [],
         isSubMenu: false,
         subMenu: [],
-        isStatic: true,
+        // isStatic: true,
       },
       // {
       //   key: KEY.SYSTEM_SETTINGS_KEY,

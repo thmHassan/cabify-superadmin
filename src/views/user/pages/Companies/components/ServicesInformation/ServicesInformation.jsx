@@ -110,7 +110,14 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
                 name="maps_api"
                 options={mapsApiOptions}
                 value={values.maps_api}
-                onChange={(val) => setFieldValue("maps_api", val)}
+                onChange={(val) => {
+                  setFieldValue("maps_api", val);
+                  if (val !== "google") {
+                    setFieldValue("maps_api_key", "");
+                    // If not using Google, disable map feature
+                    setFieldValue("map", false);
+                  }
+                }}
                 placeholder="Select Maps API"
                 className="w-full absolute"
               />
@@ -233,6 +240,38 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               component="div"
               className="text-red-500 text-sm mt-1"
             />
+          </div>
+          <div className="w-full sm:w-[calc((100%-20px)/2)]">
+            {values.maps_api === "google" && (
+              <>
+                <FormLabel htmlFor="maps_api_key">Maps API Key</FormLabel>
+                <div className="sm:h-16 h-14 md:absolute md:w-[calc((90%)/2)]">
+                  <FormSelection
+                    name="maps_api_key"
+                    options={[
+                      { value: "admin", label: "Admin Google Key" },
+                      { value: "your", label: "Your Google Key" },
+                    ]}
+                    value={values.maps_api_key}
+                    onChange={(val) => {
+                      setFieldValue("maps_api_key", val);
+                      // If admin key selected -> enable map, if user's key selected -> disable map
+                      if (val === "admin") {
+                        setFieldValue("map", true);
+                      } else if (val === "your") {
+                        setFieldValue("map", false);
+                      }
+                    }}
+                    placeholder="Select Maps API Key"
+                  />
+                </div>
+                <ErrorMessage
+                  name="maps_api_key"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-5 py-5 border-y-[0.7px] border-[#6C6C6C]">
