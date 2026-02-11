@@ -101,13 +101,16 @@ const PendingSubscriptionTableRow = (props) => {
                             )}
                             {subscription?.deduct_type && (
                                 <Tag size="sm" variant="mediumGray">
-                                    <span>{subscription.deduct_type}</span>
+                                    <span>
+                                        {subscription.deduct_type.charAt(0).toUpperCase() +
+                                            subscription.deduct_type.slice(1)}
+                                    </span>
                                 </Tag>
                             )}
                         </div>
                     </div>
                 </td>
-                        {/* <td className="py-[30px] flex flex-col justify-center min-w-[199px]">
+                {/* <td className="py-[30px] flex flex-col justify-center min-w-[199px]">
           <CardSubtitle type={1} subtitle={`$${payment_amount}`} />
           <ChildText text={subscription?.billing_cycle} />
         </td> */}

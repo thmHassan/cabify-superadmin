@@ -99,6 +99,11 @@ const Payments = () => {
     setCurrentPage(1)
   };
 
+  const capitalizeFirst = (text) => {
+    if (!text) return "";
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  };
+
   const columns = [
     { header: "Company Name", accessor: "company_name" },
     { header: "Date", accessor: "date" },
@@ -109,12 +114,19 @@ const Payments = () => {
       render: (value) => (
         <div className="flex">
           <Tag variant={getStatusColor(value)} className="!pt-1 !pb-[3px]">
-            <ChildText text={value} className="!text-[#ffffff]" />
+            <ChildText
+              text={capitalizeFirst(value)}
+              className="!text-[#ffffff]"
+            />
           </Tag>
         </div>
       ),
     },
-    { header: "Method", accessor: "method" },
+    {
+      header: "Method",
+      accessor: "method",
+      render: (value) => capitalizeFirst(value),
+    },
   ];
 
   return (
@@ -170,7 +182,7 @@ const Payments = () => {
               onDateChange={setDate}
             />
           </div>
-          <Pagination
+          <Pagination className="mt-3"
             currentPage={currentPage}
             totalPages={totalPages}
             itemsPerPage={itemsPerPage}
