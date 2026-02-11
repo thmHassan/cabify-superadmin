@@ -28,14 +28,14 @@ const PaymentTable = ({ columns, data, onSearch, onDateChange }) => {
       <div className="overflow-x-auto ">
         <div className="flex flex-row items-stretch sm:items-center gap-3 sm:gap-5 justify-between mb-4 sm:mb-0 bg-[#F5F7F9] p-3 border-b">
           <div className="md:w-full w-[calc(100%-54px)] sm:flex-1">
-            <SearchBar
+            {/* <SearchBar
               value={_searchQuery}
               onSearchChange={(value) => {
                 setSearchQuery(value);
                 onSearch?.(value);
               }}
               className="w-full md:max-w-[400px] max-w-full"
-            />
+            /> */}
           </div>
           <div className="hidden md:flex flex-row gap-3 sm:gap-5 w-full sm:w-auto">
             <input

@@ -170,9 +170,9 @@ const Payments = () => {
               </span>
               <CardSubtitle type={1} subtitle="Recent Transactions" />
             </div>
-            <div className="w-full sm:max-w-[400px] sm:w-auto">
+            {/* <div className="w-full sm:max-w-[400px] sm:w-auto">
               <SearchBar className="w-full" />
-            </div>
+            </div> */}
           </div>
           <div className="bg-[#ffffff] rounded-[10px] overflow-x-auto">
             <PaymentTable
