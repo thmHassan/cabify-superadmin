@@ -115,7 +115,7 @@ const EnablementInformation = ({
       <div className="flex flex-wrap gap-4 sm:gap-5 mb-6 sm:mb-[60px]">
         {[
           "dispatcher",
-          "map",
+          // "map",
           "push_notification",
           "usage_monitoring",
           "revenue_statements",

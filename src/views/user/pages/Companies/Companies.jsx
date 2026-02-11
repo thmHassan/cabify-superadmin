@@ -264,15 +264,10 @@ const Companies = () => {
 
   useEffect(() => {
     fetchCompanyCards();
-    const statusParam = _selectedStatus?.value ?? "all";
-
-    console.log(statusParam, "statusparam");
-    fetchCompanyList(1, statusParam, itemsPerPage, debouncedSearchQuery);
   }, [refreshTrigger]);
 
   useEffect(() => {
     const statusParam = _selectedStatus?.value ?? "all";
-
     fetchCompanyList(
       currentPage,
       statusParam,
