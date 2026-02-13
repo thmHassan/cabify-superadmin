@@ -10,6 +10,7 @@ const UsageMonitoringCard = ({ company }) => {
         map_request,
         voip_minutes,
         dispatchers,
+        last_login,
     } = company;
 
     const metrics = [
@@ -62,7 +63,7 @@ const UsageMonitoringCard = ({ company }) => {
                             Last Seen
                         </span>
                         <ChildText
-                            text="2 minutes ago"
+                            text={last_login || "Never"}
                             className="!text-[#FFFFFF] whitespace-nowrap"
                         />
                     </div>
