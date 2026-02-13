@@ -114,12 +114,11 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
                   setFieldValue("maps_api", val);
                   if (val !== "google") {
                     setFieldValue("maps_api_key", "");
-                    // If not using Google, disable map feature
                     setFieldValue("map", false);
                   }
                 }}
                 placeholder="Select Maps API"
-                className="w-full absolute"
+                className="w-full"
               />
             </div>
             <ErrorMessage
@@ -245,7 +244,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
             {values.maps_api === "google" && (
               <>
                 <FormLabel htmlFor="maps_api_key">Maps API Key</FormLabel>
-                <div className="sm:h-16 h-14 md:absolute md:w-[calc((90%)/2)]">
+                <div className="sm:h-16 h-14 w-full">
                   <FormSelection
                     name="maps_api_key"
                     options={[
