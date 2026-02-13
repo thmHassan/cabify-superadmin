@@ -299,7 +299,7 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
   return (
     <>
       <div className="mb-6 sm:mb-[60px] flex flex-col gap-5">
-        <div className="flex flex-wrap gap-3 sm:gap-5 border-b-[0.7px] border-[#6C6C6C] pb-5">
+        <div className="flex flex-wrap gap-3 sm:gap-5">
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <FormLabel htmlFor="units">Units</FormLabel>
             <div className="sm:h-16 h-14 md:absolute md:w-[calc((90%)/2)]">
@@ -321,16 +321,6 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <FormLabel htmlFor="country_of_use">Country of Use</FormLabel>
             <div className="sm:h-16 h-14">
-              {/* <div className="md:absolute md:w-[calc((90%)/2)]">
-                <Field
-                  type="text"
-                  name="country_of_use"
-                  className="sm:px-5 px-4 sm:py-[21px] py-4 border border-[#8D8D8D] rounded-lg w-full h-full 
-                  shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] 
-                  sm:text-base text-sm leading-[22px] font-semibold"
-                  placeholder="Enter country of use"
-                />
-              </div> */}
               <div className="md:absolute md:w-[calc((90%)/2)]">
                 <FormSelection
                   name="country_of_use"
