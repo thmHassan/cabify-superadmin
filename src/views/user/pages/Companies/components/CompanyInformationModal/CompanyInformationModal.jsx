@@ -309,7 +309,7 @@ const CompanyInformationModal = ({
                     <span>
                       {companyDetails?.status
                         ? companyDetails.status.charAt(0).toUpperCase() +
-                          companyDetails.status.slice(1).toLowerCase()
+                        companyDetails.status.slice(1).toLowerCase()
                         : "N/A"}
                     </span>
                   </div>
@@ -347,6 +347,7 @@ const CompanyInformationModal = ({
             tabs={TABS_CONFIGS}
             setIsOpen={setIsOpen}
             companyId={companyId}
+            companyDetails={companyDetails}
           />
         </div>
       </div>

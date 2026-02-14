@@ -293,7 +293,7 @@ const Companies = () => {
       location: c.city ?? "-",
       drivers: `${c.drivers_allowed ?? 0} Drivers`,
       contact: c.phone ?? c.email ?? "-",
-      revenue: "-",
+      revenue: c.monthly_revenue ? `$${c.monthly_revenue}` : "0",
     }));
   };
 
