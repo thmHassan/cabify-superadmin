@@ -3,6 +3,7 @@ import {
   EDIT_COMPANY,
   GET_COMPANY_BY_ID,
   GET_COMPANY_CARD_DETAILS,
+  GET_COMPANY_MAP_API,
   GET_COMPANY_PAYMENT_HISTORY,
 } from "../constants/api.route.constant";
 import { METHOD_GET, METHOD_POST } from "../constants/method.constant";
@@ -41,6 +42,13 @@ export async function apiEditCompanyDetails(params, data) {
 export async function apiDeleteCompany(params) {
   return ApiService.fetchData({
     url: `${DELETE_COMPANY}?id=${params.id}`,
+    method: METHOD_GET,
+  });
+}
+
+export async function apiGetMapApiCount(params) {
+  return ApiService.fetchData({
+    url: `${GET_COMPANY_MAP_API}?company_id=${params.company_id}`,
     method: METHOD_GET,
   });
 }

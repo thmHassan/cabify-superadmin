@@ -7,6 +7,7 @@ export const GET_COMPANY_BY_ID = "/super-admin/edit-company";
 export const EDIT_COMPANY = "/super-admin/edit-company";
 export const GET_COMPANY_PAYMENT_HISTORY = "/super-admin/payment-history";
 export const DELETE_COMPANY = "/super-admin/delete-company"
+export const GET_COMPANY_MAP_API = "/super-admin/get-maps-api-count"
 
 // api for onboarding
 export const CREATE_ONBOARDING_REQUEST =
