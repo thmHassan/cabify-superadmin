@@ -284,17 +284,31 @@ const Companies = () => {
     refreshTrigger,
   ]);
 
+  const currencySymbols = {
+    INR: "₹",
+    USD: "$",
+    EUR: "€",
+    GBP: "£",
+    AUD: "A$",
+    CAD: "C$",
+    AED: "د.إ",
+  };
+
   const mapToTableRows = (companies) => {
-    return companies.map((c) => ({
-      id: c.id ?? c.company_id,
-      picture: c.picture ? c.picture : null,
-      name: c.company_name ?? "-",
-      status: [c.status ?? "-", c.subscription_type ?? "-"],
-      location: c.city ?? "-",
-      drivers: `${c.drivers_allowed ?? 0} Drivers`,
-      contact: c.phone ?? c.email ?? "-",
-      revenue: c.monthly_revenue ? `$${c.monthly_revenue}` : "0",
-    }));
+    return companies.map((c) => {
+      const symbol = currencySymbols[c.currency] || "";
+
+      return {
+        id: c.id ?? c.company_id,
+        picture: c.picture ? c.picture : null,
+        name: c.company_name ?? "-",
+        status: [c.status ?? "-", c.subscription_type ?? "-"],
+        location: c.city ?? "-",
+        drivers: `${c.drivers_allowed ?? 0} Drivers`,
+        contact: c.phone ?? c.email ?? "-",
+        revenue: `${symbol}${c.monthly_revenue ?? 0}`,
+      };
+    });
   };
 
 
