@@ -154,12 +154,12 @@ const Companies = () => {
 
   const openFilter = () => {
     setIsFilterOpen(true);
-    lockBodyScroll();
+    // lockBodyScroll();
   };
 
   const closeFilter = () => {
     setIsFilterOpen(false);
-    unlockBodyScroll();
+    // unlockBodyScroll();
   };
 
   const fetchCompanyCards = async () => {
@@ -370,7 +370,7 @@ const Companies = () => {
             type="filled"
             btnSize="2xl"
             onClick={() => {
-              lockBodyScroll();
+              // lockBodyScroll();
               setIsCompanyModalOpen({ type: "new", isOpen: true });
             }}
             className="w-full sm:w-auto -mb-2 sm:-mb-3 lg:-mb-3 !py-3.5 sm:!py-3 lg:!py-3 2xl:!text-xl 2xl:!leading-6 2xl:!px-6"
