@@ -222,7 +222,7 @@ const AddCompanyModal = ({
         }
       } else {
         setFormData({});
-        unlockBodyScroll();
+        // unlockBodyScroll();
         onRefresh();
         setIsOpen({ type: "new", isOpen: false });
       }

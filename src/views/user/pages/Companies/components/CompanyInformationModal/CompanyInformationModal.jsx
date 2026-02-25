@@ -219,7 +219,7 @@ const CompanyInformationModal = ({
       <Button
         className="bg-[#F3F3F3] !absolute top-3 right-3 sm:top-5 sm:right-10 w-[35px] h-[35px] sm:w-[45px] sm:h-[45px] rounded-full flex justify-center items-center z-10"
         onClick={() => {
-          unlockBodyScroll();
+          // unlockBodyScroll();
           setIsOpen(false);
         }}
       >
