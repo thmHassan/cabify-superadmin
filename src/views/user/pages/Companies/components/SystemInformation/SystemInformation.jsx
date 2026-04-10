@@ -37,11 +37,46 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
   const timeZoneOptions = [
     { value: "UTC", label: "UTC" },
     { value: "Asia/Kolkata", label: "Asia/Kolkata (IST)" },
-    { value: "Asia/Dubai", label: "Asia/Dubai" },
-    { value: "Europe/London", label: "Europe/London" },
-    { value: "Europe/Paris", label: "Europe/Paris" },
-    { value: "America/New_York", label: "America/New_York" },
-    { value: "America/Los_Angeles", label: "America/Los_Angeles" },
+    { value: "Asia/Dubai", label: "Asia/Dubai (GST)" },
+
+    { value: "Asia/Singapore", label: "Asia/Singapore (SGT)" },
+    { value: "Asia/Tokyo", label: "Asia/Tokyo (JST)" },
+    { value: "Asia/Shanghai", label: "Asia/Shanghai (CST)" },
+    { value: "Asia/Hong_Kong", label: "Asia/Hong_Kong (HKT)" },
+    { value: "Asia/Bangkok", label: "Asia/Bangkok (ICT)" },
+    { value: "Asia/Jakarta", label: "Asia/Jakarta (WIB)" },
+    { value: "Asia/Seoul", label: "Asia/Seoul (KST)" },
+
+    { value: "Asia/Riyadh", label: "Asia/Riyadh (AST)" },
+    { value: "Asia/Qatar", label: "Asia/Qatar (AST)" },
+    { value: "Asia/Kuwait", label: "Asia/Kuwait (AST)" },
+
+    { value: "Europe/London", label: "Europe/London (GMT/BST)" },
+    { value: "Europe/Paris", label: "Europe/Paris (CET/CEST)" },
+    { value: "Europe/Berlin", label: "Europe/Berlin (CET/CEST)" },
+    { value: "Europe/Madrid", label: "Europe/Madrid (CET/CEST)" },
+    { value: "Europe/Rome", label: "Europe/Rome (CET/CEST)" },
+    { value: "Europe/Amsterdam", label: "Europe/Amsterdam (CET/CEST)" },
+    { value: "Europe/Moscow", label: "Europe/Moscow (MSK)" },
+
+    { value: "America/New_York", label: "America/New_York (EST/EDT)" },
+    { value: "America/Chicago", label: "America/Chicago (CST/CDT)" },
+    { value: "America/Denver", label: "America/Denver (MST/MDT)" },
+    { value: "America/Los_Angeles", label: "America/Los_Angeles (PST/PDT)" },
+    { value: "America/Toronto", label: "America/Toronto (EST/EDT)" },
+    { value: "America/Vancouver", label: "America/Vancouver (PST/PDT)" },
+    { value: "America/Sao_Paulo", label: "America/Sao_Paulo (BRT)" },
+    { value: "America/Mexico_City", label: "America/Mexico_City (CST)" },
+
+    { value: "Africa/Johannesburg", label: "Africa/Johannesburg (SAST)" },
+    { value: "Africa/Cairo", label: "Africa/Cairo (EET)" },
+    { value: "Africa/Nairobi", label: "Africa/Nairobi (EAT)" },
+    { value: "Africa/Lagos", label: "Africa/Lagos (WAT)" },
+
+    { value: "Australia/Sydney", label: "Australia/Sydney (AEST/AEDT)" },
+    { value: "Australia/Melbourne", label: "Australia/Melbourne (AEST/AEDT)" },
+    { value: "Australia/Perth", label: "Australia/Perth (AWST)" },
+    { value: "Pacific/Auckland", label: "Pacific/Auckland (NZST/NZDT)" }
   ];
 
   const COUNTRY_OPTIONS = [

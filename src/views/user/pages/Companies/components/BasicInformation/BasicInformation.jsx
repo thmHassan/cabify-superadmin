@@ -12,12 +12,56 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
   const [showPasswordField, setShowPasswordField] = useState(type !== "edit");
 
   const currencyOptions = [
-    { value: "USD", label: "USD" },
-    { value: "EUR", label: "EUR" },
-    { value: "GBP", label: "GBP" },
-    { value: "INR", label: "INR" },
-    { value: "CAD", label: "CAD" },
-    { value: "AUD", label: "AUD" },
+    { value: "USD", label: "USD - United States ($)" },
+    { value: "EUR", label: "EUR - Eurozone (€)" },
+    { value: "GBP", label: "GBP - United Kingdom (£)" },
+    { value: "INR", label: "INR - India (₹)" },
+    { value: "CAD", label: "CAD - Canada ($)" },
+    { value: "AUD", label: "AUD - Australia ($)" },
+
+    { value: "JPY", label: "JPY - Japan (¥)" },
+    { value: "CNY", label: "CNY - China (¥)" },
+    { value: "HKD", label: "HKD - Hong Kong ($)" },
+    { value: "SGD", label: "SGD - Singapore ($)" },
+    { value: "KRW", label: "KRW - South Korea (₩)" },
+
+    { value: "AED", label: "AED - UAE (د.إ)" },
+    { value: "SAR", label: "SAR - Saudi Arabia (﷼)" },
+    { value: "QAR", label: "QAR - Qatar (﷼)" },
+    { value: "KWD", label: "KWD - Kuwait (د.ك)" },
+    { value: "OMR", label: "OMR - Oman (﷼)" },
+
+    { value: "CHF", label: "CHF - Switzerland (CHF)" },
+    { value: "SEK", label: "SEK - Sweden (kr)" },
+    { value: "NOK", label: "NOK - Norway (kr)" },
+    { value: "DKK", label: "DKK - Denmark (kr)" },
+
+    { value: "BRL", label: "BRL - Brazil (R$)" },
+    { value: "MXN", label: "MXN - Mexico ($)" },
+    { value: "ARS", label: "ARS - Argentina ($)" },
+    { value: "CLP", label: "CLP - Chile ($)" },
+
+    { value: "ZAR", label: "ZAR - South Africa (R)" },
+    { value: "NGN", label: "NGN - Nigeria (₦)" },
+    { value: "EGP", label: "EGP - Egypt (£)" },
+    { value: "KES", label: "KES - Kenya (KSh)" },
+
+    { value: "THB", label: "THB - Thailand (฿)" },
+    { value: "MYR", label: "MYR - Malaysia (RM)" },
+    { value: "IDR", label: "IDR - Indonesia (Rp)" },
+    { value: "PHP", label: "PHP - Philippines (₱)" },
+    { value: "VND", label: "VND - Vietnam (₫)" },
+
+    { value: "TRY", label: "TRY - Turkey (₺)" },
+    { value: "PLN", label: "PLN - Poland (zł)" },
+    { value: "CZK", label: "CZK - Czech Republic (Kč)" },
+    { value: "HUF", label: "HUF - Hungary (Ft)" },
+    { value: "ILS", label: "ILS - Israel (₪)" },
+
+    { value: "PKR", label: "PKR - Pakistan (₨)" },
+    { value: "BDT", label: "BDT - Bangladesh (৳)" },
+    { value: "LKR", label: "LKR - Sri Lanka (₨)" },
+    { value: "NPR", label: "NPR - Nepal (₨)" }
   ];
 
   const onNext = async () => {
