@@ -29,7 +29,7 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
   };
   const mapsApiOptions = [
     { value: "google", label: "Google" },
-    { value: "barikoi", label: "Barikoi" },
+    { value: "mapify", label: "Mapify" },
     // { value: "both", label: "Both" },
   ];
 

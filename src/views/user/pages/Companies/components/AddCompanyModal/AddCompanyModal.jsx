@@ -248,6 +248,9 @@ const AddCompanyModal = ({
         const company = result?.data?.company || {};
         // Set password to empty string for edit mode
         company.password = "";
+        if (company.maps_api === "barikoi") {
+          company.maps_api = "mapify";
+        }
         setInitialValues({
           ...company,
           voip: toBoolean(company.voip, 2),
