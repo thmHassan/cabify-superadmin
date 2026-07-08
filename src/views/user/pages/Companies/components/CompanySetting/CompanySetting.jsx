@@ -97,6 +97,7 @@ const CompanySetting = ({ companyId }) => {
                   <div className="h-16">
                     <Field
                       type="text"
+                      disabled
                       name="mapApiProvider"
                       className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
                       placeholder="Enter Map API Provider"
@@ -116,6 +117,7 @@ const CompanySetting = ({ companyId }) => {
                     <Field
                       type="text"
                       name="callApiProvider"
+                      readOnly
                       className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
                       placeholder="Enter Call API Provider"
                     />
@@ -132,6 +134,7 @@ const CompanySetting = ({ companyId }) => {
                     <Field
                       type="text"
                       name="paymentMethod"
+                      readOnly
                       className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
                       placeholder="Enter Payment Method"
                     />
@@ -148,6 +151,7 @@ const CompanySetting = ({ companyId }) => {
                     <Field
                       type="text"
                       name="planType"
+                      readOnly
                       className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
                       placeholder="Enter Plan Type"
                     />
@@ -166,6 +170,7 @@ const CompanySetting = ({ companyId }) => {
                     <Field
                       type="text"
                       name="mapSearchApiProvider"
+                      readOnly
                       className="px-5 py-[21px] border border-[#8D8D8D] rounded-lg w-full h-full shadow-[-4px_4px_6px_0px_#0000001F] placeholder:text-[#6C6C6C] text-base leading-[22px] font-semibold"
                       placeholder="Enter Map Search API Provider"
                     />
