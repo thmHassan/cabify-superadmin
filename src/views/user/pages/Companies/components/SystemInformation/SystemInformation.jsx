@@ -17,6 +17,12 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
     }
   }, [values.stripe_enable, setFieldValue]);
 
+  useEffect(() => {
+    if (values.subscription?.deduct_type === "cash") {
+      setFieldValue("billing_mode", "one_time");
+    }
+  }, [values.subscription?.deduct_type, setFieldValue]);
+
   const onNext = async () => {
     const fieldsToValidate = Object.keys(SYSTEM_INFORMATION_VALIDATION_SCHEMA);
     setTouched(
@@ -43,6 +49,13 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
     { value: "America/New_York", label: "America/New_York" },
     { value: "America/Los_Angeles", label: "America/Los_Angeles" },
   ];
+
+  const billingModeOptions = [
+    { value: "one_time", label: "One-time Payment" },
+    { value: "auto_renew", label: "Auto-renew Subscription" },
+  ];
+
+  const shouldShowBillingMode = values.subscription?.deduct_type !== "cash";
 
   const COUNTRY_OPTIONS = [
     { value: "AF", label: "Afghanistan" },
@@ -357,6 +370,28 @@ const SystemInformation = ({ goToNextTab, setIsOpen, formEl }) => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
+
+          {shouldShowBillingMode && (
+            <div className="w-full sm:w-[calc((100%-20px)/2)]">
+              <FormLabel htmlFor="billing_mode">Billing Mode</FormLabel>
+              <div className="sm:h-16 h-14">
+                <div className="md:absolute md:w-[calc((90%)/2)]">
+                  <FormSelection
+                    name="billing_mode"
+                    options={billingModeOptions}
+                    value={values.billing_mode || "one_time"}
+                    onChange={(val) => setFieldValue("billing_mode", val)}
+                    placeholder="Select billing mode"
+                  />
+                </div>
+              </div>
+              <ErrorMessage
+                name="billing_mode"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-5">
