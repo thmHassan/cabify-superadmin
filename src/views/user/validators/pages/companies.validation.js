@@ -83,6 +83,9 @@ export const SYSTEM_INFORMATION_VALIDATION_SCHEMA = {
   enable_smtp: Yup.boolean(),
 
   stripe_enablement: Yup.string().nullable(),
+  billing_mode: Yup.string()
+    .oneOf(["one_time", "auto_renew"])
+    .default("one_time"),
 };
 
 

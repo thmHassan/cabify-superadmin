@@ -1,11 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../../../../components/ui/Button/Button";
+import ApiService from "../../../../services/ApiService";
 
 const SubscriptionSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
+  const [confirmationState, setConfirmationState] = useState("idle");
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+
+  useEffect(() => {
+    if (!sessionId) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const confirmSession = async () => {
+      try {
+        setConfirmationState("loading");
+        await ApiService.confirmStripeSession({ session_id: sessionId });
+
+        if (!cancelled) {
+          setConfirmationState("success");
+          setConfirmationMessage("Payment has been synced with the local backend.");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setConfirmationState("error");
+          setConfirmationMessage(
+            error?.response?.data?.message ||
+              "Payment succeeded, but the backend sync failed. Check Stripe webhook/session confirmation."
+          );
+        }
+      }
+    };
+
+    confirmSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId]);
 
   const handleGoToCompanies = () => {
     navigate("/companies");
@@ -41,6 +78,24 @@ const SubscriptionSuccess = () => {
         <p className="text-gray-600 mb-6">
           Your subscription has been activated successfully. Thank you for your payment.
         </p>
+
+        {confirmationState === "loading" && (
+          <div className="mb-6 p-3 bg-blue-50 border border-blue-200 text-blue-700 rounded">
+            Syncing payment with backend...
+          </div>
+        )}
+
+        {confirmationState === "success" && (
+          <div className="mb-6 p-3 bg-green-50 border border-green-200 text-green-700 rounded">
+            {confirmationMessage}
+          </div>
+        )}
+
+        {confirmationState === "error" && (
+          <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-700 rounded">
+            {confirmationMessage}
+          </div>
+        )}
 
         {/* Session ID Display */}
         {sessionId && (

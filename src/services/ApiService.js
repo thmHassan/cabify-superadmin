@@ -195,6 +195,22 @@ const ApiService = {
     });
   },
 
+  confirmStripeSession(data) {
+    return new Promise((resolve, reject) => {
+      BaseService({
+        method: "POST",
+        url: "/super-admin/confirm-stripe-session",
+        data,
+      })
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((errors) => {
+          reject(errors);
+        });
+    });
+  },
+
   getSubscriptionList() {
     return new Promise((resolve, reject) => {
       BaseService({

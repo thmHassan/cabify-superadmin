@@ -27,6 +27,7 @@ const EnablementInformation = ({
 
       const paymentData = new FormData();
       paymentData.append("id", createdCompanyId);
+      paymentData.append("billing_mode", values.billing_mode || "one_time");
 
       const response = await ApiService.cashPayment(paymentData);
 
@@ -64,7 +65,8 @@ const EnablementInformation = ({
       console.log("Payment Data:", {
         id: createdCompanyId,
         amount: subscriptionAmount,
-        subscription: values?.subscription
+        subscription: values?.subscription,
+        billing_mode: values.billing_mode || "one_time"
       });
 
       const response = await ApiService.createStripePaymentUrl(paymentData);
@@ -170,8 +172,30 @@ const EnablementInformation = ({
           <span>Cancel</span>
         </Button>
         
-        {modalType === "company" && (companyCreated || newSubscriptionCreated) && shouldShowPaymentButtons ? (
+      {modalType === "company" && (companyCreated || newSubscriptionCreated) && shouldShowPaymentButtons ? (
           <>
+            {(values.subscription?.deduct_type === "card" || newSubscriptionCreated) && (
+              <div className="w-full mb-4 p-4 border border-[#E9E9E9] rounded-lg bg-white">
+                <FormLabel htmlFor="billing_mode">Online Billing Mode</FormLabel>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  <label className="flex gap-3 p-3 border rounded-lg cursor-pointer">
+                    <Field type="radio" name="billing_mode" value="one_time" />
+                    <span>
+                      <span className="block font-semibold">One-time Payment</span>
+                      <span className="block text-sm text-gray-500">No auto renew. Send a new link on renewal.</span>
+                    </span>
+                  </label>
+                  <label className="flex gap-3 p-3 border rounded-lg cursor-pointer">
+                    <Field type="radio" name="billing_mode" value="auto_renew" />
+                    <span>
+                      <span className="block font-semibold">Auto-renew Subscription</span>
+                      <span className="block text-sm text-gray-500">Use only for trusted clients with their card.</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            )}
+
             {/* Show Cash Payment button only if subscription is cash AND not a new subscription change */}
             {!newSubscriptionCreated && values.subscription?.deduct_type === "cash" && (
               <Button
