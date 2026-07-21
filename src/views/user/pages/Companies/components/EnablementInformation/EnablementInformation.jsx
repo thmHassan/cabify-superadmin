@@ -4,7 +4,6 @@ import FormLabel from "../../../../../../components/ui/FormLabel";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import ApiService from "../../../../../../services/ApiService";
 import { useState } from "react";
-import { ErrorMessage, Field } from "formik";
 
 const EnablementInformation = ({
   setIsOpen,
@@ -61,6 +60,7 @@ const EnablementInformation = ({
       }
       
       paymentData.append("amount", Number(subscriptionAmount));
+      paymentData.append("billing_mode", values.billing_mode || "one_time");
 
       console.log("Payment Data:", {
         id: createdCompanyId,
@@ -111,6 +111,24 @@ const EnablementInformation = ({
   const shouldShowPaymentButtons =
     (paymentStatus === "pending" || (paymentStatus === "success" && isExpired)) ||
     newSubscriptionCreated;
+  const shouldShowOnlinePayment =
+    values.subscription?.deduct_type === "card" || newSubscriptionCreated;
+  const shouldShowCashPayment =
+    !newSubscriptionCreated && values.subscription?.deduct_type === "cash";
+  const billingMode = values.billing_mode || "one_time";
+
+  const billingModeOptions = [
+    {
+      value: "one_time",
+      title: "One-time Payment",
+      description: "No auto renew. Send a new link on renewal.",
+    },
+    {
+      value: "auto_renew",
+      title: "Auto-renew Subscription",
+      description: "Use only for trusted clients with their card.",
+    },
+  ];
 
   return (
     <>
@@ -158,11 +176,58 @@ const EnablementInformation = ({
         </div>
       )} */}
 
-      <div className="flex gap-5 justify-end">
+      {modalType === "company" &&
+        (companyCreated || newSubscriptionCreated) &&
+        shouldShowPaymentButtons &&
+        shouldShowOnlinePayment && (
+          <div className="mb-6 rounded-lg border border-[#E9E9E9] bg-white p-4">
+            <FormLabel htmlFor="billing_mode">Online Billing Mode</FormLabel>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {billingModeOptions.map((option) => {
+                const isSelected = billingMode === option.value;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setFieldValue("billing_mode", option.value)}
+                    className={`min-h-[92px] rounded-lg border p-4 text-left transition-colors ${
+                      isSelected
+                        ? "border-[#1F41BB] bg-[#F5F7FF]"
+                        : "border-[#E2E4E5] bg-white hover:border-[#1F41BB66]"
+                    }`}
+                  >
+                    <span className="flex items-start gap-3">
+                      <span
+                        className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
+                          isSelected ? "border-[#1F41BB]" : "border-[#9CA3AF]"
+                        }`}
+                      >
+                        {isSelected && (
+                          <span className="h-2.5 w-2.5 rounded-full bg-[#1F41BB]" />
+                        )}
+                      </span>
+                      <span>
+                        <span className="block text-base font-semibold leading-6 text-[#252525]">
+                          {option.title}
+                        </span>
+                        <span className="mt-1 block text-sm leading-5 text-[#6C6C6C]">
+                          {option.description}
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-5">
         <Button
           btnSize="md"
           type="filledGray"
-          className="!px-10 pt-4 pb-[15px] leading-[25px]"
+          className="w-full !px-10 pt-4 pb-[15px] leading-[25px] sm:w-auto"
           onClick={() => {
             unlockBodyScroll();
             setIsOpen({ type: "new", isOpen: false });
@@ -174,34 +239,12 @@ const EnablementInformation = ({
         
       {modalType === "company" && (companyCreated || newSubscriptionCreated) && shouldShowPaymentButtons ? (
           <>
-            {(values.subscription?.deduct_type === "card" || newSubscriptionCreated) && (
-              <div className="w-full mb-4 p-4 border border-[#E9E9E9] rounded-lg bg-white">
-                <FormLabel htmlFor="billing_mode">Online Billing Mode</FormLabel>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  <label className="flex gap-3 p-3 border rounded-lg cursor-pointer">
-                    <Field type="radio" name="billing_mode" value="one_time" />
-                    <span>
-                      <span className="block font-semibold">One-time Payment</span>
-                      <span className="block text-sm text-gray-500">No auto renew. Send a new link on renewal.</span>
-                    </span>
-                  </label>
-                  <label className="flex gap-3 p-3 border rounded-lg cursor-pointer">
-                    <Field type="radio" name="billing_mode" value="auto_renew" />
-                    <span>
-                      <span className="block font-semibold">Auto-renew Subscription</span>
-                      <span className="block text-sm text-gray-500">Use only for trusted clients with their card.</span>
-                    </span>
-                  </label>
-                </div>
-              </div>
-            )}
-
             {/* Show Cash Payment button only if subscription is cash AND not a new subscription change */}
-            {!newSubscriptionCreated && values.subscription?.deduct_type === "cash" && (
+            {shouldShowCashPayment && (
               <Button
                 btnSize="md"
                 type="filled"
-                className="!px-10 pt-4 pb-[15px] leading-[25px]"
+                className="w-full !px-10 pt-4 pb-[15px] leading-[25px] sm:w-auto"
                 onClick={handleCashPayment}
                 disabled={isProcessingPayment}
               >
@@ -210,11 +253,11 @@ const EnablementInformation = ({
             )}
             
             {/* Show Online Payment button if subscription is card OR if subscription changed from cash to card */}
-            {(values.subscription?.deduct_type === "card" || newSubscriptionCreated) && (
+            {shouldShowOnlinePayment && (
               <Button
                 btnSize="md"
                 type="filled"
-                className="!px-10 pt-4 pb-[15px] leading-[25px]"
+                className="w-full !px-10 pt-4 pb-[15px] leading-[25px] sm:w-auto"
                 onClick={handleOnlinePayment}
                 disabled={isProcessingPayment}
               >
@@ -226,7 +269,7 @@ const EnablementInformation = ({
           <Button
             btnSize="md"
             type="filled"
-            className="!px-10 pt-4 pb-[15px] leading-[25px]"
+            className="w-full !px-10 pt-4 pb-[15px] leading-[25px] sm:w-auto"
             btnType="submit"
             disabled={isCreatingCompany || isProcessingPayment}
           >
