@@ -38,6 +38,11 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
     { value: "barikoi", label: "Barikoi" },
     // { value: "both", label: "Both" },
   ];
+  const allProviderOptions = [
+    { value: "google", label: "Google" },
+    { value: "mapify", label: "Mapify" },
+    { value: "barikoi", label: "Barikoi" },
+  ];
 
   useEffect(() => {
     const fetchSubscriptionList = async () => {
@@ -145,6 +150,44 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               component="div"
               className="text-red-500 text-sm mt-1"
             />
+          </div>
+          <div className="w-full border rounded-xl p-4 bg-slate-50">
+            <h3 className="font-semibold text-lg mb-4">Company Map Provider Configuration</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                ["map_provider", "Map Display Provider", allProviderOptions.filter((o) => o.value !== "barikoi")],
+                ["search_provider", "Search Provider", allProviderOptions],
+                ["geocoding_provider", "Geocoding Provider", allProviderOptions],
+                ["routing_provider", "Routing / Fare Provider", allProviderOptions],
+              ].map(([name, label, options]) => (
+                <div key={name}>
+                  <FormLabel htmlFor={name}>{label}</FormLabel>
+                  <FormSelection name={name} options={options} value={values[name]} onChange={(value) => setFieldValue(name, value)} />
+                </div>
+              ))}
+              <div>
+                <FormLabel htmlFor="credential_source">Credential Source</FormLabel>
+                <FormSelection
+                  name="credential_source"
+                  options={[{ value: "platform", label: "Platform Credentials" }, { value: "tenant", label: "Company Credentials" }]}
+                  value={values.credential_source}
+                  onChange={(value) => setFieldValue("credential_source", value)}
+                />
+              </div>
+            </div>
+            {values.credential_source === "tenant" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                <Field className="border rounded-lg p-3" name="google_browser_key" placeholder="Google browser/mobile key" type="password" />
+                <Field className="border rounded-lg p-3" name="google_server_key" placeholder="Google server/routes key" type="password" />
+                <Field className="border rounded-lg p-3" name="mapify_api_token" placeholder="Mapify API token" type="password" />
+                <Field className="border rounded-lg p-3" name="mapify_routing_url" placeholder="Mapify routing URL" />
+                <Field className="border rounded-lg p-3" name="barikoi_api_key" placeholder="Barikoi API key" type="password" />
+              </div>
+            )}
+            <label className="flex items-center gap-2 mt-4">
+              <Field type="checkbox" name="allow_platform_fallback" />
+              Allow platform fallback when a tenant provider is temporarily unavailable
+            </label>
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
             <FormLabel htmlFor="passengers_allowed">
