@@ -10,6 +10,20 @@ import { apiCreateApiKeys, apiGetApiKeys, } from "../../../../services/ApiKeySer
 import _ from "lodash";
 import FormLabel from "../../../../components/ui/FormLabel";
 
+const DEFAULT_API_KEYS = {
+  stripe_secret: "",
+  stripe_key: "",
+  stripe_webhook_secret: "",
+  exchange_rate_api_key: "",
+  barikoi_key: "",
+  google_map_key: "",
+  firebase_key: "",
+  smtp_host: "",
+  smtp_user_name: "",
+  smtp_password: "",
+  smtp_from_address: "",
+};
+
 const ApiKeys = () => {
   const [isApiKeysLoading, setIsApiKeysLoading] = useState(false);
   const [apiKeysData, setApiKeysData] = useState({});
@@ -44,7 +58,10 @@ const ApiKeys = () => {
           "updated_at",
           "id",
         ]);
-        setApiKeysData(filteredKeys);
+        setApiKeysData({
+          ...DEFAULT_API_KEYS,
+          ...filteredKeys,
+        });
       }
     } catch (error) {
       console.log("Error fetching API keys:", error);
@@ -93,7 +110,7 @@ const ApiKeys = () => {
       <CardContainer className="p-3 sm:p-4 lg:p-5">
         <Formik
           enableReinitialize
-          initialValues={apiKeysData}
+          initialValues={{ ...DEFAULT_API_KEYS, ...apiKeysData }}
           onSubmit={handleFormSubmit}
         >
           {({ values, isSubmitting }) => (

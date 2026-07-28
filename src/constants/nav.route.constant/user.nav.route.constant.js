@@ -242,6 +242,20 @@ const userNavRoutes = [
         subMenu: [],
         // isStatic: true,
       },
+      {
+        key: KEY.APP_MAINTENANCE_KEY,
+        title: "App Maintenance",
+        icon: {
+          active: SettingIcon,
+          component: SettingIcon,
+          size: 20,
+        },
+        route: PATH.APP_MAINTENANCE_PATH,
+        active: [],
+        isSubMenu: false,
+        subMenu: [],
+        isStatic: false,
+      },
       // {
       //   key: KEY.SYSTEM_SETTINGS_KEY,
       //   title: "System Settings",

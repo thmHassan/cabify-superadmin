@@ -5,6 +5,7 @@ import {
   GET_COMPANY_CARD_DETAILS,
   GET_COMPANY_MAP_API,
   GET_COMPANY_PAYMENT_HISTORY,
+  GET_CURRENCY_CONVERSION_RATE,
 } from "../constants/api.route.constant";
 import { METHOD_GET, METHOD_POST } from "../constants/method.constant";
 import { replaceSlash } from "../utils/functions/common.function";
@@ -50,5 +51,13 @@ export async function apiGetMapApiCount(params) {
   return ApiService.fetchData({
     url: `${GET_COMPANY_MAP_API}?company_id=${params.company_id}`,
     method: METHOD_GET,
+  });
+}
+
+export async function apiGetCurrencyConversionRate(from, to) {
+  return ApiService.fetchData({
+    url: GET_CURRENCY_CONVERSION_RATE,
+    method: METHOD_GET,
+    params: { from, to },
   });
 }

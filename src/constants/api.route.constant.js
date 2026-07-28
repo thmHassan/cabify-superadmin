@@ -8,6 +8,7 @@ export const EDIT_COMPANY = "/super-admin/edit-company";
 export const GET_COMPANY_PAYMENT_HISTORY = "/super-admin/payment-history";
 export const DELETE_COMPANY = "/super-admin/delete-company"
 export const GET_COMPANY_MAP_API = "/super-admin/get-maps-api-count"
+export const GET_CURRENCY_CONVERSION_RATE = "/super-admin/currency-conversion-rate";
 
 // api for onboarding
 export const CREATE_ONBOARDING_REQUEST =
@@ -69,3 +70,6 @@ export const GET_API_KEY = "/super-admin/api-keys";
 
 // api for payment
 export const GET_PAYMENT_LIST = "/super-admin/payment-list";
+
+// api for global mobile app maintenance
+export const APP_MAINTENANCE = "/super-admin/app-maintenance";

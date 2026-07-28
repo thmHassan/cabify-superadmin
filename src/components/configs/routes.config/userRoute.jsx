@@ -134,6 +134,12 @@ const userRoute = [
     authority: [],
   },
   {
+    key: KEY.APP_MAINTENANCE_KEY,
+    path: PATH.APP_MAINTENANCE_PATH,
+    component: lazy(() => import("../../../views/user/pages/AppMaintenance")),
+    authority: [],
+  },
+  {
     key: KEY.SUB_ADMIN_MANAGEMENT_KEY,
     path: PATH.SUB_ADMIN_MANAGEMENT_PATH,
     component: lazy(() =>

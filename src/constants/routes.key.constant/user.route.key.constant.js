@@ -18,6 +18,7 @@ export const MAPS_CONFIGURATION_KEY = "maps-configuration";
 export const VOIP_SETTINGS_KEY = "voip-settings";
 export const PAYMENTS_KEY = "payments";
 export const SYSTEM_SETTINGS_KEY = "system-settings";
+export const APP_MAINTENANCE_KEY = "app-maintenance";
 export const SUB_ADMIN_MANAGEMENT_KEY = "sub-admin-management";
 export const SUBSCRIPTION_SUCCESS_KEY = "subscription-success";
 export const PAYMENT_FAILED_KEY = "payment-failed";

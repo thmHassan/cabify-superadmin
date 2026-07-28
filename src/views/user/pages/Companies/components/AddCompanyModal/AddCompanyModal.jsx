@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import TabView from "../../../../../../components/shared/TabView/TabView";
+import ConfirmDialog from "../../../../../../components/shared/ConfirmDialog";
 import ImageUploadIcon from "../../../../../../components/svg/ImageUploadIcon";
 import BasicInformation from "../BasicInformation";
 import EnablementInformation from "../EnablementInformation";
@@ -9,9 +11,11 @@ import {
   convertToFormData,
   toBoolean,
   toYesNo,
-  unlockBodyScroll,
 } from "../../../../../../utils/functions/common.function";
-import { apiGetCompanyDetailsById } from "../../../../../../services/CompanyService";
+import {
+  apiGetCompanyDetailsById,
+  apiGetCurrencyConversionRate,
+} from "../../../../../../services/CompanyService";
 import _ from "lodash";
 import { MODAL_CONFIG } from "../../configs/ModalConfigs";
 import { Form, Formik } from "formik";
@@ -34,7 +38,7 @@ const AddCompanyModal = ({
 }) => {
   const { type } = isCompanyModalOpen;
   const [formData, setFormData] = useState(initialValue);
-  const [companyCreated, setCompanyCreated] = useState(false);
+  const [, setCompanyCreated] = useState(false);
   const [createdCompany, setCreatedCompany] = useState(null);
   const [createdCompanyId, setCreatedCompanyId] = useState(null);
   const [isCreatingCompany, setIsCreatingCompany] = useState(false);
@@ -44,6 +48,7 @@ const AddCompanyModal = ({
   const [newSubscriptionCreated, setNewSubscriptionCreated] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [currencyConversionConfirmation, setCurrencyConversionConfirmation] = useState(null);
 
   const [initialValues, setInitialValues] = useState({
     company_name: formData.company_name || "",
@@ -126,11 +131,54 @@ const AddCompanyModal = ({
     { title: "Enablement", component: EnablementInformation },
   ];
 
+  const requestCurrencyConversionConfirmation = (details) =>
+    new Promise((resolve) => {
+      setCurrencyConversionConfirmation({ ...details, resolve });
+    });
+
+  const closeCurrencyConversionConfirmation = (confirmed) => {
+    const confirmation = currencyConversionConfirmation;
+    setCurrencyConversionConfirmation(null);
+    confirmation?.resolve(confirmed);
+  };
+
   const onSubmit = async (values, { setSubmitting }) => {
     try {
       setSubmitting(true);
       setIsCreatingCompany(true);
       setSubmitError(null);
+
+      let walletConversion = null;
+      const oldCurrency = String(initialValues.currency || "").toUpperCase();
+      const newCurrency = String(values.currency || "").toUpperCase();
+      const currencyChanged =
+        modalType === "company" &&
+        type === "edit" &&
+        oldCurrency &&
+        newCurrency &&
+        oldCurrency !== newCurrency;
+
+      if (currencyChanged) {
+        const rateResponse = await apiGetCurrencyConversionRate(oldCurrency, newCurrency);
+        const rate = Number(rateResponse?.data?.rate);
+
+        if (!Number.isFinite(rate) || rate <= 0) {
+          throw new Error("A valid currency conversion rate was not received.");
+        }
+
+        const confirmed = await requestCurrencyConversionConfirmation({
+          from: oldCurrency,
+          to: newCurrency,
+          rate,
+          updatedAt: rateResponse?.data?.time_last_update_utc,
+        });
+
+        if (!confirmed) {
+          return;
+        }
+
+        walletConversion = { rate };
+      }
 
       const {
         log_map_search_result,
@@ -170,7 +218,13 @@ const AddCompanyModal = ({
         voip: toYesNo(voip, 2),
       };
 
-      const { picture, ...valuesWithoutPicture } = formattedValues;
+      if (walletConversion) {
+        formattedValues.convert_wallet_balances = true;
+        formattedValues.wallet_conversion_rate = walletConversion.rate;
+      }
+
+      const valuesWithoutPicture = { ...formattedValues };
+      delete valuesWithoutPicture.picture;
       const formValues = { ...valuesWithoutPicture };
 
       if (formData.picture instanceof File) {
@@ -209,6 +263,10 @@ const AddCompanyModal = ({
           : await MODAL_CONFIG[modalType][type].api(payload);
 
       if (response.status === 200 || response.status === 201) {
+        if (type === "edit") {
+          onRefresh?.();
+        }
+
         if (modalType === "company") {
           setCompanyCreated(true);
           const companyObj = response.data.company || response.data.tenant || {};
@@ -243,7 +301,7 @@ const AddCompanyModal = ({
         setSubmitError(error.errors.join(", "));
       } else {
         setSubmitError(
-          error.response?.data?.message || "Failed to create company"
+          error.response?.data?.message || error.message || "Failed to save company"
         );
       }
     } finally {
@@ -252,7 +310,7 @@ const AddCompanyModal = ({
     }
   };
 
-  const getCompanyDetailsById = async () => {
+  const getCompanyDetailsById = useCallback(async () => {
     try {
       const result = await apiGetCompanyDetailsById({ id });
 
@@ -284,14 +342,16 @@ const AddCompanyModal = ({
           subscription: result?.data?.subscription,
         });
       }
-    } catch (error) { }
-  };
+    } catch {
+      setSubmitError("Unable to load company details.");
+    }
+  }, [id]);
 
   useEffect(() => {
     if (type === "edit" && id) {
       getCompanyDetailsById();
     }
-  }, []);
+  }, [getCompanyDetailsById, id, type]);
 
   const getValidationSchema = () => {
     if (type === "edit") {
@@ -309,6 +369,40 @@ const AddCompanyModal = ({
 
   return (
     <div>
+      {currencyConversionConfirmation &&
+        createPortal(
+          <ConfirmDialog
+            isOpen
+            title="Convert all wallet balances?"
+            message={
+              <div className="space-y-3">
+                <p>
+                  Changing the company currency will convert every rider and driver wallet balance.
+                </p>
+                <div className="rounded-lg border border-[#D8DEE9] bg-[#F8FAFC] p-3 text-[#252525]">
+                  <div className="font-semibold">
+                    1 {currencyConversionConfirmation.from} = {currencyConversionConfirmation.rate}{" "}
+                    {currencyConversionConfirmation.to}
+                  </div>
+                  <div className="mt-1 text-xs text-[#6C6C6C]">
+                    Example: 1,000 {currencyConversionConfirmation.from} becomes{" "}
+                    {(1000 * currencyConversionConfirmation.rate).toFixed(2)}{" "}
+                    {currencyConversionConfirmation.to}.
+                  </div>
+                </div>
+                <p className="text-xs">
+                  A conversion entry will be added to each affected wallet history.
+                </p>
+              </div>
+            }
+            confirmText="Convert and save"
+            cancelText="Keep current currency"
+            onConfirm={() => closeCurrencyConversionConfirmation(true)}
+            onCancel={() => closeCurrencyConversionConfirmation(false)}
+          />,
+          document.body
+        )}
+
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-4 right-4 z-50 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow-lg max-w-md animate-slide-in">

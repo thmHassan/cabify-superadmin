@@ -19,6 +19,7 @@ export const MAPS_CONFIGURATION_PATH = "/maps-configuration";
 export const VOIP_SETTINGS_PATH = "/voip-settings";
 export const PAYMENTS_PATH = "/payments";
 export const SYSTEM_SETTINGS_PATH = "/system-settings";
+export const APP_MAINTENANCE_PATH = "/app-maintenance";
 export const SUB_ADMIN_MANAGEMENT_PATH = "/sub-admin-management";
 export const SUBSCRIPTION_SUCCESS_PATH = "/subscription-success";
 export const PAYMENT_FAILED_PATH = "/payment-failed";
