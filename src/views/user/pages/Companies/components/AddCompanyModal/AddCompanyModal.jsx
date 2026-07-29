@@ -46,8 +46,6 @@ const AddCompanyModal = ({
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
 
   const [newSubscriptionCreated, setNewSubscriptionCreated] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
   const [currencyConversionConfirmation, setCurrencyConversionConfirmation] = useState(null);
 
   const [initialValues, setInitialValues] = useState({
@@ -263,7 +261,21 @@ const AddCompanyModal = ({
           : await MODAL_CONFIG[modalType][type].api(payload);
 
       if (response.status === 200 || response.status === 201) {
-        if (type === "edit") {
+        const subscriptionChanged =
+          String(initialValues.subscription_type) !==
+          String(values.subscription_type);
+        const selectedDeductType = String(
+          values.subscription?.deduct_type || ""
+        ).toLowerCase();
+        const requiresNewStripePayment =
+          modalType === "company" &&
+          type === "edit" &&
+          selectedDeductType === "card" &&
+          (subscriptionChanged || Number(response.data.newSubscriptionCreate) === 1);
+
+        // Keep the payment modal stable. Refreshing the company list here caused
+        // the loading state that looked like a page refresh before payment.
+        if (type === "edit" && !requiresNewStripePayment) {
           onRefresh?.();
         }
 
@@ -272,23 +284,16 @@ const AddCompanyModal = ({
           const companyObj = response.data.company || response.data.tenant || {};
           setCreatedCompany(companyObj);
 
+          // Stripe APIs require the tenancy primary key (for example,
+          // "hassancompany10"), not the editable business company_id.
           const companyId =
-            companyObj.id ||
-            response.data.company_id ||
-            response.data.data?.id;
+            response.data.tenant_id ||
+            (type === "edit" ? id : companyObj.id || response.data.data?.id);
           setCreatedCompanyId(companyId);
 
-          // Check if subscription changed from cash to card
-          if (type === "edit" && response.data.newSubscriptionCreate === 1) {
-            setNewSubscriptionCreated(true);
-            setToastMessage("You have changed your subscription from Cash to Card. Please complete the payment.");
-            setShowToast(true);
-
-            // Auto hide toast after 5 seconds
-            setTimeout(() => {
-              setShowToast(false);
-            }, 5000);
-          }
+          // The API may serialize its flag as either 1 or "1"; the normalized
+          // value above also covers that response shape.
+          setNewSubscriptionCreated(requiresNewStripePayment);
         }
       } else {
         setFormData({});
@@ -402,31 +407,6 @@ const AddCompanyModal = ({
           />,
           document.body
         )}
-
-      {/* Toast Notification */}
-      {showToast && (
-        <div className="fixed top-4 right-4 z-50 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-lg shadow-lg max-w-md animate-slide-in">
-          <div className="flex items-start">
-            <div className="flex-shrink-0">
-              <svg className="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="ml-3 flex-1">
-              <p className="text-sm font-semibold">Payment Required</p>
-              <p className="text-sm mt-1">{toastMessage}</p>
-            </div>
-            <button
-              onClick={() => setShowToast(false)}
-              className="ml-4 flex-shrink-0 text-yellow-600 hover:text-yellow-800 transition-colors"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
 
       <Formik
         initialValues={initialValues}

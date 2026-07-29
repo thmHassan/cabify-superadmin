@@ -45,8 +45,16 @@ const EnablementInformation = ({
       setIsProcessingPayment(true);
       setPaymentError(null);
 
+      const paymentCompanyId = String(
+        createdCompanyId || values?.id || ""
+      ).trim();
+      if (!paymentCompanyId) {
+        setPaymentError("Company ID is missing. Please close and reopen the company modal.");
+        return;
+      }
+
       const paymentData = new FormData();
-      paymentData.append("id", createdCompanyId);
+      paymentData.append("id", paymentCompanyId);
       
       // NEW: Get amount from subscription object with fallback
       const subscriptionAmount = values?.subscription?.amount || 
@@ -63,7 +71,7 @@ const EnablementInformation = ({
       paymentData.append("billing_mode", values.billing_mode || "one_time");
 
       console.log("Payment Data:", {
-        id: createdCompanyId,
+        id: paymentCompanyId,
         amount: subscriptionAmount,
         subscription: values?.subscription,
         billing_mode: values.billing_mode || "one_time"
@@ -73,7 +81,7 @@ const EnablementInformation = ({
 
       if (response.status === 200 || response.status === 201) {
         if (response.data.url) {
-          window.open(response.data.url, "_blank");
+          window.location.assign(response.data.url);
           
           // NEW: Show success message
           setPaymentError(null);
@@ -101,7 +109,7 @@ const EnablementInformation = ({
   const company =
     companyCreated && typeof companyCreated === "object"
       ? companyCreated
-      : formEl?.values?.company || {};
+      : formEl?.values || {};
 
   const paymentStatus = company?.payment_status;
   const expiryDate = company?.expiry_date;
@@ -111,10 +119,13 @@ const EnablementInformation = ({
   const shouldShowPaymentButtons =
     (paymentStatus === "pending" || (paymentStatus === "success" && isExpired)) ||
     newSubscriptionCreated;
+  const subscriptionDeductType = String(
+    values.subscription?.deduct_type || ""
+  ).toLowerCase();
   const shouldShowOnlinePayment =
-    values.subscription?.deduct_type === "card" || newSubscriptionCreated;
+    subscriptionDeductType === "card" || newSubscriptionCreated;
   const shouldShowCashPayment =
-    !newSubscriptionCreated && values.subscription?.deduct_type === "cash";
+    !newSubscriptionCreated && subscriptionDeductType === "cash";
   const billingMode = values.billing_mode || "one_time";
 
   const billingModeOptions = [
@@ -177,7 +188,6 @@ const EnablementInformation = ({
       )} */}
 
       {modalType === "company" &&
-        (companyCreated || newSubscriptionCreated) &&
         shouldShowPaymentButtons &&
         shouldShowOnlinePayment && (
           <div className="mb-6 rounded-lg border border-[#E9E9E9] bg-white p-4">
@@ -237,7 +247,7 @@ const EnablementInformation = ({
           <span>Cancel</span>
         </Button>
         
-      {modalType === "company" && (companyCreated || newSubscriptionCreated) && shouldShowPaymentButtons ? (
+      {modalType === "company" && shouldShowPaymentButtons ? (
           <>
             {/* Show Cash Payment button only if subscription is cash AND not a new subscription change */}
             {shouldShowCashPayment && (
