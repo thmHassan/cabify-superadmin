@@ -272,10 +272,15 @@ const AddCompanyModal = ({
           type === "edit" &&
           selectedDeductType === "card" &&
           (subscriptionChanged || Number(response.data.newSubscriptionCreate) === 1);
+        const requiresPayment =
+          modalType === "company" &&
+          type === "edit" &&
+          (Number(response.data.paymentRequired) === 1 ||
+            (subscriptionChanged && ["cash", "card"].includes(selectedDeductType)));
 
         // Keep the payment modal stable. Refreshing the company list here caused
         // the loading state that looked like a page refresh before payment.
-        if (type === "edit" && !requiresNewStripePayment) {
+        if (type === "edit" && !requiresPayment) {
           onRefresh?.();
         }
 
@@ -482,8 +487,10 @@ const AddCompanyModal = ({
                 modalType={modalType}
                 companyCreated={createdCompany}
                 createdCompanyId={createdCompanyId}
+                tenantId={id}
                 isCreatingCompany={isCreatingCompany}
                 newSubscriptionCreated={newSubscriptionCreated}
+                onRefresh={onRefresh}
                 formEl={{ ...formEl, values, setFieldValue, errors, touched }}
               />
             </Form>

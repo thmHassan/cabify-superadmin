@@ -11,8 +11,10 @@ const EnablementInformation = ({
   modalType,
   companyCreated,
   createdCompanyId,
+  tenantId,
   isCreatingCompany,
   newSubscriptionCreated,
+  onRefresh,
   formEl
 }) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
@@ -24,14 +26,24 @@ const EnablementInformation = ({
       setIsProcessingPayment(true);
       setPaymentError(null);
 
+      const paymentCompanyId = String(
+        tenantId || createdCompanyId || values?.id || ""
+      ).trim();
+      if (!paymentCompanyId) {
+        setPaymentError("Company ID is missing. Please close and reopen the company modal.");
+        return;
+      }
+
       const paymentData = new FormData();
-      paymentData.append("id", createdCompanyId);
+      paymentData.append("id", paymentCompanyId);
       paymentData.append("billing_mode", values.billing_mode || "one_time");
 
       const response = await ApiService.cashPayment(paymentData);
 
       if (response.status === 200 || response.status === 201) {
-        setIsOpen(false);
+        onRefresh?.();
+        unlockBodyScroll();
+        setIsOpen({ type: "new", isOpen: false });
       }
     } catch (error) {
       setPaymentError(error.response?.data?.message || "Cash payment failed");
@@ -46,7 +58,7 @@ const EnablementInformation = ({
       setPaymentError(null);
 
       const paymentCompanyId = String(
-        createdCompanyId || values?.id || ""
+        tenantId || createdCompanyId || values?.id || ""
       ).trim();
       if (!paymentCompanyId) {
         setPaymentError("Company ID is missing. Please close and reopen the company modal.");
