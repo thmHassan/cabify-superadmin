@@ -217,7 +217,9 @@ const AddCompanyModal = ({
       };
 
       if (walletConversion) {
-        formattedValues.convert_wallet_balances = true;
+        // Laravel's multipart boolean validator accepts 1/0, while FormData
+        // serializes a JavaScript boolean as the string "true".
+        formattedValues.convert_wallet_balances = 1;
         formattedValues.wallet_conversion_rate = walletConversion.rate;
       }
 
@@ -257,7 +259,7 @@ const AddCompanyModal = ({
 
       const response =
         type === "edit"
-          ? await MODAL_CONFIG[modalType][type].api(id, payload)
+          ? await MODAL_CONFIG[modalType][type].api({ id }, payload)
           : await MODAL_CONFIG[modalType][type].api(payload);
 
       if (response.status === 200 || response.status === 201) {
