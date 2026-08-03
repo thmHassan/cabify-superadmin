@@ -1,17 +1,18 @@
 import { ErrorMessage, Field } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../../../../../components/ui/Button/Button";
 import Password from "../../../../../../components/elements/CustomPassword/Password";
 import { unlockBodyScroll } from "../../../../../../utils/functions/common.function";
 import FormSelection from "../../../../../../components/ui/FormSelection/FormSelection";
 import FormLabel from "../../../../../../components/ui/FormLabel";
 import { BASIC_INFORMATION_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
+import { apiGetActiveCurrencies } from "../../../../../../services/CurrencyService";
 
 const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
   const { values, setFieldValue, setTouched, validateForm } = formEl;
   const [showPasswordField, setShowPasswordField] = useState(type !== "edit");
 
-  const currencyOptions = [
+  const fallbackCurrencyOptions = [
     { value: "USD", label: "USD" },
     { value: "EUR", label: "EUR" },
     { value: "GBP", label: "GBP" },
@@ -19,6 +20,25 @@ const BasicInformation = ({ goToNextTab, setIsOpen, type, formEl }) => {
     { value: "CAD", label: "CAD" },
     { value: "AUD", label: "AUD" },
   ];
+  const [currencyOptions, setCurrencyOptions] = useState(fallbackCurrencyOptions);
+
+  useEffect(() => {
+    let mounted = true;
+    apiGetActiveCurrencies()
+      .then((response) => {
+        if (!mounted) return;
+        const options = (response?.data?.currencies || []).map((currency) => ({
+          value: currency.code,
+          label: `${currency.code} — ${currency.name} (${currency.symbol})`,
+        }));
+        if (values.currency && !options.some((option) => option.value === values.currency)) {
+          options.push({ value: values.currency, label: `${values.currency} (currently assigned)` });
+        }
+        if (options.length) setCurrencyOptions(options);
+      })
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, [values.currency]);
 
   const onNext = async () => {
     const fieldsToValidate = Object.keys(BASIC_INFORMATION_VALIDATION_SCHEMA);

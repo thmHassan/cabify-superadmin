@@ -256,6 +256,20 @@ const userNavRoutes = [
         subMenu: [],
         isStatic: false,
       },
+      {
+        key: KEY.CURRENCY_MANAGEMENT_KEY,
+        title: "Currency Management",
+        icon: {
+          active: PaymentsIcon,
+          component: PaymentsIcon,
+          size: 20,
+        },
+        route: PATH.CURRENCY_MANAGEMENT_PATH,
+        active: [],
+        isSubMenu: false,
+        subMenu: [],
+        isStatic: false,
+      },
       // {
       //   key: KEY.SYSTEM_SETTINGS_KEY,
       //   title: "System Settings",

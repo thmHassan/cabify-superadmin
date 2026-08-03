@@ -140,6 +140,12 @@ const userRoute = [
     authority: [],
   },
   {
+    key: KEY.CURRENCY_MANAGEMENT_KEY,
+    path: PATH.CURRENCY_MANAGEMENT_PATH,
+    component: lazy(() => import("../../../views/user/pages/CurrencyManagement")),
+    authority: [],
+  },
+  {
     key: KEY.SUB_ADMIN_MANAGEMENT_KEY,
     path: PATH.SUB_ADMIN_MANAGEMENT_PATH,
     component: lazy(() =>

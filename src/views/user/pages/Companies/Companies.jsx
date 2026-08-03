@@ -33,6 +33,47 @@ import Modal from "../../../../components/shared/Modal";
 import Loading from "../../../../components/shared/Loading/Loading";
 import { useAppSelector } from "../../../../store";
 import { apiDeleteCompany } from "../../../../services/CompanyService";
+import { apiGetCurrencies } from "../../../../services/CurrencyService";
+
+const formatCurrencyAmount = (amount, currency = "USD", definitions = {}) => {
+  const numericAmount = Number(amount) || 0;
+  const currencyCode = String(currency || "USD").toUpperCase();
+  const definition = definitions[currencyCode];
+
+  if (definition) {
+    const decimals = Math.max(0, Math.min(4, Number(definition.decimal_places ?? 2)));
+    const formattedNumber = numericAmount.toLocaleString("en-US", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
+    return definition.symbol_position === "after"
+      ? `${formattedNumber} ${definition.symbol}`
+      : `${definition.symbol}${formattedNumber}`;
+  }
+
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currencyCode,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(numericAmount);
+  } catch {
+    return `${currencyCode} ${numericAmount.toLocaleString("en-US", {
+      maximumFractionDigits: 2,
+    })}`;
+  }
+};
+
+const formatRevenueBreakdown = (breakdown, fallback, definitions) => {
+  if (!Array.isArray(breakdown) || breakdown.length === 0) {
+    return fallback;
+  }
+
+  return breakdown
+    .map(({ amount, currency }) => formatCurrencyAmount(amount, currency, definitions))
+    .join(" + ");
+};
 
 const Companies = () => {
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState({
@@ -73,6 +114,17 @@ const Companies = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [upcomingSubscription, setUpcomingSubscription] = useState(null);
   const [expiredSubscription, setExpiredSubscription] = useState(null);
+  const [currencyDefinitions, setCurrencyDefinitions] = useState({});
+
+  useEffect(() => {
+    apiGetCurrencies()
+      .then((response) => {
+        setCurrencyDefinitions(Object.fromEntries(
+          (response?.data?.currencies || []).map((currency) => [currency.code, currency])
+        ));
+      })
+      .catch(() => {});
+  }, []);
 
   const handleRefresh = () => setRefreshTrigger((prev) => prev + 1);
 
@@ -104,8 +156,14 @@ const Companies = () => {
     },
     {
       title: "Monthly Revenue",
-      value: companyCards?.monthly_revenue,
-      change: "+3 from last hour",
+      value: formatCurrencyAmount(
+        companyCards?.monthly_revenue_base_amount ?? companyCards?.monthly_revenue,
+        companyCards?.monthly_revenue_base_currency ?? "USD",
+        currencyDefinitions
+      ),
+      change: companyCards?.monthly_revenue_complete === false
+        ? "USD equivalent (FX pending)"
+        : "USD equivalent",
       icon: {
         component: MonthlyRevenueIcon,
       },
@@ -284,19 +342,15 @@ const Companies = () => {
     refreshTrigger,
   ]);
 
-  const currencySymbols = {
-    INR: "₹",
-    USD: "$",
-    EUR: "€",
-    GBP: "£",
-    AUD: "A$",
-    CAD: "C$",
-    AED: "د.إ",
-  };
-
   const mapToTableRows = (companies) => {
     return companies.map((c) => {
-      const symbol = currencySymbols[c.currency] || "";
+      const legacyRevenue = c.monthly_revenue_base_currency
+        ? formatCurrencyAmount(
+            c.monthly_revenue_base_amount ?? c.monthly_revenue,
+            c.monthly_revenue_base_currency,
+            currencyDefinitions
+          )
+        : formatCurrencyAmount(c.monthly_revenue, c.currency, currencyDefinitions);
 
       return {
         id: c.id ?? c.company_id,
@@ -306,7 +360,14 @@ const Companies = () => {
         location: c.city ?? "-",
         drivers: `${c.drivers_allowed ?? 0} Drivers`,
         contact: c.phone ?? c.email ?? "-",
-        revenue: `${symbol}${c.monthly_revenue ?? 0}`,
+        revenue: formatRevenueBreakdown(
+          c.monthly_revenue_breakdown,
+          legacyRevenue,
+          currencyDefinitions
+        ),
+        revenueLabel: c.monthly_revenue_complete === false
+          ? "monthly revenue (FX pending)"
+          : "monthly revenue",
       };
     });
   };
@@ -326,7 +387,7 @@ const Companies = () => {
 
 
     setCompanyListDisplay(mapToTableRows(filtered));
-  }, [companyListRaw, _selectedPlan]);
+  }, [companyListRaw, _selectedPlan, currencyDefinitions]);
 
 
 

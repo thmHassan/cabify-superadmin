@@ -23,7 +23,7 @@ const ICON_CONFIG = {
 
 const CompanyTableRow = (props) => {
   const { actionOptions, data, type } = props;
-  const { name, status, location, drivers, contact, revenue, picture } = data;
+  const { name, status, location, drivers, contact, revenue, revenueLabel, picture } = data;
   return (
     <CommonTableRowFields
       itemData={data}
@@ -53,7 +53,7 @@ const CompanyTableRow = (props) => {
 
       <td className="py-[30px] flex pl-[50Px] flex-col justify-center min-w-[199px]">
         <CardSubtitle type={1} subtitle={revenue} />
-        <ChildText text="monthly revenue" />
+        <ChildText text={revenueLabel ?? "monthly revenue"} />
       </td>
     </CommonTableRowFields>
   );

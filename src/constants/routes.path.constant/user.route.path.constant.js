@@ -20,6 +20,7 @@ export const VOIP_SETTINGS_PATH = "/voip-settings";
 export const PAYMENTS_PATH = "/payments";
 export const SYSTEM_SETTINGS_PATH = "/system-settings";
 export const APP_MAINTENANCE_PATH = "/app-maintenance";
+export const CURRENCY_MANAGEMENT_PATH = "/currency-management";
 export const SUB_ADMIN_MANAGEMENT_PATH = "/sub-admin-management";
 export const SUBSCRIPTION_SUCCESS_PATH = "/subscription-success";
 export const PAYMENT_FAILED_PATH = "/payment-failed";
