@@ -126,7 +126,12 @@ const EnablementInformation = ({
   const paymentStatus = company?.payment_status;
   const expiryDate = company?.expiry_date;
 
-  const isExpired = expiryDate ? new Date(expiryDate) <= new Date() : false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const expiry = expiryDate ? new Date(`${expiryDate}T00:00:00`) : null;
+  const isExpired = expiry instanceof Date && !Number.isNaN(expiry.getTime())
+    ? expiry < today
+    : false;
 
   const shouldShowPaymentButtons =
     (paymentStatus === "pending" || (paymentStatus === "success" && isExpired)) ||

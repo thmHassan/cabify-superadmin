@@ -47,6 +47,7 @@ const AddCompanyModal = ({
 
   const [newSubscriptionCreated, setNewSubscriptionCreated] = useState(false);
   const [currencyConversionConfirmation, setCurrencyConversionConfirmation] = useState(null);
+  const [showCompanySetupInfo, setShowCompanySetupInfo] = useState(false);
 
   const [initialValues, setInitialValues] = useState({
     company_name: formData.company_name || "",
@@ -77,6 +78,7 @@ const AddCompanyModal = ({
     dispatchers_allowed: formData.dispatchers_allowed,
     drivers_allowed: formData.drivers_allowed,
     subscription_type: formData.subscription_type,
+    force_subscription_renewal: false,
     log_map_search_result: formData.log_map_search_result ?? false,
     voip: formData.voip ?? false,
     sub_company: formData.sub_company ?? false,
@@ -252,6 +254,16 @@ const AddCompanyModal = ({
         delete latestFormData.picture;
       }
 
+      // Multipart form data stringifies booleans. Laravel's boolean validator
+      // accepts 1/0, so normalize this flag explicitly.
+      if (type === "edit") {
+        latestFormData.force_subscription_renewal = latestFormData.force_subscription_renewal
+          ? 1
+          : 0;
+      } else {
+        delete latestFormData.force_subscription_renewal;
+      }
+
       delete latestFormData.subscription;
       const formDataToSend = convertToFormData(latestFormData);
 
@@ -301,6 +313,10 @@ const AddCompanyModal = ({
           // The API may serialize its flag as either 1 or "1"; the normalized
           // value above also covers that response shape.
           setNewSubscriptionCreated(requiresNewStripePayment);
+
+          if (type !== "edit") {
+            setShowCompanySetupInfo(true);
+          }
         }
       } else {
         setFormData({});
@@ -341,6 +357,7 @@ const AddCompanyModal = ({
           stripe_enable: toBoolean(company.stripe_enable),
           enable_smtp: toBoolean(company.enable_smtp),
           billing_mode: company.billing_mode || "one_time",
+          force_subscription_renewal: false,
           dispatcher: toBoolean(company.dispatcher, 2),
           map: toBoolean(company.map, 2),
           zone: toBoolean(company.zone, 2),
@@ -411,6 +428,33 @@ const AddCompanyModal = ({
             cancelText="Keep current currency"
             onConfirm={() => closeCurrencyConversionConfirmation(true)}
             onCancel={() => closeCurrencyConversionConfirmation(false)}
+          />,
+          document.body
+        )}
+
+      {showCompanySetupInfo &&
+        createPortal(
+          <ConfirmDialog
+            isOpen
+            title="Company Created Successfully"
+            message={
+              <div className="space-y-4">
+                <p>
+                  Please inform the company that the following setup must be added before using the system:
+                </p>
+                <ul className="list-disc space-y-2 pl-5 text-[#252525]">
+                  <li>At least one Vehicle Type</li>
+                  <li>At least one Document Type</li>
+                  <li>At least one Package</li>
+                </ul>
+                <p className="text-xs">
+                  The company subscription can be added later.
+                </p>
+              </div>
+            }
+            confirmText="Continue"
+            onConfirm={() => setShowCompanySetupInfo(false)}
+            showCancel={false}
           />,
           document.body
         )}

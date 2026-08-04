@@ -12,6 +12,7 @@ const ConfirmDialog = ({
   onConfirm,
   onCancel,
   isLoading = false,
+  showCancel = true,
 }) => {
   return (
     <Modal size="sm" isOpen={isOpen} className="p-6 sm:p-8">
@@ -23,15 +24,17 @@ const ConfirmDialog = ({
           {message}
         </div>
         <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-4">
-          <Button
-            btnSize="md"
-            type="filledGray"
-            className="w-full sm:w-auto !px-8 !pt-3 pb-[11px]"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
-            <span>{cancelText}</span>
-          </Button>
+          {showCancel && (
+            <Button
+              btnSize="md"
+              type="filledGray"
+              className="w-full sm:w-auto !px-8 !pt-3 pb-[11px]"
+              onClick={onCancel}
+              disabled={isLoading}
+            >
+              <span>{cancelText}</span>
+            </Button>
+          )}
           <Button
             btnSize="md"
             type={confirmType}

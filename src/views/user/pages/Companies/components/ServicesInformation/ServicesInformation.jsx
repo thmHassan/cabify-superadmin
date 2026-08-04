@@ -9,7 +9,7 @@ import FormSelection from "../../../../../../components/ui/FormSelection/FormSel
 import ApiService from "../../../../../../services/ApiService";
 import { SERVICE_INFORMATION_VALIDATION_SCHEMA } from "../../../../validators/pages/companies.validation";
 
-const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
+const ServicesInformation = ({ goToNextTab, formEl, setIsOpen, type }) => {
   const { values, setFieldValue, setTouched, validateForm } = formEl;
 
   const [subscriptionOptions, setSubscriptionOptions] = useState([]);
@@ -282,6 +282,18 @@ const ServicesInformation = ({ goToNextTab, formEl, setIsOpen }) => {
               component="div"
               className="text-red-500 text-sm mt-1"
             />
+            {type === "edit" && (
+              <label className="mt-3 flex cursor-pointer items-start gap-2 text-sm text-[#252525] md:mt-20">
+                <Field
+                  type="checkbox"
+                  name="force_subscription_renewal"
+                  className="mt-0.5 h-4 w-4"
+                />
+                <span>
+                  Renew this package again after saving (payment will be required)
+                </span>
+              </label>
+            )}
           </div>
           <div className="w-full sm:w-[calc((100%-20px)/2)]">
             {values.maps_api === "google" && (
